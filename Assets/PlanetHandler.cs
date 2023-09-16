@@ -11,7 +11,7 @@ public class PlanetHandler {
     }
 
     public void BuildRandomPlanets(int planetsToCreate) {
-        for (int i = 0; i < planetsToCreate; i++) {
+        for (int i = 1; i <= planetsToCreate; i++) {
             Planet planet = new("Planet " + i, (float) random.NextDouble(), (float) random.NextDouble(), (float) random.NextDouble(), random.Next(-2, 2), random.Next(-2, 2), random.Next(-2, 2));
             planets.Add(planet.Name, planet);
         }

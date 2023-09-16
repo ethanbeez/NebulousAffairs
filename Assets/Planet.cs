@@ -41,6 +41,7 @@ public class Planet {
         this.affluenceYield = affluenceYield;
         this.politicsYield = politicsYield;
         this.intelligenceYield = intelligenceYield;
+        influences = new();
         // Storing influences
         /*foreach (Influence influence in influences) {
             this.influences.Add(influence.LeaderName, influence);
@@ -49,6 +50,14 @@ public class Planet {
     #endregion
 
     #region Getters/Setters
+    public Influence GetLeaderInfluence(string leaderName) {
+        return influences[leaderName];
+    }
+
+    public void AddNewInfluence(Influence influence) {
+        influences.Add(influence.LeaderName, influence);
+    }
+
     public void SetAffluenceYield(int affluenceYield) { 
         this.affluenceYield = affluenceYield;
     }

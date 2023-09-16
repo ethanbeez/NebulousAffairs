@@ -11,16 +11,10 @@ public class LeaderHandler {
     }
 
     public void BuildRandomLeaders(int leadersToCreate) {
-        for (int i = 0; i < leadersToCreate; i++) {
+        for (int i = 1; i <= leadersToCreate; i++) {
             Leader leader = new("Leader " + i, (float) random.NextDouble(), (float) random.NextDouble(), (float) random.NextDouble(), 
                                                (float) random.NextDouble(), (float) random.NextDouble(), 10, 10, 10);
             leaders.Add(leader.Name, leader);
-        }
-    }
-
-    public List<Influence> BuildDefaultInfluences() {
-        foreach (Planet planet in planets) { 
-            
         }
     }
 }

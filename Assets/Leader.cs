@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using UnityEngine;
 
 public class Leader {
@@ -46,29 +47,32 @@ public class Leader {
     public event GameActionHandler? ActionOccurred;
     #endregion
 
-    #region Constructors
+    #region Constructors & Builders
     public Leader(string name, float hoarder, float loner, float affluenceBias, float politicsBias, float intelligenceBias,
-        int startingAffluence = 0, int startingPolitics = 0, int startingIntelligence = 0) {
+        int startingAffluence = 0, int startingPolitics = 0, int startingIntelligence = 0, int affluenceYield = 1,
+        int politicsYield = 1, int intelligenceYield = 1) {
+        this.affluenceYield = affluenceYield;
+        this.politicsYield = politicsYield;
+        this.intelligenceYield = intelligenceYield;
+
         planetControlCount = 0; // To be 'corrected' to 2 when building connections in GameHandler
         this.name = name;
         affluenceStockpile = startingAffluence;
         politicsStockpile = startingPolitics;
         intelligenceStockpile = startingIntelligence;
-        // Storing relationships
-        /*this.relationships = new(); // TODO: MAKE BUILDER METHODS FOR THIS!
-        foreach (Relationship relationship in relationships) {
-            this.relationships.Add(relationship.TargetLeaderName, relationship);
-        }
-        this.influences = new();
-        // Storing influences
-        foreach (Influence influence in influences) {
-            this.influences.Add(influence.PlanetName, influence);
-        }*/ 
+
+        influences = new();
+        controlledPlanets = new();
         decisionProfile = new(this, hoarder, loner, affluenceBias, politicsBias, intelligenceBias); // TODO: Make a builder class for this!
+    }
+
+    public void AddNewInfluence(Influence influence) {
+        influences.Add(influence.PlanetName, influence);
     }
     #endregion
 
     #region Getters/Setters
+
     public List<Influence> GetAscendingSortedPlanetInfluences() {
         List<Influence> sortedPlanetInfluences = new();
         foreach (Influence influence in influences.Values) {
@@ -76,6 +80,14 @@ public class Leader {
         }
         sortedPlanetInfluences.Sort((influence1, influence2) => influence1.InfluenceValue.CompareTo(influence2));
         return sortedPlanetInfluences;
+    }
+
+    public List<Planet> GetControlledPlanets() {
+        List<Planet> controlledPlanetsList = new();
+        foreach (Planet controlledPlanet in controlledPlanets.Values) {
+            controlledPlanetsList.Add(controlledPlanet);
+        }
+        return controlledPlanetsList;
     }
 
     public void SetAffluenceStockpile(int affluenceStockpile) {
@@ -100,6 +112,17 @@ public class Leader {
 
     public void SetIntelligenceYields(int intelligenceYield) { 
         this.intelligenceYield = intelligenceYield;
+    }
+
+    public void SetPlanetInfluence(string planetName, float leaderInfluence) {
+        if (!influences.ContainsKey(planetName)) {
+            Debug.LogError("Leader.SetPlanetInfluence tried to access a planet by name that did not exist in the influences Dictionary.");
+        }
+        influences[planetName].SetInfluence(leaderInfluence);
+    }
+
+    public Influence GetPlanetInfluence(string planetName) {
+        return influences[planetName];
     }
     #endregion
 
@@ -250,7 +273,7 @@ public class Leader {
     }
 }
 
-public struct Relationship {
+public class Relationship {
     #region Fields
     private Leader originLeader;
     private Leader targetLeader;
@@ -258,8 +281,8 @@ public struct Relationship {
     #endregion
 
     #region Properties
-    public readonly string TargetLeaderName => targetLeader.Name;
-    public readonly float OpinionValue => opinionValue;
+    public string TargetLeaderName => targetLeader.Name;
+    public float OpinionValue => opinionValue;
     #endregion
 
     #region Constructors
@@ -273,7 +296,7 @@ public struct Relationship {
     // public void UpdateRelationship(Action)
 }
 
-public struct Influence {
+public class Influence {
     #region Fields
     private Leader leader;
     private Planet planet;
@@ -282,11 +305,11 @@ public struct Influence {
     #endregion
 
     #region Properties
-    public readonly string LeaderName => leader.Name;
-    public readonly string PlanetName => planet.Name;
-    public readonly Planet Planet => planet;
-    public readonly float InfluenceValue => influenceValue;
-    public readonly bool IsLeader => isLeader;
+    public string LeaderName => leader.Name;
+    public string PlanetName => planet.Name;
+    public Planet Planet => planet;
+    public float InfluenceValue => influenceValue;
+    public bool IsLeader => isLeader;
     #endregion
 
     #region Constructors
@@ -297,6 +320,11 @@ public struct Influence {
         this.isLeader = isLeader;
     }
     #endregion
+
+    public void SetInfluence(float influenceValue) {
+        this.influenceValue = influenceValue;
+    }
+
     public void UpdateInfluence(GameAction influencingAction) {
         throw new NotImplementedException();
     }
