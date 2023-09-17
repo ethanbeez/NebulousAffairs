@@ -10,7 +10,7 @@ public enum ActionTypes {
 
 public enum CurrencyType { 
     Affluence = 0,
-    Diplomacy = 1,
+    Politics = 1,
     Intellect = 2
 }
 

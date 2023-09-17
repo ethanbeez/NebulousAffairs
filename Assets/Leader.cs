@@ -68,6 +68,7 @@ public class Leader {
 
     public void AddNewInfluence(Influence influence) {
         influences.Add(influence.PlanetName, influence);
+        decisionProfile.AddNewPlanet(influence);
     }
     #endregion
 
@@ -78,7 +79,7 @@ public class Leader {
         foreach (Influence influence in influences.Values) {
             sortedPlanetInfluences.Add(influence);
         }
-        sortedPlanetInfluences.Sort((influence1, influence2) => influence1.InfluenceValue.CompareTo(influence2));
+        sortedPlanetInfluences.Sort((influence1, influence2) => influence1.InfluenceValue.CompareTo(influence2.InfluenceValue));
         return sortedPlanetInfluences;
     }
 
@@ -132,6 +133,10 @@ public class Leader {
         return action;
     }
 
+    public void UpdatePriorities() {
+        decisionProfile.UpdatePriorities();
+    }
+
     /// <summary>
     /// This method does nothing if this leader was already the leader of the planet.
     /// </summary>
@@ -154,6 +159,7 @@ public class Leader {
         private const int ComfortableIntelligenceYield = 2;
 
         private const int ActionsToChooseFrom = 2;
+        private const int PlanetsToChooseFrom = 4;
 
         private Leader leader;
         private System.Random random;
@@ -189,9 +195,13 @@ public class Leader {
             this.intelligenceBias = intelligenceBias;
 
             planetPriorities = new();
-            foreach (Influence influence in leader.influences.Values) {
+            /*foreach (Influence influence in leader.influences.Values) {
                 planetPriorities.Add(influence);
-            }
+            }*/
+        }
+
+        public void AddNewPlanet(Influence influence) {
+            planetPriorities.Add(influence);
         }
 
         public GameAction ChooseNextAction(int actionsToConsider) {
@@ -230,7 +240,7 @@ public class Leader {
                         CurrencyType currencyToIncrease = (CurrencyType) currencies.GetValue(randomCurrencyIndex); // TODO: THIS IS STUPID MAKE THIS SMARTER!!
                         int nextCurrencyIndex = (randomCurrencyIndex + 1) % currencies.Length;
                         CurrencyType currencyToDecrease = (CurrencyType) currencies.GetValue(nextCurrencyIndex);
-                        Planet targetPlanet = planetPriorities[i].Planet;
+                        Planet targetPlanet = planetPriorities[i + random.Next(PlanetsToChooseFrom)].Planet;
                         gameActionList.Add(new DiplomacyAction(0, leader, targetPlanet, currencyToIncrease, currencyToDecrease));
                     }
                     break;
@@ -325,8 +335,9 @@ public class Influence {
         this.influenceValue = influenceValue;
     }
 
-    public void UpdateInfluence(GameAction influencingAction) {
-        throw new NotImplementedException();
+    public void UpdateInfluence(float influenceModifier) {
+        float newInfluenceValue = Mathf.Clamp(influenceValue + influenceModifier, 0, 1);
+        influenceValue = newInfluenceValue;
     }
     /// <summary>
     /// Retruns true if this leader was already the leader of the planet.

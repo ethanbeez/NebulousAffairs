@@ -47,8 +47,9 @@ public class GameHandler {
         leader.GainPlanetControl(planet);
     }
 
-    public void ExecuteBotTurns() {
+    public void ExecuteBotTurns(TurnHandler.GameTurns gameTurns) {
         foreach (Leader leader in leaderHandler.leaders.Values) {
+            leader.UpdatePriorities();
             GameAction leaderAction = leader.MakeDecision();
             switch (leaderAction) {
                 case DiplomacyAction diplomacy:
@@ -65,7 +66,8 @@ public class GameHandler {
     }
 
     private void HandleDiplomacyAction(DiplomacyAction diplomacyAction) {
-        
+        Planet targetPlanet = planetHandler.planets[diplomacyAction.TargetPlanet.Name];
+        targetPlanet.HandleDiplomacyAction(diplomacyAction);
     }
 
     private void HandleEspionageAction(EspionageAction espionageAction) {

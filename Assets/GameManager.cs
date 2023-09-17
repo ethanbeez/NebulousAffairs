@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,12 @@ public class GameManager : MonoBehaviour {
     void Start() {
         gameHandler = new();
         turnHandler = new();
+        turnHandler.TurnChanged += AdvanceTurn;
+    }
+
+    private void AdvanceTurn(TurnHandler.GameTurns gameTurns) {
+        Debug.Log(gameTurns.ToString());
+        gameHandler.ExecuteBotTurns(gameTurns);
     }
 
     // Update is called once per frame

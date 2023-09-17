@@ -77,8 +77,51 @@ public class Planet {
 
     #region Actions
     public void HandleDiplomacyAction(DiplomacyAction diplomacyAction) {
-        CurrencyType currencyToIncrease = diplomacyAction.CurrencyToIncrease;
-        CurrencyType currencyToDecrease = diplomacyAction.CurrencyToDecrease;
+        // TODO: All of this logic should probably be a class in Planet.
+        float currencyIncreasePriority = 0;
+        string increasedCurrency = ""; // TODO: Remove these, mainly just for debugging.
+        switch (diplomacyAction.CurrencyToIncrease) {
+            case CurrencyType.Affluence:
+                currencyIncreasePriority = affluencePriority;
+                increasedCurrency = "Gold";
+                break;
+            case CurrencyType.Politics:
+                currencyIncreasePriority = politicsPriority;
+                increasedCurrency = "Politics";
+                break;
+            case CurrencyType.Intellect:
+                currencyIncreasePriority = intelligencePriority;
+                increasedCurrency = "Intellect";
+                break;
+        }
+        float currencyDecreasePriority = 0;
+        string decreasedCurrency = "";
+        switch (diplomacyAction.CurrencyToDecrease) {
+            case CurrencyType.Affluence:
+                currencyDecreasePriority = affluencePriority;
+                decreasedCurrency = "Gold";
+                break;
+            case CurrencyType.Politics:
+                currencyDecreasePriority = politicsPriority;
+                decreasedCurrency = "Politics";
+                break;
+            case CurrencyType.Intellect:
+                currencyDecreasePriority = intelligencePriority;
+                decreasedCurrency = "Intellect";
+                break;
+        }
+
+        float potentialIncreasePoints = 0.2f; // TODO: Don't hardcode these!
+        float potentialDecreasePoints = -0.05f;
+
+        float actualIncreasePoints = potentialIncreasePoints * currencyIncreasePriority;
+        float actualDecreasePoints = potentialDecreasePoints * currencyDecreasePriority;
+        float totalInfluenceModifier = actualIncreasePoints + actualDecreasePoints;
+        Influence leaderInfluence = influences[diplomacyAction.OriginLeader.Name];
+        leaderInfluence.UpdateInfluence(totalInfluenceModifier);
+        string gainOrLoss = (totalInfluenceModifier > 0) ? "gain" : "loss";
+        Debug.Log(leaderInfluence.LeaderName + " performed diplomacy with " + leaderInfluence.PlanetName + ", resulting in +1 " + increasedCurrency + "/turn, and -1 " + decreasedCurrency + "/turn. " +
+            "This resulted in a " + gainOrLoss + " of " + totalInfluenceModifier + " Influence points! (new total: " + leaderInfluence.InfluenceValue + ")");
     }
     #endregion
 }

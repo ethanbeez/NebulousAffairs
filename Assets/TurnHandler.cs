@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class TurnHandler {
-    private int turnLimit;
+    private int turnLimit; // TODO: Remove
     private int startingYear;
     private int yearsPerTurn;
 
@@ -13,6 +13,7 @@ public class TurnHandler {
     public delegate void TurnChangeHandler(GameTurns gameTurns);
     public event TurnChangeHandler? TurnChanged;
     public TurnHandler(int turnLimit = 20, int startingYear = 3000, int yearsPerTurn = 50) { 
+        gameTurns = new(startingYear: startingYear, yearsPerTurn: yearsPerTurn, turnLimit: turnLimit);
         this.turnLimit = turnLimit;
         this.startingYear = startingYear;
         this.yearsPerTurn = yearsPerTurn;
@@ -43,7 +44,7 @@ public class TurnHandler {
         #endregion
 
         #region Constructors
-        public GameTurns(int currentTurn = 1, int startingYear = 3000, int yearsPerTurn = 1, int turnLimit = 100) { // No parameterless struct constructors in C#9, not ideal syntax ):
+        public GameTurns(int currentTurn = 1, int startingYear = 3000, int yearsPerTurn = 1, int turnLimit = 20) { // No parameterless struct constructors in C#9, not ideal syntax ):
             this.currentTurn = currentTurn;
             this.startingYear = startingYear;
             this.currentYear = startingYear;
