@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     GameHandler gameHandler;
+    TurnHandler turnHandler;
     // Start is called before the first frame update
     void Start() {
         gameHandler = new();
+        turnHandler = new();
     }
 
     // Update is called once per frame
     void Update() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            turnHandler.AdvanceTurn();
+        }
+
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             Debug.Log(gameHandler.DEBUG_GetLeaderInfoString("Leader 1"));
         }

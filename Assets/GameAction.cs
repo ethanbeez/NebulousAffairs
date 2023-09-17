@@ -19,7 +19,6 @@ public abstract class GameAction {
     private readonly Leader originLeader;
     public int TurnOccurred => turnOccurred;
     public Leader OriginLeader => originLeader;
-    
 
     protected GameAction(int turnOccurred, Leader originLeader) { 
         this.turnOccurred = turnOccurred;
@@ -32,7 +31,9 @@ public class TradeAction : GameAction {
     private const int PoliticsCost = 0;
     private const int IntellectCost = 0;
     private readonly Leader targetLeader;
+
     public Leader TargetLeader => targetLeader;
+
     public TradeAction(int turnOccurred, Leader originLeader, Leader targetLeader) : base(turnOccurred, originLeader) { 
         this.targetLeader = targetLeader;
     }
@@ -56,11 +57,11 @@ public class DiplomacyAction : GameAction {
     private const int PoliticsCost = 5;
     private const int IntellectCost = 0;
     private readonly Planet targetPlanet;
-    CurrencyType currencyToIncrease;
-    CurrencyType currencyToDecrease;
-
-    public CurrencyType CurrencyToIncrease;
-    public CurrencyType CurrencyToDecrease;
+    private readonly CurrencyType currencyToIncrease;
+    private readonly CurrencyType currencyToDecrease;
+    public CurrencyType CurrencyToIncrease => currencyToIncrease;
+    public CurrencyType CurrencyToDecrease => currencyToDecrease;
+    public Planet TargetPlanet => targetPlanet;
     public DiplomacyAction(int turnOccurred, Leader originLeader, Planet targetPlanet, CurrencyType currencyToIncrease, CurrencyType currencyToDecrease) 
         : base(turnOccurred, originLeader) {
         this.currencyToIncrease = currencyToIncrease;

@@ -1,34 +1,26 @@
+#nullable enable
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TurnHandler : MonoBehaviour {
-    [Header("Turn Settings")]
-    [Range(1, 500)]
-    public int TurnLimit;
-    [Range(1, 10_000)]
-    public int StartingYear;
-    [Range(1, 1000)]
-    public int YearsPerTurn;
+public class TurnHandler {
+    private int turnLimit;
+    private int startingYear;
+    private int yearsPerTurn;
 
     private GameTurns gameTurns;
-    public static UnityAction<GameTurns> OnTurnChanged;
-    // Start is called before the first frame update
-    void Start() {
-        gameTurns = new(startingYear: StartingYear, yearsPerTurn: YearsPerTurn, turnLimit: TurnLimit);
+    public delegate void TurnChangeHandler(GameTurns gameTurns);
+    public event TurnChangeHandler? TurnChanged;
+    public TurnHandler(int turnLimit = 20, int startingYear = 3000, int yearsPerTurn = 50) { 
+        this.turnLimit = turnLimit;
+        this.startingYear = startingYear;
+        this.yearsPerTurn = yearsPerTurn;
     }
 
-    // Update is called once per frame
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            AdvanceTurn();
-            Debug.Log(gameTurns.ToString());
-        }
-    }
-
-    void AdvanceTurn() {
+    public void AdvanceTurn() {
         gameTurns.AdvanceTurn();
+        TurnChanged?.Invoke(gameTurns);
     }
 
     public struct GameTurns {

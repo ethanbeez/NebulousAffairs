@@ -74,4 +74,11 @@ public class Planet {
         currentLeader = leader;
     }
     #endregion
+
+    #region Actions
+    public void HandleDiplomacyAction(DiplomacyAction diplomacyAction) {
+        CurrencyType currencyToIncrease = diplomacyAction.CurrencyToIncrease;
+        CurrencyType currencyToDecrease = diplomacyAction.CurrencyToDecrease;
+    }
+    #endregion
 }

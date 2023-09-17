@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,35 @@ public class GameHandler {
 
     public void UpdatePlanetLeader(Planet planet, Leader leader) {
         leader.GainPlanetControl(planet);
+    }
+
+    public void ExecuteBotTurns() {
+        foreach (Leader leader in leaderHandler.leaders.Values) {
+            GameAction leaderAction = leader.MakeDecision();
+            switch (leaderAction) {
+                case DiplomacyAction diplomacy:
+                    HandleDiplomacyAction(diplomacy);
+                    break;
+                case EspionageAction espionage:
+                    HandleEspionageAction(espionage);
+                    break;
+                case TradeAction trade:
+                    HandleTradeAction(trade);
+                    break;
+            }
+        }
+    }
+
+    private void HandleDiplomacyAction(DiplomacyAction diplomacyAction) {
+        
+    }
+
+    private void HandleEspionageAction(EspionageAction espionageAction) {
+        throw new NotImplementedException("Espionage action is not implemented to be handled yet.");
+    }
+
+    private void HandleTradeAction(TradeAction tradeAction) {
+        throw new NotImplementedException("Trade action is not implemented to be handled yet.");
     }
 
     public string DEBUG_GetLeaderInfoString(string leaderName) {
