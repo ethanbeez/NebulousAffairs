@@ -8,18 +8,19 @@ using UnityEngine;
 public class GameHandler {
     LeaderHandler leaderHandler;
     PlanetHandler planetHandler;
-    public GameHandler() {
+
+    public GameHandler(int leadersPerPlanet) {
         planetHandler = new();
         leaderHandler = new();
 
         planetHandler.BuildRandomPlanets(12);
         leaderHandler.BuildRandomLeaders(6);
-        BuildConnections();
+        BuildConnections(leadersPerPlanet);
     }
 
-    public void BuildConnections() {
+    public void BuildConnections(int leadersPerPlanet) {
         BuildInfluenceProfiles();
-        BuildPlanetLeaders();
+        BuildPlanetLeaders(leadersPerPlanet);
     }
 
     public void BuildInfluenceProfiles() {
@@ -32,11 +33,11 @@ public class GameHandler {
         }
     }
 
-    public void BuildPlanetLeaders() {
+    public void BuildPlanetLeaders(int leadersPerPlanet) {
         List<Planet> planetList = planetHandler.planets.Values.ToList();
         int planetIndex = 0;
         foreach (Leader leader in leaderHandler.leaders.Values) {
-            while (leader.PlanetControlCount < 2) {
+            while (planetIndex < planetList.Count && leader.PlanetControlCount < 2) {
                 leader.SetPlanetInfluence(planetList[planetIndex].Name, 0.6f);
                 leader.GainPlanetControl(planetList[planetIndex++]);
             }

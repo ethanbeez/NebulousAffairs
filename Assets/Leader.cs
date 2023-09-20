@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using UnityEngine;
+using static TurnHandler;
 
 public class Leader {
 
@@ -43,8 +44,8 @@ public class Leader {
     #endregion
 
     #region Events
-    public delegate void GameActionHandler(GameAction action);
-    public event GameActionHandler? ActionOccurred;
+    public delegate void TurnChangeHandler(GameTurns gameTurns);
+    public event TurnChangeHandler? TurnChanged;
     #endregion
 
     #region Constructors & Builders
@@ -176,9 +177,9 @@ public class Leader {
         private float intelligencePriority;
         private List<Influence> planetPriorities;
 
-        public float AffluenceBias => affluenceBias;
-        public float PoliticsBias => politicsBias;
-        public float IntelligenceBias => intelligenceBias;
+        public float AffluenceRawBias => affluenceBias;
+        public float PoliticsRawBias => politicsBias;
+        public float IntellectRawBias => intelligenceBias;
 
         public float AffluencePriority => affluencePriority;
         public float PoliticsPriority => politicsPriority;
@@ -195,9 +196,6 @@ public class Leader {
             this.intelligenceBias = intelligenceBias;
 
             planetPriorities = new();
-            /*foreach (Influence influence in leader.influences.Values) {
-                planetPriorities.Add(influence);
-            }*/
         }
 
         public void AddNewPlanet(Influence influence) {

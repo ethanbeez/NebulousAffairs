@@ -2,13 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour {
+    public const int StartingPlanetsPerLeader = 2; 
     GameHandler gameHandler;
     TurnHandler turnHandler;
     // Start is called before the first frame update
     void Start() {
-        gameHandler = new();
+        gameHandler = new(StartingPlanetsPerLeader);
         turnHandler = new();
         turnHandler.TurnChanged += AdvanceTurn;
     }

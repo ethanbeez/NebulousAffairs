@@ -44,7 +44,7 @@ public class TradeAction : GameAction {
             return -1;
         }
 
-        return Mathf.Clamp(1 - leader.DecisionProfile.AffluenceBias - leader.DecisionProfile.AffluencePriority + additionalAdjustments, 0, 1);
+        return Mathf.Clamp(1 - leader.DecisionProfile.AffluenceRawBias - leader.DecisionProfile.AffluencePriority + additionalAdjustments, 0, 1);
     }
 
     public static float ComputeSpecificDecisionWeight(Leader originLeader, Leader targetLeader) {
@@ -74,7 +74,7 @@ public class DiplomacyAction : GameAction {
             return -1;
         }
 
-        return Mathf.Clamp(1 - leader.DecisionProfile.PoliticsBias - leader.DecisionProfile.PoliticsPriority + additionalAdjustments, 0, 1);
+        return Mathf.Clamp(1 - leader.DecisionProfile.PoliticsRawBias - leader.DecisionProfile.PoliticsPriority + additionalAdjustments, 0, 1);
     }
 
     public static float ComputeSpecificDecisionWeight() {
@@ -96,7 +96,7 @@ public class EspionageAction : GameAction {
             return -1;
         }
 
-        return Mathf.Clamp(1 - leader.DecisionProfile.IntelligenceBias - leader.DecisionProfile.IntelligencePriority + additionalAdjustments, 0, 1);
+        return Mathf.Clamp(1 - leader.DecisionProfile.IntellectRawBias - leader.DecisionProfile.IntelligencePriority + additionalAdjustments, 0, 1);
     }
 
     public static float ComputeSpecificDecisionWeight() {
