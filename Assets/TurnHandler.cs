@@ -12,6 +12,8 @@ public class TurnHandler {
     private GameTurns gameTurns;
     public delegate void TurnChangeHandler(GameTurns gameTurns);
     public event TurnChangeHandler? TurnChanged;
+    public delegate void ElectionOccurredHandler(GameTurns gameTurns, Election election);
+    public event ElectionOccurredHandler? ElectionOccurred;
     public TurnHandler(int turnLimit = 20, int startingYear = 3000, int yearsPerTurn = 50) { 
         gameTurns = new(startingYear: startingYear, yearsPerTurn: yearsPerTurn, turnLimit: turnLimit);
         this.turnLimit = turnLimit;

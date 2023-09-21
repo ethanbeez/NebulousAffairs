@@ -338,7 +338,7 @@ public class Influence {
         influenceValue = newInfluenceValue;
     }
     /// <summary>
-    /// Retruns true if this leader was already the leader of the planet.
+    /// Returns true if this leader was already the leader of the planet.
     /// </summary>
     public bool SetIsLeader(bool isLeader) {
         bool previousIsLeader = this.isLeader;
