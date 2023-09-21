@@ -149,6 +149,14 @@ public class Leader {
             planetControlCount++;
         }
     }
+
+    public void LosePlanetControl(Planet planet) {
+        bool wasLeader = influences[planet.Name].SetIsLeader(false);
+        if (wasLeader) {
+            controlledPlanets.Remove(planet.Name, out _);
+            planetControlCount--;
+        }
+    }
     #endregion
 
     public class LeaderDecisionProfile {
@@ -316,6 +324,7 @@ public class Influence {
     public string LeaderName => leader.Name;
     public string PlanetName => planet.Name;
     public Planet Planet => planet;
+    public Leader Leader => leader;
     public float InfluenceValue => influenceValue;
     public bool IsLeader => isLeader;
     #endregion

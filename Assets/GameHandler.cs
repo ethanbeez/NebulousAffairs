@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using UnityEngine;
 
 public class GameHandler {
@@ -39,6 +40,7 @@ public class GameHandler {
         foreach (Leader leader in leaderHandler.leaders.Values) {
             while (planetIndex < planetList.Count && leader.PlanetControlCount < 2) {
                 leader.SetPlanetInfluence(planetList[planetIndex].Name, 0.6f);
+                planetList[planetIndex].SetCurrentLeader(leader);
                 leader.GainPlanetControl(planetList[planetIndex++]);
             }
         }
@@ -64,6 +66,36 @@ public class GameHandler {
                     break;
             }
         }
+    }
+
+    public void ProcessElection(Election electionData) { 
+        foreach (Planet planet in planetHandler.planets.Values) {
+            electionData.DeterminePlanetElectionOutcome(planet);
+        }
+        foreach (KeyValuePair<string, Planet> gainedPlanet in electionData.GainedPlanetLeaders) {
+            leaderHandler.leaders[gainedPlanet.Key].GainPlanetControl(gainedPlanet.Value);
+        }
+        foreach (KeyValuePair<string, Planet> lostPlanet in electionData.LostPlanetLeaders) {
+            leaderHandler.leaders[lostPlanet.Key].LosePlanetControl(lostPlanet.Value);
+        }
+        
+        Dictionary<string, List<(Leader, float)>> ratios = Election.GetPlanetInfluenceRatios(planetHandler.planets.Values.ToList());
+        // TODO: FOLLOWING IS DEBUG ONLY!
+        StringBuilder sb = new();
+        foreach (KeyValuePair<string, List<(Leader, float)>> kvp in ratios) {
+            sb.Append(kvp.Key);
+            sb.Append(": ");
+            foreach ((Leader, float) leaderWeight in kvp.Value) {
+                sb.Append(leaderWeight.Item1.Name);
+                sb.Append("\t");
+                // sb.Append("(");
+                sb.Append(leaderWeight.Item2);
+                sb.Append("\n");
+                // sb.Append("), ");
+            }
+            sb.Append("\n");
+        }
+        Debug.Log(sb.ToString());
     }
 
     private void HandleDiplomacyAction(DiplomacyAction diplomacyAction) {

@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Planet {
@@ -28,6 +29,7 @@ public class Planet {
     public float AffluencePriority => affluencePriority;
     public float PoliticsPriority => politicsPriority;
     public float IntelligencePriority => intelligencePriority;
+    public Leader? CurrentLeader => currentLeader;
     #endregion
 
     #region Constructors
@@ -42,14 +44,18 @@ public class Planet {
         this.politicsYield = politicsYield;
         this.intelligenceYield = intelligenceYield;
         influences = new();
-        // Storing influences
-        /*foreach (Influence influence in influences) {
-            this.influences.Add(influence.LeaderName, influence);
-        }*/
     }
     #endregion
 
     #region Getters/Setters
+    public void SetCurrentLeader(Leader leader) {
+        this.currentLeader = leader;
+    }
+
+    public List<Influence> GetAllInfluences() {
+        return influences.Values.ToList();
+    }
+
     public Influence GetLeaderInfluence(string leaderName) {
         return influences[leaderName];
     }
@@ -68,10 +74,6 @@ public class Planet {
 
     public void SetIntelligenceYield(int intelligenceYield) {
         this.intelligenceYield = intelligenceYield;
-    }
-
-    public void SetCurrentLeader(Leader leader) {
-        currentLeader = leader;
     }
     #endregion
 

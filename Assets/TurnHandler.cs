@@ -8,14 +8,16 @@ public class TurnHandler {
     private int turnLimit; // TODO: Remove
     private int startingYear;
     private int yearsPerTurn;
+    private int turnsPerElection;
 
     private GameTurns gameTurns;
     public delegate void TurnChangeHandler(GameTurns gameTurns);
     public event TurnChangeHandler? TurnChanged;
     public delegate void ElectionOccurredHandler(GameTurns gameTurns, Election election);
     public event ElectionOccurredHandler? ElectionOccurred;
-    public TurnHandler(int turnLimit = 20, int startingYear = 3000, int yearsPerTurn = 50) { 
+    public TurnHandler(int turnLimit = 20, int startingYear = 3000, int yearsPerTurn = 50, int turnsPerElection = 5) { 
         gameTurns = new(startingYear: startingYear, yearsPerTurn: yearsPerTurn, turnLimit: turnLimit);
+        this.turnsPerElection = turnsPerElection;
         this.turnLimit = turnLimit;
         this.startingYear = startingYear;
         this.yearsPerTurn = yearsPerTurn;
@@ -23,6 +25,11 @@ public class TurnHandler {
 
     public void AdvanceTurn() {
         gameTurns.AdvanceTurn();
+        // TODO: Don't hardcode the -1; do something like gameTurns.CurrentTurn - starting turn to get a proper adaptable measure
+         if ((gameTurns.CurrentTurn - 1) % turnsPerElection == 0) {
+            ElectionOccurred?.Invoke(gameTurns, new Election(gameTurns.CurrentTurn - 1, gameTurns.CurrentYear - gameTurns.YearsPerTurn));
+            return;
+        }
         TurnChanged?.Invoke(gameTurns);
     }
 

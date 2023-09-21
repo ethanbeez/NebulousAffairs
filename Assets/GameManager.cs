@@ -13,11 +13,17 @@ public class GameManager : MonoBehaviour {
         gameHandler = new(StartingPlanetsPerLeader);
         turnHandler = new();
         turnHandler.TurnChanged += AdvanceTurn;
+        turnHandler.ElectionOccurred += AdvanceElectionTurn;
     }
 
     private void AdvanceTurn(TurnHandler.GameTurns gameTurns) {
         Debug.Log(gameTurns.ToString());
         gameHandler.ExecuteBotTurns(gameTurns);
+    }
+
+    private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
+        AdvanceTurn(gameTurns);
+        gameHandler.ProcessElection(electionData);
     }
 
     // Update is called once per frame
