@@ -7,11 +7,14 @@ using UnityEngine;
 
 public class Planet {
     private string name;
+    private static int nextPlanetID = 0;
+    private int id;
     #region Fields
     private int affluenceYield;
     private int politicsYield;
     private int intelligenceYield;
     private Leader? currentLeader;
+
 
     // Personality
     private float affluencePriority;
@@ -22,6 +25,7 @@ public class Planet {
 
     #region Properties
     public string Name => name;
+    public int ID => id;
     public int AffluenceYield => affluenceYield;
     public int PoliticsYield => politicsYield;
     public int IntelligenceYield => intelligenceYield;
@@ -35,6 +39,7 @@ public class Planet {
     #region Constructors
     public Planet(string name, float affluencePriority, float politicsPriority, float intelligencePriority, int affluenceYield = 1, int politicsYield = 1, int intelligenceYield = 1) {
         this.name = name;
+        id = nextPlanetID++;
         // Priorities
         this.affluencePriority = affluencePriority;
         this.politicsPriority = politicsPriority;
@@ -58,6 +63,10 @@ public class Planet {
 
     public Influence GetLeaderInfluence(string leaderName) {
         return influences[leaderName];
+    }
+
+    public float GetLeaderInfluenceValue(string leaderName) {
+        return GetLeaderInfluence(leaderName).InfluenceValue;
     }
 
     public void AddNewInfluence(Influence influence) {

@@ -50,6 +50,22 @@ public class GameHandler {
         leader.GainPlanetControl(planet);
     }
 
+    public List<Planet> GetPlanets() {
+        return planetHandler.planets.Values.ToList();
+    }
+
+    public Planet GetPlanet(string planetName) {
+        if (planetHandler.planets.TryGetValue(planetName, out Planet planet)) {
+            return planet;
+        }
+        Debug.LogError("GameHandler.GetPlanet failed to retrieve the planet with name " + planetName + "!");
+        throw new Exception();
+    }
+
+    public Planet GetPlanet(int planetID) {
+        throw new NotImplementedException();
+    }
+
     public void ExecuteBotTurns(TurnHandler.GameTurns gameTurns) {
         foreach (Leader leader in leaderHandler.leaders.Values) {
             leader.UpdatePriorities();
