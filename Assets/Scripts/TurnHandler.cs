@@ -76,4 +76,8 @@ public class TurnHandler {
         }
         #endregion
     }
+
+    public string GetCurrentTurnInfo() {
+        return gameTurns.ToString();
+    }
 }

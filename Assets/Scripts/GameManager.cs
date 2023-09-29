@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour {
         }
 
         GenerateNebula();
-
+        uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo());
         PlanetController.PlanetClicked += HandlePlanetClick;
         turnHandler.TurnChanged += AdvanceTurn;
         turnHandler.ElectionOccurred += AdvanceElectionTurn;
@@ -55,13 +55,14 @@ public class GameManager : MonoBehaviour {
         // clickedPlanet.GetLeaderInfluenceValue(clickedPlanet.CurrentLeader.Name); (the influence value of the current leader of the planet)
 
         // If you can, please write your UI code such that it is rendered via a UIController method. For example, if you can write this method, this would be great:
-        // uiController.RenderPlanetInfo(clickedPlanet)
+        uiController.RenderPlanetInfo(clickedPlanet, 1.2f);
         cameraController.StartFly(location, Quaternion.identity);
     }
 
     private void AdvanceTurn(TurnHandler.GameTurns gameTurns) {
         Debug.Log(gameTurns.ToString());
         gameHandler.ExecuteBotTurns(gameTurns);
+        uiController.updateTurnDisplay(gameTurns.ToString());
     }
 
     private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
