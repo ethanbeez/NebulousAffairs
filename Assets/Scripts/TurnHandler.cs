@@ -33,6 +33,10 @@ public class TurnHandler {
         TurnChanged?.Invoke(gameTurns);
     }
 
+    public string GetCurrentTurnInfo() {
+        return gameTurns.ToString();
+    }
+
     public struct GameTurns {
         #region Fields
         private int currentTurn;

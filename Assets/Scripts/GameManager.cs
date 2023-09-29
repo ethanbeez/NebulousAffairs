@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour {
         foreach (Planet planet in gameHandler.GetPlanets()) {
             planetsInfo.Add((planet.ID, planet.Name));
         }
-        nebulaController.InstantiatePlanets(planetsInfo);
+        // nebulaController.InstantiatePlanets(planetsInfo); // TODO: Uncomment, for planet orbit testing 9/29
     }
 
     private void HandlePlanetClick(int planetID, Vector3 location, string planetName) {
