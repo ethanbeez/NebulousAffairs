@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour {
     public AnimationCurve freeCamReturnCurve;
     public AnimationCurve flyToCurve;
+    public AnimationCurve flyToWarpCurve;
     private Vector3 freeCamStartMarker;
     public Vector3 freeCamEndMarker;
     public GameObject focusTarget;
@@ -35,6 +37,8 @@ public class CameraController : MonoBehaviour {
 
     public Vector3 planetClickCameraOffset = new();
 
+    public PostProcessVolume ppVolume;
+
     bool FreeCam { 
         get => freeCam;
         set {
@@ -46,6 +50,7 @@ public class CameraController : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+        ppVolume = GameObject.Find("PostProcessVolume").GetComponent<PostProcessVolume>();
         // planetClickCameraOffset = new();
         freeCamReturnComplete = true;
         flyToLocationComplete = true;
@@ -55,20 +60,6 @@ public class CameraController : MonoBehaviour {
     void Update() {
         if (Input.GetKeyDown(KeyCode.F)) {
             FreeCam = true;
-        } else if (Input.GetKeyDown(KeyCode.M)) {
-            /*FreeCam = false;
-            focusTarget = null;
-            freeCamReturnComplete = false;
-            startTime = Time.time;
-            freeCamStartMarker = transform.position;
-            freeCamEndMarker = mapCamLocation;
-            center = (freeCamStartMarker + freeCamEndMarker) * 0.5f;
-            center -= new Vector3(0, 1, 0);
-            freeCamStartMarker -= center;
-            freeCamEndMarker -= center;
-            // freeCamReturnLength = Vector3.Distance(freeCamStartMarker, freeCamEndMarker);
-
-            freeCamStartRotation = transform.rotation;*/
         }
 
         if (FreeCam) {
@@ -150,7 +141,7 @@ public class CameraController : MonoBehaviour {
     private void FlyToLocation() {
         // Debug.Log("Flying...");
         // float completion = (Time.time - startTime) / flyToTime;
-        float distanceRemaining = Vector3.Distance(transform.position, focusTarget.transform.position);
+        // float distanceRemaining = Vector3.Distance(transform.position, focusTarget.transform.position);
 
         float completion = ((Time.time - startTime) * speed) / startingDistance;
         // float completion = (transform.position - focusTarget.transform.position) / focusTarget.transform.position;
@@ -164,6 +155,7 @@ public class CameraController : MonoBehaviour {
         // transform.position = Vector3.MoveTowards(transform.position, focusTarget.transform.position, step);
         transform.position = Vector3.Slerp(flyToStartMarker, focusTarget.transform.position + planetClickCameraOffset, flyToCurve.Evaluate(completion));
         transform.rotation = Quaternion.Slerp(flyToStartRotation, focusTarget.transform.rotation, flyToCurve.Evaluate(completion));
+        // ppVolume.instance
         // transform.position += center; // TODO: why ):
     }
 
