@@ -189,7 +189,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6595625}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -379,7 +379,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &177323565
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1538,7 +1538,7 @@ GameObject:
   - component: {fileID: 1322153327}
   - component: {fileID: 1322153326}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Empires
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1583,7 +1583,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Leaders
+  m_text: Empires
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1673,7 +1673,7 @@ GameObject:
   - component: {fileID: 1586418430}
   - component: {fileID: 1586418429}
   m_Layer: 5
-  m_Name: LeaderButton
+  m_Name: EmpiresButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1697,7 +1697,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -20, y: -9.8810005}
-  m_SizeDelta: {x: 159, y: -22}
+  m_SizeDelta: {x: 90.3472, y: -22}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1586418429
 MonoBehaviour:
@@ -1874,9 +1874,9 @@ MonoBehaviour:
   planetScreen: {fileID: 6595628}
   planetName: {fileID: 1019473686}
   planetInfo: {fileID: 364817932}
-  planetPolitics: {fileID: 12148340}
-  planetWealth: {fileID: 491335219}
-  planetIntelligence: {fileID: 1274068303}
+  planetPoliticsPriority: {fileID: 12148340}
+  planetWealthPriority: {fileID: 491335219}
+  planetIntelligencePriority: {fileID: 1274068303}
 --- !u!4 &1796897788
 Transform:
   m_ObjectHideFlags: 0

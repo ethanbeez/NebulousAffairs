@@ -43,7 +43,7 @@ public class UIController : MonoBehaviour {
         mainScreen.enabled = false;
         planetName.text = clickedPlanet.Name;
         planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
-         planetIntelligencePriority.text = clickedPlanet.IntelligencePriority.ToString();
+        planetIntelligencePriority.text = clickedPlanet.IntelligencePriority.ToString();
         planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
         planetWealthPriority.text = clickedPlanet.PoliticsPriority.ToString();
 
