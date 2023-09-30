@@ -342,6 +342,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6a0057809f28ba47a40d2e797d8b05a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turnTransitionAnimCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.49781018
+      value: 0.9976415
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7473846
+      value: 1.0012456
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.99999994
+      value: 0.0023584906
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   planetMaterials:
   - {fileID: 2100000, guid: 014f99cf6e6eecc428732e51dc3fd72a, type: 2}
   - {fileID: 2100000, guid: 2ab33946529ffbe4d9e9985d52bb75de, type: 2}
@@ -352,17 +403,20 @@ MonoBehaviour:
   planetPrefab: {fileID: 4610384906330584056, guid: 49d6f83b96f7ec74589937f7bfbd4754, type: 3}
   starPrefab: {fileID: 3718561715850445905, guid: 98e04c31b281a5e48aaa536e391c4b3e, type: 3}
   blackHolePrefab: {fileID: 8455590484306682924, guid: b3a96da07fcbd1e48b3af93a2c4b8eca, type: 3}
+  planetGameObjects: []
+  starGameObjects: []
+  blackHole: {fileID: 0}
   galaxyDepth: -30
   blackHoleStarRadius: 20
   starPlanetMinRadius: 4
   starPlanetMaxRadius: 10
-  planetLocationLeftBound: -8
-  planetLocationRightBound: 12
-  planetLocationTopBound: 4
-  planetLocationBottomBound: -8
+  NextTurnAnimTimeElapsed: 0
+  TurnAnimSpeedModifier: 10
+  NextTurnAnimLength: 3
   planetLocationZ: 10
   planetsPerRow: 4
   planetsPerCol: 3
+  motionEnabled: 0
 --- !u!4 &829074426
 Transform:
   m_ObjectHideFlags: 0
@@ -472,6 +526,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -46.447, z: 0}
+--- !u!1 &1851303567
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1851303568}
+  - component: {fileID: 1851303569}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1851303568
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851303567}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -107.57213, y: -83.84297, z: 82.05426}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1851303569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851303567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca951374f088691409b0d0e3f09af204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1941853393
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,3 +670,4 @@ SceneRoots:
   - {fileID: 1702762554}
   - {fileID: 829074426}
   - {fileID: 1941853394}
+  - {fileID: 1851303568}

@@ -14,6 +14,12 @@ public class PlanetController : MonoBehaviour {
     private float startTime;
     private float centerOffset = -5;
 
+    public bool OrbitMotionEnabled { get; set; }
+    public float CurrentSpeed { get; private set; }
+    public float DefaultSpeed { get; set; }
+
+
+
     public string planetName;
     public int planetID;
     public delegate void PlanetClickHandler(int planetID, GameObject focusTarget, string planetName); // TODO: Both for simplicity; planetName likely removed later
@@ -30,11 +36,13 @@ public class PlanetController : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        randomOrbitSpeed = (Random.value * 15f) + 15f;
+        OrbitMotionEnabled = false;
+        randomOrbitSpeed = (Random.value * 5f);
+        DefaultSpeed += randomOrbitSpeed;
+        CurrentSpeed = DefaultSpeed;
         // orbitPhase = 0;
         // startTime = Time.time;
-        Vector3 starLocation = starController.StarLocation;
-        Debug.Log(starLocation);
+        // Vector3 starLocation = starController.StarLocation;
         // phase0Start = starLocation + new Vector3(0, 0, orbitRadius);
         // Debug.Log(phase0Start);
         // phase1Start = starLocation + new Vector3(orbitRadius, 0, 0);
@@ -43,20 +51,29 @@ public class PlanetController : MonoBehaviour {
         // this.transform.position = phase0Start;
     }
 
-    // Update is called once per frame
     void FixedUpdate() {
-        Vector3 normalized = radius * Vector3.Normalize(transform.position - starController.StarLocation) + starController.StarLocation;
-        transform.position = NebulaMath.RotateAroundBody(normalized, starController.StarLocation, Vector3.up, randomOrbitSpeed * Time.deltaTime);
-        // transform.RotateAround(starController.StarLocation, Vector3.up, 20 * Time.deltaTime);
+        // if (NebulaController.NextTurnAnimActive) UpdateNextTurnAnimStarSpeed(NebulaController.NextTurnAnimProgress);
+        // if (OrbitMotionEnabled) Orbit();
+    }
 
-        // Orbit();
+    public void SetCurrentSpeed(float speed) {
+        /*if (progress >= 1) {
+            CurrentSpeed = DefaultSpeed;
+            return;
+        }*/
+        CurrentSpeed = speed;
     }
 
     void OnMouseDown() {
         PlanetClicked?.Invoke(planetID, gameObject, planetName);
     }
 
-    // TODO: Semi-deprecated, remove if we don't fine-tuned control over paths
+    public void Orbit() {
+        Vector3 normalized = radius * Vector3.Normalize(transform.position - starController.StarLocation) + starController.StarLocation;
+        transform.position = NebulaMath.RotateAroundBody(normalized, starController.StarLocation, Vector3.up, CurrentSpeed * Time.deltaTime);
+    }
+
+    // TODO: Semi-deprecated, remove if we don't want fine-tuned control over paths
     /* void Orbit() {
         float phaseCompletion = (Time.time - startTime) / orbitPeriod;
         

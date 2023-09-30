@@ -11,26 +11,27 @@ public class TurnHandler {
     private int turnsPerElection;
 
     private GameTurns gameTurns;
-    public delegate void TurnChangeHandler(GameTurns gameTurns);
-    public event TurnChangeHandler? TurnChanged;
-    public delegate void ElectionOccurredHandler(GameTurns gameTurns, Election election);
-    public event ElectionOccurredHandler? ElectionOccurred;
+    // public delegate void TurnChangeHandler(GameTurns gameTurns);
+    // public event TurnChangeHandler? TurnChanged;
+    // public delegate void ElectionOccurredHandler(GameTurns gameTurns, Election election);
+    // public event ElectionOccurredHandler? ElectionOccurred;
     public TurnHandler(int turnLimit = 20, int startingYear = 3000, int yearsPerTurn = 50, int turnsPerElection = 5) { 
-        gameTurns = new(startingYear: startingYear, yearsPerTurn: yearsPerTurn, turnLimit: turnLimit);
+        gameTurns = new(startingYear: startingYear, yearsPerTurn: yearsPerTurn, turnLimit: turnLimit, turnsPerElection: turnsPerElection);
         this.turnsPerElection = turnsPerElection;
         this.turnLimit = turnLimit;
         this.startingYear = startingYear;
         this.yearsPerTurn = yearsPerTurn;
     }
 
-    public void AdvanceTurn() {
+    public GameTurns AdvanceTurn() {
         gameTurns.AdvanceTurn();
         // TODO: Don't hardcode the -1; do something like gameTurns.CurrentTurn - starting turn to get a proper adaptable measure
-         if ((gameTurns.CurrentTurn - 1) % turnsPerElection == 0) {
+        return gameTurns;
+        /*if ((gameTurns.CurrentTurn - 1) % turnsPerElection == 0) {
             ElectionOccurred?.Invoke(gameTurns, new Election(gameTurns.CurrentTurn - 1, gameTurns.CurrentYear - gameTurns.YearsPerTurn));
-            return;
+            return gameTurns;
         }
-        TurnChanged?.Invoke(gameTurns);
+        TurnChanged?.Invoke(gameTurns);*/
     }
 
     public string GetCurrentTurnInfo() {
@@ -45,6 +46,7 @@ public class TurnHandler {
         private int yearsPerTurn;
         private int turnLimit;
         private int yearLimit;
+        private int turnsPerElection;
         #endregion
 
         #region Properties
@@ -54,16 +56,23 @@ public class TurnHandler {
         public int YearsPerTurn => yearsPerTurn;
         public int TurnLimit => turnLimit;
         public int YearLimit => yearLimit;
+
+        public bool ElectionTurn {
+            get { 
+                return (currentTurn - 1) % turnsPerElection == 0; 
+            } 
+        }
         #endregion
 
         #region Constructors
-        public GameTurns(int currentTurn = 1, int startingYear = 3000, int yearsPerTurn = 1, int turnLimit = 20) { // No parameterless struct constructors in C#9, not ideal syntax ):
+        public GameTurns(int currentTurn = 1, int startingYear = 3000, int yearsPerTurn = 1, int turnLimit = 20, int turnsPerElection = 5) { // No parameterless struct constructors in C#9, not ideal syntax ):
             this.currentTurn = currentTurn;
             this.startingYear = startingYear;
             this.currentYear = startingYear;
             this.yearsPerTurn = yearsPerTurn;
             this.turnLimit = turnLimit;
             this.yearLimit = startingYear + (turnLimit * yearsPerTurn);
+            this.turnsPerElection = turnsPerElection;
         }
         #endregion
 

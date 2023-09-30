@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using static TurnHandler;
 
 public class GameManager : MonoBehaviour {
     public const int NumLeaders = 6;
@@ -27,14 +28,30 @@ public class GameManager : MonoBehaviour {
         }
 
         GenerateNebula();
+        InputManager.MPressed += CameraToMapPosition;
+        InputManager.SPressed += ToggleNebulaOrbits;
+        InputManager.TPressed += ToggleGalaxyMotionTrails;
 
+        InputManager.SpacePressed += HandleTurnAdvancement;
         PlanetController.PlanetClicked += HandlePlanetClick;
-        turnHandler.TurnChanged += AdvanceTurn;
-        turnHandler.ElectionOccurred += AdvanceElectionTurn;
+        // turnHandler.TurnChanged += AdvanceTurn;
+        // turnHandler.ElectionOccurred += AdvanceElectionTurn;
+    }
+
+    private void ToggleGalaxyMotionTrails() {
+        nebulaController.ToggleGalaxyMotionTrails();
     }
 
     private void GenerateNebula() {
         GeneratePlanets();
+    }
+
+    private void CameraToMapPosition() {
+        cameraController.StartMapFly();
+    }
+
+    private void ToggleNebulaOrbits() {
+        nebulaController.ToggleNebulaMotion();
     }
 
     private void GeneratePlanets() {
@@ -60,15 +77,20 @@ public class GameManager : MonoBehaviour {
         cameraController.StartFly(focusTarget);
     }
 
-    private void AdvanceTurn(TurnHandler.GameTurns gameTurns) {
-        Debug.Log(gameTurns.ToString());
-        gameHandler.ExecuteBotTurns(gameTurns);
+    private void HandleTurnAdvancement() {
+        nebulaController.StartTurnTransitionAnim();
+        TurnHandler.GameTurns gameTurnInfo = turnHandler.AdvanceTurn();
+        gameHandler.ExecuteBotTurns(gameTurnInfo);
+        if (gameTurnInfo.ElectionTurn) {
+            Election election = new(gameTurnInfo.CurrentTurn - 1, gameTurnInfo.CurrentYear - gameTurnInfo.YearsPerTurn);
+            gameHandler.ProcessElection(election);
+        }
     }
 
-    private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
+    /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
         AdvanceTurn(gameTurns);
         gameHandler.ProcessElection(electionData);
-    }
+    }*/
 
     // Update is called once per frame
     void Update() {

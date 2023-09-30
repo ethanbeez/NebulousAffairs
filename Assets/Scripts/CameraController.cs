@@ -56,7 +56,7 @@ public class CameraController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.F)) {
             FreeCam = true;
         } else if (Input.GetKeyDown(KeyCode.M)) {
-            FreeCam = false;
+            /*FreeCam = false;
             focusTarget = null;
             freeCamReturnComplete = false;
             startTime = Time.time;
@@ -68,7 +68,7 @@ public class CameraController : MonoBehaviour {
             freeCamEndMarker -= center;
             // freeCamReturnLength = Vector3.Distance(freeCamStartMarker, freeCamEndMarker);
 
-            freeCamStartRotation = transform.rotation;
+            freeCamStartRotation = transform.rotation;*/
         }
 
         if (FreeCam) {
@@ -85,6 +85,22 @@ public class CameraController : MonoBehaviour {
                 transform.position = focusTarget.transform.position + planetClickCameraOffset;
             }
         }
+    }
+
+    public void StartMapFly() {
+        FreeCam = false;
+        focusTarget = null;
+        freeCamReturnComplete = false;
+        startTime = Time.time;
+        freeCamStartMarker = transform.position;
+        freeCamEndMarker = mapCamLocation;
+        center = (freeCamStartMarker + freeCamEndMarker) * 0.5f;
+        center -= new Vector3(0, 1, 0);
+        freeCamStartMarker -= center;
+        freeCamEndMarker -= center;
+        // freeCamReturnLength = Vector3.Distance(freeCamStartMarker, freeCamEndMarker);
+
+        freeCamStartRotation = transform.rotation;
     }
 
     void FlyToMapPosition() {
