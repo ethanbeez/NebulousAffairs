@@ -157,10 +157,10 @@ RectTransform:
   - {fileID: 1502919592}
   m_Father: {fileID: 983734752}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 233.38098}
-  m_SizeDelta: {x: 0, y: -466.762}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -25}
+  m_SizeDelta: {x: 800, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &165946633
 MonoBehaviour:
@@ -234,7 +234,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -253, y: -187}
+  m_AnchoredPosition: {x: -280, y: -187}
   m_SizeDelta: {x: 57.3749, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &299810677
@@ -368,7 +368,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -90, y: -187}
+  m_AnchoredPosition: {x: -197, y: -187}
   m_SizeDelta: {x: 57.3749, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &311829939
@@ -810,7 +810,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 69.05
+  m_fontSize: 23.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1075,7 +1075,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1180,7 +1180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1573,7 +1573,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1896,7 +1896,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -407.31256, y: -187}
+  m_AnchoredPosition: {x: -361, y: -187}
   m_SizeDelta: {x: 57.3749, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1766667516
@@ -2084,14 +2084,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5674e2afb1f2e64cbe6134c97999b1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScreen: {fileID: 0}
-  turnDisplay: {fileID: 0}
-  planetScreen: {fileID: 0}
-  planetName: {fileID: 0}
-  planetInfo: {fileID: 0}
-  planetPoliticsPriority: {fileID: 0}
-  planetWealthPriority: {fileID: 0}
-  planetIntelligencePriority: {fileID: 0}
+  mainScreen: {fileID: 983734751}
+  turnDisplay: {fileID: 665203800}
+  planetScreen: {fileID: 860152197}
+  planetName: {fileID: 1586075936}
+  planetInfo: {fileID: 2098303138}
+  planetPoliticsPriority: {fileID: 1766667516}
+  planetWealthPriority: {fileID: 299810677}
+  planetIntelligencePriority: {fileID: 311829939}
 --- !u!1 &1970983656
 GameObject:
   m_ObjectHideFlags: 0
@@ -2173,7 +2173,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000047683716, y: -128}
+  m_AnchoredPosition: {x: 0.0000038146973, y: -128}
   m_SizeDelta: {x: 208.0253, y: 82.1012}
   m_Pivot: {x: 0.5, y: 0.49999994}
 --- !u!114 &2098303138
@@ -2259,7 +2259,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -74.23389, y: 0, z: -72.58496, w: 0}
+  m_margin: {x: -27.001541, y: 0, z: -24.227936, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
