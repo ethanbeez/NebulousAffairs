@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour {
+    public const int NumLeaders = 6;
     public const int StartingPlanetsPerLeader = 2; 
     private GameHandler gameHandler;
     private TurnHandler turnHandler;
@@ -41,10 +42,10 @@ public class GameManager : MonoBehaviour {
         foreach (Planet planet in gameHandler.GetPlanets()) {
             planetsInfo.Add((planet.ID, planet.Name));
         }
-        // nebulaController.InstantiatePlanets(planetsInfo); // TODO: Uncomment, for planet orbit testing 9/29
+        nebulaController.InstantiateNebula(NumLeaders, StartingPlanetsPerLeader, planetsInfo);
     }
 
-    private void HandlePlanetClick(int planetID, Vector3 location, string planetName) {
+    private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
         // ORION: Insert logic that renders UI that pops up when a planet is clicked here.
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
 
@@ -56,7 +57,7 @@ public class GameManager : MonoBehaviour {
 
         // If you can, please write your UI code such that it is rendered via a UIController method. For example, if you can write this method, this would be great:
         // uiController.RenderPlanetInfo(clickedPlanet)
-        cameraController.StartFly(location, Quaternion.identity);
+        cameraController.StartFly(focusTarget);
     }
 
     private void AdvanceTurn(TurnHandler.GameTurns gameTurns) {
