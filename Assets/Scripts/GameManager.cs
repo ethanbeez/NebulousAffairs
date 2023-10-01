@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour {
 
     private void CameraToMapPosition() {
         cameraController.StartMapFly();
+        uiController.RenderMainScene();
     }
 
     private void ToggleNebulaOrbits() {
