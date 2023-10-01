@@ -31,12 +31,17 @@ public class GameManager : MonoBehaviour {
         InputManager.MPressed += CameraToMapPosition;
         InputManager.SPressed += ToggleNebulaOrbits;
         InputManager.TPressed += ToggleGalaxyMotionTrails;
+        InputManager.EscapePressed += QuitGame;
 
         InputManager.SpacePressed += HandleTurnAdvancement;
         uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo());
         PlanetController.PlanetClicked += HandlePlanetClick;
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
+    }
+
+    private void QuitGame() {
+        Application.Quit();
     }
 
     private void ToggleGalaxyMotionTrails() {

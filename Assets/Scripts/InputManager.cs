@@ -18,6 +18,9 @@ public class InputManager : MonoBehaviour {
     public delegate void TPressHandler();
     public static event TPressHandler? TPressed;
 
+    public delegate void EscapePressHandler();
+    public static event EscapePressHandler? EscapePressed;
+
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             SpacePressed?.Invoke();
@@ -25,8 +28,10 @@ public class InputManager : MonoBehaviour {
             MPressed?.Invoke();
         } else if (Input.GetKeyDown(KeyCode.S)) {
             SPressed?.Invoke();
-        } else if (Input.GetKeyDown(KeyCode.T)) { 
+        } else if (Input.GetKeyDown(KeyCode.T)) {
             TPressed?.Invoke();
+        } else if (Input.GetKeyDown(KeyCode.Escape)) { 
+            EscapePressed?.Invoke();
         }
     }
 }
