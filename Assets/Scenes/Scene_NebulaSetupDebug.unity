@@ -1007,7 +1007,7 @@ MonoBehaviour:
   starPlanetMinRadius: 6
   starPlanetMaxRadius: 15
   NextTurnAnimTimeElapsed: 0
-  TurnAnimSpeedModifier: 10
+  TurnAnimSpeedModifier: 20
   planetLocationZ: 30
   planetsPerRow: 4
   planetsPerCol: 3

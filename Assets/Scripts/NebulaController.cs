@@ -121,7 +121,7 @@ public class NebulaController : MonoBehaviour {
             starController.blackHoleController = blackHoleInstance.GetComponent<BlackHoleController>();
             starInstance.transform.position = new Vector3(Mathf.Cos(currentAngle) * blackHoleStarRadius, galaxyDepth, Mathf.Sin(currentAngle) * blackHoleStarRadius);
             starController.Radius = blackHoleStarRadius; // TODO: Don't hardcode these
-            starController.DefaultSpeed = 0.5f;
+            starController.DefaultSpeed = 0.05f;
             List<(int ID, string name)> planetsForCurrentStar = planetsInfo.GetRange(currentPlanetListIndex, planetsPerSystem);
             InstantiateSystems(starInstance, planetsForCurrentStar, ref planetMaterialIndex);
             currentPlanetListIndex += planetsPerSystem;
@@ -155,7 +155,7 @@ public class NebulaController : MonoBehaviour {
             trailRenderer.endColor = new(planetMaterialColor.r, planetMaterialColor.g, planetMaterialColor.b, 0);
             radiusFromStar = starPlanetMinRadius + (i * radiusIncrement);
             planetController.radius = radiusFromStar;
-            planetController.DefaultSpeed = 5f;
+            planetController.DefaultSpeed = 0.3f;
             planetInstance.transform.position = starInstance.transform.position + new Vector3(Mathf.Cos(currentAngle) * radiusFromStar, 0, Mathf.Sin(currentAngle) * radiusFromStar);
 
             planetGameObjects.Add(planetInstance);
