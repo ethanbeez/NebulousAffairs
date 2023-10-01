@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour {
         // clickedPlanet.GetLeaderInfluenceValue(clickedPlanet.CurrentLeader.Name); (the influence value of the current leader of the planet)
 
         // If you can, please write your UI code such that it is rendered via a UIController method. For example, if you can write this method, this would be great:
-        uiController.RenderPlanetInfo(clickedPlanet, 1.2f);
+        uiController.RenderPlanetInfo(clickedPlanet, 2f);
         // uiController.RenderPlanetInfo(clickedPlanet)
         cameraController.StartFly(focusTarget);
     }
@@ -98,10 +98,6 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            turnHandler.AdvanceTurn();
-        }
-
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             Debug.Log(gameHandler.DEBUG_GetLeaderInfoString("Leader 1"));
         }

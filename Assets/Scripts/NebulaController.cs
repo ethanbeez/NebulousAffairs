@@ -15,10 +15,10 @@ public class NebulaController : MonoBehaviour {
     public List<GameObject> planetGameObjects;
     public List<GameObject> starGameObjects;
     public GameObject blackHole;
-    public float galaxyDepth = -5f;
-    public float blackHoleStarRadius = 20f;
-    public float starPlanetMinRadius = 4f;
-    public float starPlanetMaxRadius = 8f;
+    public float galaxyDepth = -30f;
+    public float blackHoleStarRadius = 30f;
+    public float starPlanetMinRadius = 6f;
+    public float starPlanetMaxRadius = 20f;
 
     public float NextTurnAnimTimeElapsed;
     public float TurnAnimSpeedModifier = 2f; // 200%
@@ -120,11 +120,12 @@ public class NebulaController : MonoBehaviour {
             StarController starController = starInstance.GetComponent<StarController>();
             starController.blackHoleController = blackHoleInstance.GetComponent<BlackHoleController>();
             starInstance.transform.position = new Vector3(Mathf.Cos(currentAngle) * blackHoleStarRadius, galaxyDepth, Mathf.Sin(currentAngle) * blackHoleStarRadius);
-            starController.Radius = 15f; // TODO: Don't hardcode these
+            starController.Radius = blackHoleStarRadius; // TODO: Don't hardcode these
             starController.DefaultSpeed = 0.5f;
-            List<(int ID, string name)> planetsForCurrentStar = planetsInfo.GetRange(0, planetsPerSystem);
+            List<(int ID, string name)> planetsForCurrentStar = planetsInfo.GetRange(currentPlanetListIndex, planetsPerSystem);
             InstantiateSystems(starInstance, planetsForCurrentStar, ref planetMaterialIndex);
-            currentPlanetListIndex += systemsCount;
+            currentPlanetListIndex += planetsPerSystem;
+            // Debug.Log(currentPlanetListIndex);
 
             starGameObjects.Add(starInstance);
         }

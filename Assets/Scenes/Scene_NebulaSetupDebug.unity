@@ -1003,12 +1003,12 @@ MonoBehaviour:
   starGameObjects: []
   blackHole: {fileID: 0}
   galaxyDepth: -30
-  blackHoleStarRadius: 20
-  starPlanetMinRadius: 4
-  starPlanetMaxRadius: 10
+  blackHoleStarRadius: 25
+  starPlanetMinRadius: 6
+  starPlanetMaxRadius: 15
   NextTurnAnimTimeElapsed: 0
   TurnAnimSpeedModifier: 10
-  planetLocationZ: 10
+  planetLocationZ: 30
   planetsPerRow: 4
   planetsPerCol: 3
   motionEnabled: 0
