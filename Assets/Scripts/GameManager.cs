@@ -80,8 +80,12 @@ public class GameManager : MonoBehaviour {
         // clickedPlanet.GetLeaderInfluenceValue(clickedPlanet.CurrentLeader.Name); (the influence value of the current leader of the planet)
 
         // If you can, please write your UI code such that it is rendered via a UIController method. For example, if you can write this method, this would be great:
-        uiController.RenderPlanetInfo(clickedPlanet, 2f);
-        // uiController.RenderPlanetInfo(clickedPlanet)
+        uiController.RenderPlanetInfo(clickedPlanet, 3.4f);
+
+        // 10/3: The following method will give you a sorted list of the proportional influence values on a planet:
+        gameHandler.GetPlanetInfluenceRatios(planetName);
+        // Use the returned list to do your pie chart work!
+
         cameraController.StartFly(focusTarget);
     }
 
