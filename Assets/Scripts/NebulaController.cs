@@ -147,9 +147,9 @@ public class NebulaController : MonoBehaviour {
             planetController.starController = starInstance.GetComponent<StarController>();
 
             Material nextPlanetMaterial = planetMaterials[planetMaterialIndex++ % planetMaterials.Count];
-            planetInstance.GetComponent<Renderer>().material = nextPlanetMaterial;
+
             TrailRenderer trailRenderer = planetInstance.GetComponent<TrailRenderer>();
-            // trailRenderer.material = nextPlanetMaterial;
+            trailRenderer.material = nextPlanetMaterial;
             Color planetMaterialColor = nextPlanetMaterial.color;
             trailRenderer.startColor = new(planetMaterialColor.r, planetMaterialColor.g, planetMaterialColor.b, 0.4f);
             trailRenderer.endColor = new(planetMaterialColor.r, planetMaterialColor.g, planetMaterialColor.b, 0);

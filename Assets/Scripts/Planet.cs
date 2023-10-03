@@ -122,8 +122,8 @@ public class Planet {
                 break;
         }
 
-        float potentialIncreasePoints = 0.2f; // TODO: Don't hardcode these!
-        float potentialDecreasePoints = -0.05f;
+        float potentialIncreasePoints = 0.6f; // TODO: Don't hardcode these!
+        float potentialDecreasePoints = -0.3f;
 
         float actualIncreasePoints = potentialIncreasePoints * currencyIncreasePriority;
         float actualDecreasePoints = potentialDecreasePoints * currencyDecreasePriority;

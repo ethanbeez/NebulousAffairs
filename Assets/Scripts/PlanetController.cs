@@ -52,6 +52,7 @@ public class PlanetController : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        transform.Rotate(0f, 0.04f, 0, Space.Self);
         // if (NebulaController.NextTurnAnimActive) UpdateNextTurnAnimStarSpeed(NebulaController.NextTurnAnimProgress);
         // if (OrbitMotionEnabled) Orbit();
     }

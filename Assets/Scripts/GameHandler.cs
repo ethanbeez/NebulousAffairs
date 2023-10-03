@@ -22,6 +22,7 @@ public class GameHandler {
     public void BuildConnections(int leadersPerPlanet) {
         BuildInfluenceProfiles();
         BuildPlanetLeaders(leadersPerPlanet);
+        BuildInitialPriorities();
     }
 
     public void BuildInfluenceProfiles() {
@@ -43,6 +44,12 @@ public class GameHandler {
                 planetList[planetIndex].SetCurrentLeader(leader);
                 leader.GainPlanetControl(planetList[planetIndex++]);
             }
+        }
+    }
+
+    public void BuildInitialPriorities() {
+        foreach (Leader leader in leaderHandler.leaders.Values) {
+            leader.UpdatePlanetPriorities();
         }
     }
 
@@ -68,34 +75,45 @@ public class GameHandler {
 
     public void ExecuteBotTurns(TurnHandler.GameTurns gameTurns) {
         foreach (Leader leader in leaderHandler.leaders.Values) {
-            leader.UpdatePriorities();
-            GameAction leaderAction = leader.MakeDecision();
-            switch (leaderAction) {
-                case DiplomacyAction diplomacy:
-                    HandleDiplomacyAction(diplomacy);
-                    break;
-                case EspionageAction espionage:
-                    HandleEspionageAction(espionage);
-                    break;
-                case TradeAction trade:
-                    HandleTradeAction(trade);
-                    break;
+            leader.UpdateYieldPriorities();
+            if (gameTurns.ElectionTurn) leader.UpdatePlanetPriorities();
+            for (int i = 0; i < 3; i++) {
+                GameAction leaderAction = leader.MakeDecision();
+                switch (leaderAction) {
+                    case DiplomacyAction diplomacy:
+                        HandleDiplomacyAction(diplomacy);
+                        break;
+                    case EspionageAction espionage:
+                        HandleEspionageAction(espionage);
+                        break;
+                    case TradeAction trade:
+                        HandleTradeAction(trade);
+                        break;
+                }
             }
         }
+    }
+
+    public List<(Leader, float)> GetPlanetInfluenceRatios(string planetName) {
+        return Election.GetPlanetInfluenceRatios(planetHandler.planets[planetName]);
     }
 
     public void ProcessElection(Election electionData) { 
         foreach (Planet planet in planetHandler.planets.Values) {
             electionData.DeterminePlanetElectionOutcome(planet);
         }
-        foreach (KeyValuePair<string, Planet> gainedPlanet in electionData.GainedPlanetLeaders) {
-            leaderHandler.leaders[gainedPlanet.Key].GainPlanetControl(gainedPlanet.Value);
+        foreach (KeyValuePair<string, HashSet<Planet>> gainedPlanets in electionData.GainedPlanetLeaders) {
+            foreach (Planet gainedPlanet in gainedPlanets.Value) {
+                leaderHandler.leaders[gainedPlanets.Key].GainPlanetControl(gainedPlanet);
+            }
         }
-        foreach (KeyValuePair<string, Planet> lostPlanet in electionData.LostPlanetLeaders) {
-            leaderHandler.leaders[lostPlanet.Key].LosePlanetControl(lostPlanet.Value);
+        foreach (KeyValuePair<string, HashSet<Planet>> lostPlanets in electionData.LostPlanetLeaders) {
+            foreach (Planet lostPlanet in lostPlanets.Value) {
+                leaderHandler.leaders[lostPlanets.Key].LosePlanetControl(lostPlanet);
+            }
         }
         
-        Dictionary<string, List<(Leader, float)>> ratios = Election.GetPlanetInfluenceRatios(planetHandler.planets.Values.ToList());
+        Dictionary<string, List<(Leader, float)>> ratios = Election.GetPlanetsInfluenceRatios(planetHandler.planets.Values.ToList());
         // TODO: FOLLOWING IS DEBUG ONLY!
         StringBuilder sb = new();
         foreach (KeyValuePair<string, List<(Leader, float)>> kvp in ratios) {
@@ -104,10 +122,8 @@ public class GameHandler {
             foreach ((Leader, float) leaderWeight in kvp.Value) {
                 sb.Append(leaderWeight.Item1.Name);
                 sb.Append("\t");
-                // sb.Append("(");
                 sb.Append(leaderWeight.Item2);
                 sb.Append("\n");
-                // sb.Append("), ");
             }
             sb.Append("\n");
         }

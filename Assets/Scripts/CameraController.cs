@@ -154,7 +154,8 @@ public class CameraController : MonoBehaviour {
         // float step = 5f * Time.deltaTime;
         // transform.position = Vector3.MoveTowards(transform.position, focusTarget.transform.position, step);
         transform.position = Vector3.Slerp(flyToStartMarker, focusTarget.transform.position + planetClickCameraOffset, flyToCurve.Evaluate(completion));
-        transform.rotation = Quaternion.Slerp(flyToStartRotation, focusTarget.transform.rotation, flyToCurve.Evaluate(completion));
+        // Debug.Log(focusTarget.transform.rotation);
+        transform.rotation = Quaternion.Slerp(flyToStartRotation, new(0, 0, 0, 1), flyToCurve.Evaluate(completion));
         // ppVolume.instance
         // transform.position += center; // TODO: why ):
     }
