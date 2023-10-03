@@ -6,12 +6,12 @@ using UnityEngine.UIElements;
 public class PieChart : VisualElement
 {
     float m_Radius = 100.0f;
-    public float m_Leader1 = 16.6666666f;
-    public float m_Leader2 = 16.6666666f;
-    public float m_Leader3 = 16.6666666f;
-    public float m_Leader4 = 16.6666666f;
-    public float m_Leader5 = 16.6666666f;
-    public float m_Leader6 = 16.6666666f;
+    public float leader1 = 0f;
+    public float leader2 = 0f;
+    public float leader3 = 0f;
+    public float leader4 = 0f;
+    public float leader5 = 0f;
+    public float leader6 = 0f;
 
     public float radius{
         get => m_Radius;
@@ -28,28 +28,29 @@ public class PieChart : VisualElement
         generateVisualContent += DrawCanvas;
     }
 
+    //has issues with having only 1 leader inside
     void DrawCanvas(MeshGenerationContext ctx) {
         var painter = ctx.painter2D;
         painter.strokeColor = Color.white;
         painter.fillColor = Color.white;
         
         var percentages = new float[] {
-            m_Leader1, m_Leader2, m_Leader3, m_Leader4, m_Leader5, m_Leader6
+            leader1, leader2, leader3, leader4, leader5, leader6
         };
         var colors = new Color32[] {
-            new Color32(182, 235, 122, 255),
-            new Color32(251, 120, 19, 255),
-            new Color32(182, 235, 122, 255),
-            new Color32(251, 120, 19, 255),
-            new Color32(182, 235, 122, 255),
-            new Color32(251, 120, 19, 255)
+            new Color32(93, 97, 196, 255),
+            new Color32(115, 202, 194, 255),
+            new Color32(247, 252, 246, 255),
+            new Color32(236, 117, 113, 255),
+            new Color32(248, 229, 126, 255),
+            new Color32(0, 0, 0, 255)
         };
         float angle = 0.0f;
         float anglePct = 0.0f;
         int k = 0;
         foreach (var pct in percentages)
         {
-            anglePct += 360.0f * (pct / 100);
+            anglePct += pct * 360;
 
             painter.fillColor = colors[k++];
             painter.BeginPath();

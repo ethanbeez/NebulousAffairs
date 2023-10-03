@@ -71,24 +71,7 @@ public class GameManager : MonoBehaviour {
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
-<<<<<<< HEAD
-        uiController.RenderPlanetInfo(clickedPlanet, 2f);
-=======
-
-        // Below are some example calls for getting Planet information.
-        // clickedPlanet.AffluenceYield, clickedPlanet.IntelligenceYield, clickedPlanet.PoliticsYield (per turn yield values)
-        // clickedPlanet.AffluencePriority, clickedPlanet.IntelligencePriority, clickedPlanet.PoliticsPriority (how much they like each yield)
-        // clickedPlanet.CurrentLeader.Name; (the name of the current leader of the planet)
-        // clickedPlanet.GetLeaderInfluenceValue(clickedPlanet.CurrentLeader.Name); (the influence value of the current leader of the planet)
-
-        // If you can, please write your UI code such that it is rendered via a UIController method. For example, if you can write this method, this would be great:
-        uiController.RenderPlanetInfo(clickedPlanet, 3.4f);
-
-        // 10/3: The following method will give you a sorted list of the proportional influence values on a planet:
-        gameHandler.GetPlanetInfluenceRatios(planetName);
-        // Use the returned list to do your pie chart work!
-
->>>>>>> main
+        uiController.RenderPlanetInfo(clickedPlanet, 2f, gameHandler.GetPlanetInfluenceRatios(planetName));
         cameraController.StartFly(focusTarget);
     }
 

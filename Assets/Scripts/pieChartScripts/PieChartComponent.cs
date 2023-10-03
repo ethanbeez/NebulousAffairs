@@ -6,10 +6,10 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class PieChartComponent : MonoBehaviour
 {
-    PieChart m_PieChart;
+    public PieChart pieChart;
 
     void Start() {
-        m_PieChart = new PieChart();
-        GetComponent<UIDocument>().rootVisualElement.Add(m_PieChart);
+        pieChart = new PieChart();
+        GetComponent<UIDocument>().rootVisualElement.Add(pieChart);
     }
 }

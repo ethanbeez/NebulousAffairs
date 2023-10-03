@@ -6,6 +6,9 @@ using TMPro;
 using System.Runtime.InteropServices;
 using System;
 using UnityEngine.UI;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine.UIElements;
 
 public class UIController : MonoBehaviour {
 
@@ -22,11 +25,15 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetPoliticsPriority;
     [SerializeField] TextMeshProUGUI planetWealthPriority;
     [SerializeField] TextMeshProUGUI planetIntelligencePriority;
+    PieChart pieChart;
+    [SerializeField] UIDocument pieChartDoc;
     
 
     //Gets the GameHandler from the GameManager on wakeup
-    void Awake() {
+    void Start() {
         gameHandler = FindObjectOfType<GameManager>();
+        pieChart = FindObjectOfType<PieChartComponent>().pieChart;
+        pieChartDoc.rootVisualElement.style.display = DisplayStyle.None;
     }
 
     //Renders the Main Scene
@@ -47,7 +54,7 @@ public class UIController : MonoBehaviour {
     }
 
     //Renders the PlanetInfo Screen
-    public void RenderPlanetInfo(Planet clickedPlanet, float delayTime) {
+    public void RenderPlanetInfo(Planet clickedPlanet, float delayTime, List<(Leader, float)> influenceRatios) {
         DerenderPanels();
         planetName.text = clickedPlanet.Name;
         planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
@@ -55,18 +62,47 @@ public class UIController : MonoBehaviour {
         planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
         planetWealthPriority.text = clickedPlanet.PoliticsPriority.ToString();
 
+        //this is about to be the world's shnastiest code
+        foreach((Leader, float) influenceRatio in influenceRatios) {
+            string leaderName = influenceRatio.Item1.Name;
+            switch(leaderName) {
+                case "Leader 1":
+                    pieChart.leader1 = influenceRatio.Item2;
+                    break;
+                case "Leader 2":
+                    pieChart.leader2 = influenceRatio.Item2;
+                    break;
+                case "Leader 3":
+                    pieChart.leader3 = influenceRatio.Item2;
+                    break;
+                case "Leader 4":
+                    pieChart.leader4 = influenceRatio.Item2;
+                    break;
+                case "Leader 5":
+                    pieChart.leader5 = influenceRatio.Item2;
+                    break;
+                case "Leader 6":
+                    pieChart.leader2 = influenceRatio.Item2;
+                    break;
+            }
+
+        }
+
+
         Invoke("RenderPlanet", delayTime);
     }
 
     //Delayed method for RenderPlanetInfo
     private void RenderPlanet() {
         planetScreen.enabled = true;
+        pieChartDoc.rootVisualElement.style.display = DisplayStyle.Flex;
     }
 
     //Derenders all active panels
     private void DerenderPanels() {
         mainScreen.enabled = false;
         planetScreen.enabled = false;
+        pieChartDoc.rootVisualElement.style.display = DisplayStyle.None;
     }
 
     //Needs some shit to work first
