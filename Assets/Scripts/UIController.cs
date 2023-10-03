@@ -29,18 +29,26 @@ public class UIController : MonoBehaviour {
         gameHandler = FindObjectOfType<GameManager>();
     }
 
-    public void RenderMainScene(){
-        mainScreen.enabled = true;
-        planetScreen.enabled = false;
+    //Renders the Main Scene
+    public void RenderMainScene(float delayTime){
+        DerenderPanels();
+        Invoke("RenderMain", delayTime);
     }
+
+    //Helper method for RenderMainScene(), used to add a delay time to the Render
+    private void RenderMain() {
+        mainScreen.enabled = true;
+    }
+
 
     //Updates the TurnDisplay to a given String - the expected String is TurnHandler's GameTurns toString.
     public void updateTurnDisplay(String currentTurn) {
         turnDisplay.text = currentTurn;
     }
 
+    //Renders the PlanetInfo Screen
     public void RenderPlanetInfo(Planet clickedPlanet, float delayTime) {
-        mainScreen.enabled = false;
+        DerenderPanels();
         planetName.text = clickedPlanet.Name;
         planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
         planetIntelligencePriority.text = clickedPlanet.IntelligencePriority.ToString();
@@ -50,12 +58,28 @@ public class UIController : MonoBehaviour {
         Invoke("RenderPlanet", delayTime);
     }
 
+    //Delayed method for RenderPlanetInfo
     private void RenderPlanet() {
         planetScreen.enabled = true;
     }
 
+    //Derenders all active panels
+    private void DerenderPanels() {
+        mainScreen.enabled = false;
+        planetScreen.enabled = false;
+    }
 
-
+    //Needs some shit to work first
+    public void RenderLeaderInfo(Leader leader){
+        /*
+            Process for Rendering Leader Info:
+            Create an Event that represents whether a button has been clicked or not
+            Update that event when a button is clicked, passing in a reference to the Leader's name
+            Check for that Event being called in GameManager
+            Call GameManager.gameHandler.leaderHandler.leaders.get(name), passing in a Leader to RenderLeaderInfo()
+            Render the Leader Info
+        */
+    }
 
 
 

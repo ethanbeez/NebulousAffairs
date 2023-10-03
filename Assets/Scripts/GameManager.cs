@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour {
 
     private void CameraToMapPosition() {
         cameraController.StartMapFly();
-        uiController.RenderMainScene();
+        uiController.RenderMainScene(1.8f);
     }
 
     private void ToggleNebulaOrbits() {
@@ -70,20 +70,12 @@ public class GameManager : MonoBehaviour {
     }
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
-        // ORION: Insert logic that renders UI that pops up when a planet is clicked here.
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
-
-        // Below are some example calls for getting Planet information.
-        // clickedPlanet.AffluenceYield, clickedPlanet.IntelligenceYield, clickedPlanet.PoliticsYield (per turn yield values)
-        // clickedPlanet.AffluencePriority, clickedPlanet.IntelligencePriority, clickedPlanet.PoliticsPriority (how much they like each yield)
-        // clickedPlanet.CurrentLeader.Name; (the name of the current leader of the planet)
-        // clickedPlanet.GetLeaderInfluenceValue(clickedPlanet.CurrentLeader.Name); (the influence value of the current leader of the planet)
-
-        // If you can, please write your UI code such that it is rendered via a UIController method. For example, if you can write this method, this would be great:
         uiController.RenderPlanetInfo(clickedPlanet, 2f);
-        // uiController.RenderPlanetInfo(clickedPlanet)
         cameraController.StartFly(focusTarget);
     }
+
+    
 
     private void HandleTurnAdvancement() {
         nebulaController.StartTurnTransitionAnim();
