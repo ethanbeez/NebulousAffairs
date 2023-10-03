@@ -134,8 +134,12 @@ public class Leader {
         return action;
     }
 
-    public void UpdatePriorities() {
-        decisionProfile.UpdatePriorities();
+    public void UpdateYieldPriorities() {
+        decisionProfile.UpdateYieldPriorities();
+    }
+
+    public void UpdatePlanetPriorities() {
+        decisionProfile.UpdatePlanetPriorities();
     }
 
     /// <summary>
@@ -144,6 +148,7 @@ public class Leader {
     /// <param name="planet"></param>
     public void GainPlanetControl(Planet planet) {
         bool wasLeader = influences[planet.Name].SetIsLeader(true);
+        influences[planet.Name].Planet.SetCurrentLeader(this);
         if (!wasLeader) {
             controlledPlanets.Add(planet.Name, planet);
             planetControlCount++;
@@ -168,7 +173,7 @@ public class Leader {
         private const int ComfortableIntelligenceYield = 2;
 
         private const int ActionsToChooseFrom = 2;
-        private const int PlanetsToChooseFrom = 4;
+        private const int PlanetsToChooseFrom = 6;
 
         private Leader leader;
         private System.Random random;
@@ -255,11 +260,14 @@ public class Leader {
             }
         }
 
-        public void UpdatePriorities() {
+        public void UpdateYieldPriorities() {
             UpdateAffluencePriority();
             UpdatePoliticsPriority();
             UpdateIntelligencePriority();
-            UpdatePlanetPriorities();
+        }
+
+        public void UpdatePlanetPriorities() {
+            planetPriorities = leader.GetAscendingSortedPlanetInfluences();
         }
 
         private void UpdateAffluencePriority() {
@@ -281,10 +289,6 @@ public class Leader {
             float yieldFactor = 1 - (Mathf.Clamp(leader.intelligenceYield, 0, 1_000) / (ComfortableIntelligenceYield * 2 * (1 - hoarder)));
             float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
             intelligencePriority = Mathf.Clamp(sumFactors, 0, 1);
-        }
-
-        private void UpdatePlanetPriorities() {
-            planetPriorities = leader.GetAscendingSortedPlanetInfluences();
         }
     }
 }

@@ -5,12 +5,12 @@ using UnityEngine;
 public class Election {
     private int electionTurn;
     private int electionYear;
-    private Dictionary<string, Planet> gainedPlanetLeaders;
-    private Dictionary<string, Planet> lostPlanetLeaders;
+    private Dictionary<string, HashSet<Planet>> gainedPlanetLeaders;
+    private Dictionary<string, HashSet<Planet>> lostPlanetLeaders;
     // private Dictionary<string, List<(Leader, float)>> planetVoteRatios; // TODO: Probably don't need to store?
 
-    public Dictionary<string, Planet> GainedPlanetLeaders => gainedPlanetLeaders;
-    public Dictionary<string, Planet> LostPlanetLeaders => lostPlanetLeaders;
+    public Dictionary<string, HashSet<Planet>> GainedPlanetLeaders => gainedPlanetLeaders;
+    public Dictionary<string, HashSet<Planet>> LostPlanetLeaders => lostPlanetLeaders;
 
     public Election(int electionTurn, int electionYear) {
         // this.planetVoteRatios = new();
@@ -30,13 +30,19 @@ public class Election {
             }
         }
         if (!string.Equals(newEmperorName, planet.CurrentLeader.Name)) {
-            gainedPlanetLeaders.Add(newEmperorName, planet);
-            lostPlanetLeaders.Add(planet.CurrentLeader.Name, planet);
+            if (!gainedPlanetLeaders.ContainsKey(newEmperorName)) { 
+                gainedPlanetLeaders.Add(newEmperorName , new());
+            }
+            gainedPlanetLeaders[newEmperorName].Add(planet);
+            if (!lostPlanetLeaders.ContainsKey(planet.CurrentLeader.Name)) {
+                lostPlanetLeaders.Add(planet.CurrentLeader.Name, new());
+            }
+            lostPlanetLeaders[planet.CurrentLeader.Name].Add(planet);
         }
     }
 
     // TODO: Maybe make instance later
-    public static Dictionary<string, List<(Leader, float)>> GetPlanetInfluenceRatios(List<Planet> planets) {
+    public static Dictionary<string, List<(Leader, float)>> GetPlanetsInfluenceRatios(List<Planet> planets) {
         Dictionary<string, List<(Leader, float)>> planetVoteRatios = new();
         foreach (Planet planet in planets) {
             List<(Leader, float)> voteRatios = new();
@@ -53,5 +59,20 @@ public class Election {
             planetVoteRatios.Add(planet.Name, voteRatios);
         }
         return planetVoteRatios;
+    }
+
+    public static List<(Leader, float)> GetPlanetInfluenceRatios(Planet planet) {
+        List<(Leader, float)> voteRatios = new();
+        // TODO: Not exactly optimal code here.
+        List<Influence> influences = planet.GetAllInfluences();
+        float influenceSum = 0;
+        foreach (Influence influence in influences) {
+            influenceSum += influence.InfluenceValue;
+        }
+        foreach (Influence influence in influences) {
+            voteRatios.Add((influence.Leader, influence.InfluenceValue / influenceSum));
+        }
+        voteRatios.Sort((ratio1, ratio2) => ratio2.Item2.CompareTo(ratio1.Item2));
+        return voteRatios;
     }
 }
