@@ -98,6 +98,18 @@ public class GameHandler {
         return Election.GetPlanetInfluenceRatios(planetHandler.planets[planetName]);
     }
 
+    public List<(Planet, float)> GetLeaderInfluences(string leaderName) {
+        Leader leader = leaderHandler.leaders[leaderName];
+        List<(Planet, float)> planetInfluences = new();
+        // TODO: Not exactly optimal code here.
+        List<Influence> influences = leader.GetAllInfluences();
+        foreach (Influence influence in influences) {
+            planetInfluences.Add((influence.Planet, influence.InfluenceValue);
+        }
+        planetInfluences.Sort((planetInfluence1, planetInfluence2) => planetInfluence2.Item2.CompareTo(planetInfluence1.Item2));
+        return planetInfluences;
+    }
+
     public void ProcessElection(Election electionData) { 
         foreach (Planet planet in planetHandler.planets.Values) {
             electionData.DeterminePlanetElectionOutcome(planet);

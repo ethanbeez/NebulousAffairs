@@ -126,6 +126,10 @@ public class Leader {
     public Influence GetPlanetInfluence(string planetName) {
         return influences[planetName];
     }
+
+    public List<Influence> GetAllInfluences() {
+        return influences.Values.ToList();
+    }
     #endregion
 
     #region Game Actions
