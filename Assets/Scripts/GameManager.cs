@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour {
 
         InputManager.SpacePressed += HandleTurnAdvancement;
         uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo());
+        uiController.playerLeader = gameHandler.getPlayerLeader();
         PlanetController.PlanetClicked += HandlePlanetClick;
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
@@ -74,8 +75,6 @@ public class GameManager : MonoBehaviour {
         uiController.RenderPlanetInfo(clickedPlanet, 2f, gameHandler.GetPlanetInfluenceRatios(planetName));
         cameraController.StartFly(focusTarget);
     }
-
-    
 
     private void HandleTurnAdvancement() {
         nebulaController.StartTurnTransitionAnim();

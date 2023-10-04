@@ -12,11 +12,15 @@ using UnityEngine.UIElements;
 
 public class UIController : MonoBehaviour {
 
-    GameManager gameHandler;
+    GameManager gameManager;
 
     [Header("Main Screen Components")]
     [SerializeField] Canvas mainScreen;
     [SerializeField] TextMeshProUGUI turnDisplay;
+    [SerializeField] TextMeshProUGUI playerPolitics;
+    [SerializeField] TextMeshProUGUI playerWealth;
+    [SerializeField] TextMeshProUGUI playerIntelligence;
+    public Leader playerLeader;
 
     [Header("Planet Screen Components")]
     [SerializeField] Canvas planetScreen;
@@ -34,14 +38,24 @@ public class UIController : MonoBehaviour {
 
     //Gets the GameHandler from the GameManager on wakeup
     void Start() {
-        gameHandler = FindObjectOfType<GameManager>();
+        gameManager = FindObjectOfType<GameManager>();
         pieChart = FindObjectOfType<PieChartComponent>().pieChart;
         pieChartDoc.rootVisualElement.style.display = DisplayStyle.None;
+    }
+
+    //UHHHHHHHHHH
+    void Update() {
+        playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
+        playerWealth.text = playerLeader.AffluenceStockpile.ToString();
+        playerPolitics.text = playerLeader.PoliticsStockpile.ToString();
     }
 
     //Renders the Main Scene
     public void RenderMainScene(float delayTime){
         DerenderPanels();
+        playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
+        playerWealth.text = playerLeader.AffluenceStockpile.ToString();
+        playerPolitics.text = playerLeader.PoliticsStockpile.ToString();
         Invoke("RenderMain", delayTime);
     }
 

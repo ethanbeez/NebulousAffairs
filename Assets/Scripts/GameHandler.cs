@@ -155,4 +155,8 @@ public class GameHandler {
         }
         return leaderDebugInfo;
     }
+
+    public Leader getPlayerLeader() {
+        return leaderHandler.leaders.ElementAt(0).Value;
+    }
 }
