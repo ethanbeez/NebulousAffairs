@@ -18,7 +18,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] Canvas mainScreen;
     [SerializeField] TextMeshProUGUI turnDisplay;
 
-    [Header("Planet Sceen Components")]
+    [Header("Planet Screen Components")]
     [SerializeField] Canvas planetScreen;
     [SerializeField] TextMeshProUGUI planetName;
     [SerializeField] TextMeshProUGUI planetInfo;
@@ -27,6 +27,9 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetIntelligencePriority;
     PieChart pieChart;
     [SerializeField] UIDocument pieChartDoc;
+
+    [Header("Leader Screen Components")]
+    [SerializeField] Canvas leaderScreen;
     
 
     //Gets the GameHandler from the GameManager on wakeup
@@ -102,6 +105,7 @@ public class UIController : MonoBehaviour {
     private void DerenderPanels() {
         mainScreen.enabled = false;
         planetScreen.enabled = false;
+        leaderScreen.enabled = false;
         pieChartDoc.rootVisualElement.style.display = DisplayStyle.None;
     }
 
@@ -115,6 +119,12 @@ public class UIController : MonoBehaviour {
             Call GameManager.gameHandler.leaderHandler.leaders.get(name), passing in a Leader to RenderLeaderInfo()
             Render the Leader Info
         */
+    }
+
+    //TEMP for now - will be deleted after Prototype Build
+    public void RenderLeaderInfo() {
+        DerenderPanels();
+        leaderScreen.enabled = true;
     }
 
 
