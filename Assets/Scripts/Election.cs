@@ -72,6 +72,11 @@ public class Election {
         foreach (Influence influence in influences) {
             voteRatios.Add((influence.Leader, influence.InfluenceValue / influenceSum));
         }
+        float testSum = 0;
+        foreach ((Leader, float) val in voteRatios) {
+            testSum += val.Item2;
+        }
+        Debug.Log(testSum);
         voteRatios.Sort((ratio1, ratio2) => ratio2.Item2.CompareTo(ratio1.Item2));
         return voteRatios;
     }

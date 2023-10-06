@@ -29,7 +29,8 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetPoliticsPriority;
     [SerializeField] TextMeshProUGUI planetWealthPriority;
     [SerializeField] TextMeshProUGUI planetIntelligencePriority;
-    PieChart pieChart;
+    [SerializeField] PieChart pieChart;
+    PieChartComponent pcc;
     [SerializeField] UIDocument pieChartDoc;
 
     [Header("Leader Screen Components")]
@@ -37,14 +38,30 @@ public class UIController : MonoBehaviour {
     
 
     //Gets the GameHandler from the GameManager on wakeup
-    void Start() {
+    void OnEnable() {
         gameManager = FindObjectOfType<GameManager>();
-        pieChart = FindObjectOfType<PieChartComponent>().pieChart;
+        if (GameObject.Find("PlanetScreen/PieChart").GetComponent<PieChartComponent>() == null) {
+            Application.Quit();
+        }
+        pcc = GameObject.Find("PlanetScreen/PieChart").GetComponent<PieChartComponent>();
+        // pieChart = GameObject.Find("PlanetScreen/PieChart").GetComponent<PieChartComponent>().pieChart;
+        // pieChart = FindObjectOfType<PieChartComponent>().pieChart;
+        /*if (pieChart == null) {
+            Instantiate()
+            GameObject.Find().
+        }*/
+        // actualPieChart = pieChart.pieChart;
+        /*if (actualPieChart == null) {
+            Application.Quit();
+        }*/
+
+        pieChartDoc.enabled = true;
         pieChartDoc.rootVisualElement.style.display = DisplayStyle.None;
     }
 
     //UHHHHHHHHHH
     void Update() {
+        pieChart = pcc.pieChart;
         playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
         playerWealth.text = playerLeader.AffluenceStockpile.ToString();
         playerPolitics.text = playerLeader.PoliticsStockpile.ToString();
@@ -66,47 +83,58 @@ public class UIController : MonoBehaviour {
 
 
     //Updates the TurnDisplay to a given String - the expected String is TurnHandler's GameTurns toString.
-    public void updateTurnDisplay(String currentTurn) {
+    public void updateTurnDisplay(String currentTurn, int planetsControlled, int state) {
         turnDisplay.text = currentTurn;
+        turnDisplay.text += ", Planets Controlled: " + planetsControlled;
+        if (state == 1) {
+            turnDisplay.text += "\nYOU LOST!";
+        } else if (state == 2) {
+            turnDisplay.text += "\nYOU WON!";
+        }
     }
 
     //Renders the PlanetInfo Screen
     public void RenderPlanetInfo(Planet clickedPlanet, float delayTime, List<(Leader, float)> influenceRatios) {
-        DerenderPanels();
-        planetName.text = clickedPlanet.Name;
-        planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
-        planetIntelligencePriority.text = clickedPlanet.IntelligencePriority.ToString();
-        planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
-        planetWealthPriority.text = clickedPlanet.PoliticsPriority.ToString();
+        try {
+            DerenderPanels();
+            planetName.text = clickedPlanet.Name;
+            planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
+            planetIntelligencePriority.text = clickedPlanet.IntelligencePriority.ToString();
+            planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
+            planetWealthPriority.text = clickedPlanet.PoliticsPriority.ToString();
 
-        //this is about to be the world's shnastiest code
-        foreach((Leader, float) influenceRatio in influenceRatios) {
-            string leaderName = influenceRatio.Item1.Name;
-            switch(leaderName) {
-                case "Leader 1":
-                    pieChart.leader1 = influenceRatio.Item2;
-                    break;
-                case "Leader 2":
-                    pieChart.leader2 = influenceRatio.Item2;
-                    break;
-                case "Leader 3":
-                    pieChart.leader3 = influenceRatio.Item2;
-                    break;
-                case "Leader 4":
-                    pieChart.leader4 = influenceRatio.Item2;
-                    break;
-                case "Leader 5":
-                    pieChart.leader5 = influenceRatio.Item2;
-                    break;
-                case "Leader 6":
-                    pieChart.leader2 = influenceRatio.Item2;
-                    break;
+            //this is about to be the world's shnastiest code
+            foreach ((Leader, float) influenceRatio in influenceRatios) {
+                string leaderName = influenceRatio.Item1.Name;
+                switch (leaderName) {
+                    case "Leader 1":
+                        pieChart.leader1 = influenceRatio.Item2;
+                        break;
+                    case "Leader 2":
+                        pieChart.leader2 = influenceRatio.Item2;
+                        break;
+                    case "Leader 3":
+                        pieChart.leader3 = influenceRatio.Item2;
+                        break;
+                    case "Leader 4":
+                        pieChart.leader4 = influenceRatio.Item2;
+                        break;
+                    case "Leader 5":
+                        pieChart.leader5 = influenceRatio.Item2;
+                        break;
+                    case "Leader 6":
+                        pieChart.leader6 = influenceRatio.Item2;
+                        break;
+                }
+
             }
 
+
+            Invoke("RenderPlanet", delayTime);
+        } catch (Exception e) {
+            Application.Quit();
         }
-
-
-        Invoke("RenderPlanet", delayTime);
+        
     }
 
     //Delayed method for RenderPlanetInfo

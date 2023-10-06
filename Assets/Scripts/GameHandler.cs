@@ -73,6 +73,10 @@ public class GameHandler {
         throw new NotImplementedException();
     }
 
+    public int GetPlanetsControlled() {
+        return leaderHandler.leaders["Leader 1"].PlanetControlCount;
+    }
+
     public void ExecuteBotTurns(TurnHandler.GameTurns gameTurns) {
         foreach (Leader leader in leaderHandler.leaders.Values) {
             leader.UpdateYieldPriorities();

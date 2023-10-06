@@ -1936,6 +1936,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3104402052018355927, guid: 759a2fa5d88ec1c43935d4e81f68d7f6, type: 3}
+      propertyPath: sourceAsset
+      value: 
+      objectReference: {fileID: 9197481963319205126, guid: 14846b60d09801a4dad4b418dc724725, type: 3}
     - target: {fileID: 7599900020533125247, guid: 759a2fa5d88ec1c43935d4e81f68d7f6, type: 3}
       propertyPath: m_Name
       value: PlanetScreen

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using static TurnHandler;
 
@@ -34,7 +35,7 @@ public class GameManager : MonoBehaviour {
         InputManager.EscapePressed += QuitGame;
 
         InputManager.SpacePressed += HandleTurnAdvancement;
-        uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo());
+        uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo(), gameHandler.GetPlanetsControlled(), 0);
         uiController.playerLeader = gameHandler.getPlayerLeader();
         PlanetController.PlanetClicked += HandlePlanetClick;
         // turnHandler.TurnChanged += AdvanceTurn;
@@ -72,19 +73,31 @@ public class GameManager : MonoBehaviour {
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
-        uiController.RenderPlanetInfo(clickedPlanet, 2f, gameHandler.GetPlanetInfluenceRatios(planetName));
+        uiController.RenderPlanetInfo(clickedPlanet, 3.4f, gameHandler.GetPlanetInfluenceRatios(planetName));
         cameraController.StartFly(focusTarget);
     }
 
     private void HandleTurnAdvancement() {
+
+
         nebulaController.StartTurnTransitionAnim();
         TurnHandler.GameTurns gameTurnInfo = turnHandler.AdvanceTurn();
+
         gameHandler.ExecuteBotTurns(gameTurnInfo);
         if (gameTurnInfo.ElectionTurn) {
             Election election = new(gameTurnInfo.CurrentTurn - 1, gameTurnInfo.CurrentYear - gameTurnInfo.YearsPerTurn);
             gameHandler.ProcessElection(election);
         }
-        uiController.updateTurnDisplay(gameTurnInfo.ToString());
+        // TODO: Remove following, for rush proto
+        int won = 0;
+        if (gameTurnInfo.CurrentTurn > 20) {
+            if (gameHandler.GetPlanetsControlled() < 7) won = 1;
+            if (gameHandler.GetPlanetsControlled() >= 7) won = 2;
+        } else {
+            if (gameHandler.GetPlanetsControlled() == 0) won = 1;
+            if (gameHandler.GetPlanetsControlled() == 12) won = 2;
+        }
+        uiController.updateTurnDisplay(gameTurnInfo.ToString(), gameHandler.GetPlanetsControlled(), won);
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {

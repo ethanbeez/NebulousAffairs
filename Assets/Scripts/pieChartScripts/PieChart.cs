@@ -51,6 +51,7 @@ public class PieChart : VisualElement
         foreach (var pct in percentages)
         {
             anglePct += pct * 360;
+            Debug.Log(pct);
 
             painter.fillColor = colors[k++];
             painter.BeginPath();
