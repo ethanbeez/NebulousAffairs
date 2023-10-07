@@ -7,6 +7,7 @@ using System.Text;
 using UnityEngine;
 
 public class GameHandler {
+    Player player;
     LeaderHandler leaderHandler;
     PlanetHandler planetHandler;
 
@@ -61,6 +62,19 @@ public class GameHandler {
         return planetHandler.planets.Values.ToList();
     }
 
+    public void ProcessOutstandingTrade(string originLeader, bool tradeAccepted) { 
+        
+    }
+
+    /// <summary>
+    /// Returns all outstanding trades sent to the player on the current turn. The outstanding trades are stored in a Dictionary
+    /// mapping the origin leader's name (key) to their offered trade (value).
+    /// </summary>
+    /// <returns>All outstanding trades sent to the player on the current turn</returns>
+    public Dictionary<string, TradeAction> GetOutstandingTrades() {
+        return player.OutstandingTrades;
+    }
+
     public Planet GetPlanet(string planetName) {
         if (planetHandler.planets.TryGetValue(planetName, out Planet planet)) {
             return planet;
@@ -74,7 +88,14 @@ public class GameHandler {
     }
 
     public int GetPlanetsControlled() {
+        // TODO: Remove this!
         return leaderHandler.leaders["Leader 1"].PlanetControlCount;
+    }
+
+    public void AdvanceTurn(TurnHandler.GameTurns gameTurns) {
+        
+        ExecuteBotTurns(gameTurns);
+        player.ResetPlayerActionsLeft();
     }
 
     public void ExecuteBotTurns(TurnHandler.GameTurns gameTurns) {
@@ -156,6 +177,11 @@ public class GameHandler {
     }
 
     private void HandleTradeAction(TradeAction tradeAction) {
+        if (tradeAction.TargetLeader == player.Leader) { // Should be reference equality, this is intentional.
+            player.AddOutstandingTrade(tradeAction);
+            return;
+        }
+        
         throw new NotImplementedException("Trade action is not implemented to be handled yet.");
     }
 

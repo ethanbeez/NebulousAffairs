@@ -27,15 +27,28 @@ public abstract class GameAction {
 }
 
 public class TradeAction : GameAction {
+    #region Game Constants
     private const int AffluenceCost = 2;
     private const int PoliticsCost = 0;
     private const int IntellectCost = 0;
-    private readonly Leader targetLeader;
+    #endregion
 
-    public Leader TargetLeader => targetLeader;
+
+    #region Properties
+    public int OfferedAffluence { get; set; }
+    public int OfferedPolitics { get; set; }
+    public int OfferedIntellect { get; set; }
+
+    public int RequestedAffluence { get; set; }
+    public int RequestedPolitics { get; set; }
+    public int RequestedIntellect { get; set; }
+    public Leader TargetLeader { get; set; }
+    #endregion
+
+
 
     public TradeAction(int turnOccurred, Leader originLeader, Leader targetLeader) : base(turnOccurred, originLeader) { 
-        this.targetLeader = targetLeader;
+        TargetLeader = targetLeader;
     }
 
     // UNITY PLEASE update your .NET version compatability! Let me live my half-baked polymorphic dreams!! :-(

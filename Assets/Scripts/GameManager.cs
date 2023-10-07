@@ -82,8 +82,7 @@ public class GameManager : MonoBehaviour {
 
         nebulaController.StartTurnTransitionAnim();
         TurnHandler.GameTurns gameTurnInfo = turnHandler.AdvanceTurn();
-
-        gameHandler.ExecuteBotTurns(gameTurnInfo);
+        gameHandler.AdvanceTurn(gameTurnInfo);
         if (gameTurnInfo.ElectionTurn) {
             Election election = new(gameTurnInfo.CurrentTurn - 1, gameTurnInfo.CurrentYear - gameTurnInfo.YearsPerTurn);
             gameHandler.ProcessElection(election);

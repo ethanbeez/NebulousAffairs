@@ -9,17 +9,9 @@ using UnityEngine;
 using static TurnHandler;
 
 public class Leader {
-
+    #region Game Constants
+    #endregion Game Constants
     #region Fields
-    private string name;
-    // Currency stockpiles, representing the current unspent currency value.
-    private int affluenceStockpile;
-    private int politicsStockpile;
-    private int intelligenceStockpile;
-    // Currency yields, represented as a per-turn integer.
-    private int affluenceYield;
-    private int politicsYield;
-    private int intelligenceYield;
     // Relationships and influence.
     private Dictionary<string, Relationship> relationships; // (Leader Name) -> (Leader Relationship)
     private Dictionary<string, Influence> influences; // (Planet Name) -> (Planet Relationship)
@@ -31,14 +23,15 @@ public class Leader {
     #endregion
 
     #region Properties
-    public string Name => name;
-    public int AffluenceStockpile => affluenceStockpile;
-    public int PoliticsStockpile => politicsStockpile;
-    public int IntelligenceStockpile => intelligenceStockpile;
-
-    public int AffluenceYield => affluenceYield;
-    public int PoliticsYield => politicsYield;
-    public int IntelligenceYield => intelligenceYield;
+    public string Name { get; }
+    // Currency stockpiles, representing the current unspent currency value.
+    public int AffluenceStockpile { get; set; }
+    public int PoliticsStockpile { get; set; }
+    public int IntelligenceStockpile { get; set; }
+    // Currency yields, represented as a per-turn integer.
+    public int AffluenceYield { get; set; }
+    public int PoliticsYield { get; set; }
+    public int IntelligenceYield { get; set; }
     public LeaderDecisionProfile DecisionProfile => decisionProfile;
     public int PlanetControlCount => planetControlCount;
     #endregion
@@ -52,15 +45,15 @@ public class Leader {
     public Leader(string name, float hoarder, float loner, float affluenceBias, float politicsBias, float intelligenceBias,
         int startingAffluence = 0, int startingPolitics = 0, int startingIntelligence = 0, int affluenceYield = 1,
         int politicsYield = 1, int intelligenceYield = 1) {
-        this.affluenceYield = affluenceYield;
-        this.politicsYield = politicsYield;
-        this.intelligenceYield = intelligenceYield;
+        AffluenceYield = affluenceYield;
+        PoliticsYield = politicsYield;
+        IntelligenceYield = intelligenceYield;
 
         planetControlCount = 0; // To be 'corrected' to 2 when building connections in GameHandler
-        this.name = name;
-        affluenceStockpile = startingAffluence;
-        politicsStockpile = startingPolitics;
-        intelligenceStockpile = startingIntelligence;
+        Name = name;
+        AffluenceStockpile = startingAffluence;
+        PoliticsStockpile = startingPolitics;
+        IntelligenceStockpile = startingIntelligence;
 
         influences = new();
         controlledPlanets = new();
@@ -92,30 +85,6 @@ public class Leader {
         return controlledPlanetsList;
     }
 
-    public void SetAffluenceStockpile(int affluenceStockpile) {
-        this.affluenceStockpile = affluenceStockpile;
-    }
-
-    public void SetPoliticsStockpile(int affluenceStockpile) {
-        this.affluenceStockpile = affluenceStockpile;
-    }
-
-    public void SetIntelligenceStockpile(int affluenceStockpile) {
-        this.affluenceStockpile = affluenceStockpile;
-    }
-
-    public void SetAffluenceYield(int affluenceYield) { 
-        this.affluenceYield = affluenceYield;
-    }
-
-    public void SetPoliticsYields(int politicsYield) { 
-        this.politicsYield = politicsYield;
-    }
-
-    public void SetIntelligenceYields(int intelligenceYield) { 
-        this.intelligenceYield = intelligenceYield;
-    }
-
     public void SetPlanetInfluence(string planetName, float leaderInfluence) {
         if (!influences.ContainsKey(planetName)) {
             Debug.LogError("Leader.SetPlanetInfluence tried to access a planet by name that did not exist in the influences Dictionary.");
@@ -133,6 +102,16 @@ public class Leader {
     #endregion
 
     #region Game Actions
+    public void ProcessIncomingTradeAction(TradeAction tradeAction) {
+        AffluenceStockpile += tradeAction.OfferedAffluence;
+        IntelligenceStockpile += tradeAction.OfferedIntellect;
+        PoliticsStockpile += tradeAction.OfferedPolitics;
+    }
+
+    public void ProcessOutgoingTradeAction(TradeAction tradeAction) { 
+    
+    }
+
     public GameAction MakeDecision() {
         GameAction action = decisionProfile.ChooseNextAction(4);
         return action;
@@ -275,22 +254,22 @@ public class Leader {
         }
 
         private void UpdateAffluencePriority() {
-            float surplusFactor = 1 - (Mathf.Clamp(leader.affluenceStockpile, 0, 1_000) / (ComfortableAffluenceSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
-            float yieldFactor = 1 - (Mathf.Clamp(leader.affluenceYield, 0, 1_000) / (ComfortableAffluenceYield * 2 * (1 - hoarder)));
+            float surplusFactor = 1 - (Mathf.Clamp(leader.AffluenceStockpile, 0, 1_000) / (ComfortableAffluenceSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
+            float yieldFactor = 1 - (Mathf.Clamp(leader.AffluenceYield, 0, 1_000) / (ComfortableAffluenceYield * 2 * (1 - hoarder)));
             float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
             affluencePriority = Mathf.Clamp(sumFactors, 0, 1);
         }
 
         private void UpdatePoliticsPriority() {
-            float surplusFactor = 1 - (Mathf.Clamp(leader.politicsStockpile, 0, 1_000) / (ComfortablePoliticsSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
-            float yieldFactor = 1 - (Mathf.Clamp(leader.politicsYield, 0, 1_000) / (ComfortablePoliticsYield * 2 * (1 - hoarder)));
+            float surplusFactor = 1 - (Mathf.Clamp(leader.PoliticsStockpile, 0, 1_000) / (ComfortablePoliticsSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
+            float yieldFactor = 1 - (Mathf.Clamp(leader.PoliticsYield, 0, 1_000) / (ComfortablePoliticsYield * 2 * (1 - hoarder)));
             float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
             politicsPriority = Mathf.Clamp(sumFactors, 0, 1);
         }
 
         private void UpdateIntelligencePriority() {
-            float surplusFactor = 1 - (Mathf.Clamp(leader.intelligenceStockpile, 0, 1_000) / (ComfortableIntelligenceSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
-            float yieldFactor = 1 - (Mathf.Clamp(leader.intelligenceYield, 0, 1_000) / (ComfortableIntelligenceYield * 2 * (1 - hoarder)));
+            float surplusFactor = 1 - (Mathf.Clamp(leader.IntelligenceStockpile, 0, 1_000) / (ComfortableIntelligenceSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
+            float yieldFactor = 1 - (Mathf.Clamp(leader.IntelligenceYield, 0, 1_000) / (ComfortableIntelligenceYield * 2 * (1 - hoarder)));
             float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
             intelligencePriority = Mathf.Clamp(sumFactors, 0, 1);
         }
