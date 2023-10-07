@@ -108,7 +108,7 @@ public class GameHandler {
         // TODO: Not exactly optimal code here.
         List<Influence> influences = leader.GetAllInfluences();
         foreach (Influence influence in influences) {
-            planetInfluences.Add((influence.Planet, influence.InfluenceValue);
+            planetInfluences.Add((influence.Planet, influence.InfluenceValue));
         }
         planetInfluences.Sort((planetInfluence1, planetInfluence2) => planetInfluence2.Item2.CompareTo(planetInfluence1.Item2));
         return planetInfluences;
