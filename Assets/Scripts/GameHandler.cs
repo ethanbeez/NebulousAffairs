@@ -73,6 +73,10 @@ public class GameHandler {
         throw new NotImplementedException();
     }
 
+    public int GetPlanetsControlled() {
+        return leaderHandler.leaders["Leader 1"].PlanetControlCount;
+    }
+
     public void ExecuteBotTurns(TurnHandler.GameTurns gameTurns) {
         foreach (Leader leader in leaderHandler.leaders.Values) {
             leader.UpdateYieldPriorities();
@@ -166,5 +170,9 @@ public class GameHandler {
             leaderDebugInfo += controlledPlanet.Name + " (Influence: " + leader.GetPlanetInfluence(controlledPlanet.Name).InfluenceValue + "), ";
         }
         return leaderDebugInfo;
+    }
+
+    public Leader getPlayerLeader() {
+        return leaderHandler.leaders.ElementAt(0).Value;
     }
 }

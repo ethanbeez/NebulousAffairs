@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using static TurnHandler;
 
@@ -34,7 +35,8 @@ public class GameManager : MonoBehaviour {
         InputManager.EscapePressed += QuitGame;
 
         InputManager.SpacePressed += HandleTurnAdvancement;
-        uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo());
+        uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo(), gameHandler.GetPlanetsControlled(), 0);
+        uiController.playerLeader = gameHandler.getPlayerLeader();
         PlanetController.PlanetClicked += HandlePlanetClick;
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
@@ -54,7 +56,7 @@ public class GameManager : MonoBehaviour {
 
     private void CameraToMapPosition() {
         cameraController.StartMapFly();
-        uiController.RenderMainScene();
+        uiController.RenderMainScene(1.8f);
     }
 
     private void ToggleNebulaOrbits() {
@@ -70,34 +72,32 @@ public class GameManager : MonoBehaviour {
     }
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
-        // ORION: Insert logic that renders UI that pops up when a planet is clicked here.
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
-
-        // Below are some example calls for getting Planet information.
-        // clickedPlanet.AffluenceYield, clickedPlanet.IntelligenceYield, clickedPlanet.PoliticsYield (per turn yield values)
-        // clickedPlanet.AffluencePriority, clickedPlanet.IntelligencePriority, clickedPlanet.PoliticsPriority (how much they like each yield)
-        // clickedPlanet.CurrentLeader.Name; (the name of the current leader of the planet)
-        // clickedPlanet.GetLeaderInfluenceValue(clickedPlanet.CurrentLeader.Name); (the influence value of the current leader of the planet)
-
-        // If you can, please write your UI code such that it is rendered via a UIController method. For example, if you can write this method, this would be great:
-        uiController.RenderPlanetInfo(clickedPlanet, 3.4f);
-
-        // 10/3: The following method will give you a sorted list of the proportional influence values on a planet:
-        gameHandler.GetPlanetInfluenceRatios(planetName);
-        // Use the returned list to do your pie chart work!
-
+        uiController.RenderPlanetInfo(clickedPlanet, 3.4f, gameHandler.GetPlanetInfluenceRatios(planetName));
         cameraController.StartFly(focusTarget);
     }
 
     private void HandleTurnAdvancement() {
+
+
         nebulaController.StartTurnTransitionAnim();
         TurnHandler.GameTurns gameTurnInfo = turnHandler.AdvanceTurn();
+
         gameHandler.ExecuteBotTurns(gameTurnInfo);
         if (gameTurnInfo.ElectionTurn) {
             Election election = new(gameTurnInfo.CurrentTurn - 1, gameTurnInfo.CurrentYear - gameTurnInfo.YearsPerTurn);
             gameHandler.ProcessElection(election);
         }
-        uiController.updateTurnDisplay(gameTurnInfo.ToString());
+        // TODO: Remove following, for rush proto
+        int won = 0;
+        if (gameTurnInfo.CurrentTurn > 20) {
+            if (gameHandler.GetPlanetsControlled() < 7) won = 1;
+            if (gameHandler.GetPlanetsControlled() >= 7) won = 2;
+        } else {
+            if (gameHandler.GetPlanetsControlled() == 0) won = 1;
+            if (gameHandler.GetPlanetsControlled() == 12) won = 2;
+        }
+        uiController.updateTurnDisplay(gameTurnInfo.ToString(), gameHandler.GetPlanetsControlled(), won);
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
