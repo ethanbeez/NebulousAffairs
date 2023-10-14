@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using UnityEngine;
+using static Influence;
 using static TurnHandler;
 
 public class Leader {
@@ -17,8 +18,6 @@ public class Leader {
     private Dictionary<string, Influence> influences; // (Planet Name) -> (Planet Relationship)
     private Dictionary<string, Planet> controlledPlanets;
     private int planetControlCount;
-    // Personality
-    private LeaderDecisionProfile decisionProfile;
 
     #endregion
 
@@ -32,7 +31,10 @@ public class Leader {
     public int AffluenceYield { get; set; }
     public int PoliticsYield { get; set; }
     public int IntelligenceYield { get; set; }
-    public LeaderDecisionProfile DecisionProfile => decisionProfile;
+
+    public int AffluencePreference { get; }
+    public int PoliticsPreference { get; }
+    public int IntellectPreference { get; }
     public int PlanetControlCount => planetControlCount;
     #endregion
 
@@ -42,9 +44,8 @@ public class Leader {
     #endregion
 
     #region Constructors & Builders
-    public Leader(string name, float hoarder, float loner, float affluenceBias, float politicsBias, float intelligenceBias,
-        int startingAffluence = 0, int startingPolitics = 0, int startingIntelligence = 0, int affluenceYield = 1,
-        int politicsYield = 1, int intelligenceYield = 1) {
+    public Leader(string name, int startingAffluence = 0, int startingPolitics = 0, int startingIntelligence = 0,
+        int affluenceYield = 1, int politicsYield = 1, int intelligenceYield = 1) {
         AffluenceYield = affluenceYield;
         PoliticsYield = politicsYield;
         IntelligenceYield = intelligenceYield;
@@ -57,16 +58,33 @@ public class Leader {
 
         influences = new();
         controlledPlanets = new();
-        decisionProfile = new(this, hoarder, loner, affluenceBias, politicsBias, intelligenceBias); // TODO: Make a builder class for this!
+        relationships = new();
     }
 
     public void AddNewInfluence(Influence influence) {
         influences.Add(influence.PlanetName, influence);
-        decisionProfile.AddNewPlanet(influence);
+    }
+
+    public void AddNewRelationship(Relationship relationship) {
+        // Gets the name of the other Leader (i.e., the leader that is not 'this' Leader).
+        string otherLeaderName = (relationship.Leader1 == this) ? relationship.Leader2.Name : relationship.Leader1.Name;
+        relationships.Add(otherLeaderName, relationship);
     }
     #endregion
 
     #region Getters/Setters
+    public float GetRelationshipValue(string leaderName) {
+        return relationships[leaderName].RelationshipValue;
+    }
+
+    public List<Relationship> GetAscendingSortedLeaderRelationships() {
+        List<Relationship> sortedLeaderRelationships = new();
+        foreach (Relationship relationship in relationships.Values) {
+            sortedLeaderRelationships.Add(relationship);
+        }
+        sortedLeaderRelationships.Sort((relationship1, relationship2) => relationship1.RelationshipValue.CompareTo(relationship2.RelationshipValue));
+        return sortedLeaderRelationships;
+    }
 
     public List<Influence> GetAscendingSortedPlanetInfluences() {
         List<Influence> sortedPlanetInfluences = new();
@@ -106,23 +124,32 @@ public class Leader {
         AffluenceStockpile += tradeAction.OfferedAffluence;
         IntelligenceStockpile += tradeAction.OfferedIntellect;
         PoliticsStockpile += tradeAction.OfferedPolitics;
+
+
+        AffluenceStockpile -= tradeAction.RequestedAffluence;
+        IntelligenceStockpile -= tradeAction.RequestedIntellect;
+        PoliticsStockpile -= tradeAction.RequestedPolitics;
     }
 
-    public void ProcessOutgoingTradeAction(TradeAction tradeAction) { 
-    
+    public void ProcessOutgoingTradeOutcome(TradeAction tradeAction) {
+        AffluenceStockpile -= tradeAction.OfferedAffluence;
+        IntelligenceStockpile -= tradeAction.OfferedIntellect;
+        PoliticsStockpile -= tradeAction.OfferedPolitics;
+
+        AffluenceStockpile += tradeAction.RequestedAffluence;
+        IntelligenceStockpile += tradeAction.RequestedIntellect;
+        PoliticsStockpile += tradeAction.RequestedPolitics;
     }
 
-    public GameAction MakeDecision() {
-        GameAction action = decisionProfile.ChooseNextAction(4);
-        return action;
+    public void AcceptIncomingTrade(TradeAction tradeAction) {
+        AffluenceStockpile += tradeAction.OfferedAffluence;
+        IntelligenceStockpile += tradeAction.OfferedIntellect;
+        PoliticsStockpile += tradeAction.OfferedPolitics;
+        relationships[tradeAction.OriginLeader.Name].ProcessTradeOutcome(tradeAction.TradeWeight);
     }
 
-    public void UpdateYieldPriorities() {
-        decisionProfile.UpdateYieldPriorities();
-    }
-
-    public void UpdatePlanetPriorities() {
-        decisionProfile.UpdatePlanetPriorities();
+    public void RefuseIncomingTrade(TradeAction tradeAction) {
+        relationships[tradeAction.OriginLeader.Name].ProcessTradeOutcome(tradeAction.TradeWeight);
     }
 
     /// <summary>
@@ -146,157 +173,6 @@ public class Leader {
         }
     }
     #endregion
-
-    public class LeaderDecisionProfile {
-        private const int ComfortableAffluenceSurplus = 20;
-        private const int ComfortablePoliticsSurplus = 25;
-        private const int ComfortableIntelligenceSurplus = 25;
-        private const int ComfortableAffluenceYield = 2;
-        private const int ComfortablePoliticsYield = 2;
-        private const int ComfortableIntelligenceYield = 2;
-
-        private const int ActionsToChooseFrom = 2;
-        private const int PlanetsToChooseFrom = 6;
-
-        private Leader leader;
-        private System.Random random;
-        // Personality-driven static influences
-        private float hoarder; // 0 = values high yields; 1 = values high stockpiles
-        private float loner; // 0 = values solo actions; 1 = values leader interactions
-        // Static decision influencers
-        private float affluenceBias;
-        private float politicsBias;
-        private float intelligenceBias;
-        // Dynamic decision influencers
-        private float affluencePriority;
-        private float politicsPriority;
-        private float intelligencePriority;
-        private List<Influence> planetPriorities;
-
-        public float AffluenceRawBias => affluenceBias;
-        public float PoliticsRawBias => politicsBias;
-        public float IntellectRawBias => intelligenceBias;
-
-        public float AffluencePriority => affluencePriority;
-        public float PoliticsPriority => politicsPriority;
-        public float IntelligencePriority => intelligencePriority;
-        public List<Influence> PlanetPriorities => planetPriorities;
-
-        public LeaderDecisionProfile(Leader leader, float hoarder, float loner, float affluenceBias, float politicsBias, float intelligenceBias) {
-            this.random = new();
-            this.leader = leader;
-            this.hoarder = hoarder;
-            this.loner = loner;
-            this.affluenceBias = affluenceBias;
-            this.politicsBias = politicsBias;
-            this.intelligenceBias = intelligenceBias;
-
-            planetPriorities = new();
-        }
-
-        public void AddNewPlanet(Influence influence) {
-            planetPriorities.Add(influence);
-        }
-
-        public GameAction ChooseNextAction(int actionsToConsider) {
-            List<GameAction> possibleActions = GetLikelyActions(actionsToConsider);
-            return possibleActions[random.Next(possibleActions.Count)];
-        }
-
-        public List<GameAction> GetLikelyActions(int actionsToGet) {
-            List<GameAction> likelyActions = new();
-
-            (ActionTypes, float) espionageAction = (ActionTypes.EspionageAction, TradeAction.ComputeActionDecisionWeight(leader));
-            (ActionTypes, float) diplomacyAction = (ActionTypes.EspionageAction, DiplomacyAction.ComputeActionDecisionWeight(leader));
-            (ActionTypes, float) tradeAction = (ActionTypes.EspionageAction, TradeAction.ComputeActionDecisionWeight(leader));
-
-            List<(ActionTypes, float)> generalActionWeights = new() { espionageAction, diplomacyAction, tradeAction};
-            generalActionWeights.Sort((action1, action2) => action1.Item2.CompareTo(action2.Item2));
-            int actionsPerCategory = actionsToGet / ActionsToChooseFrom;
-            ActionTypes highestPriorityGeneralAction = generalActionWeights[0].Item1;
-
-            for (int i = 0; i < ActionsToChooseFrom; i++) {
-                ActionTypes currencyActionType = generalActionWeights[i].Item1;
-                PopulateDecisionList(likelyActions, currencyActionType, actionsPerCategory);
-            }
-
-            return likelyActions;
-        }
-
-        public void PopulateDecisionList(List<GameAction> gameActionList, ActionTypes gameActionType, int numOfActions) {
-            switch (gameActionType) { 
-                case ActionTypes.EspionageAction:
-                    goto case ActionTypes.DiplomacyAction;
-                case ActionTypes.DiplomacyAction:
-                    for (int i = 0; i < numOfActions; i++) {
-                        Array currencies = Enum.GetValues(typeof(CurrencyType));
-                        int randomCurrencyIndex = random.Next(currencies.Length);
-                        CurrencyType currencyToIncrease = (CurrencyType) currencies.GetValue(randomCurrencyIndex); // TODO: THIS IS STUPID MAKE THIS SMARTER!!
-                        int nextCurrencyIndex = (randomCurrencyIndex + 1) % currencies.Length;
-                        CurrencyType currencyToDecrease = (CurrencyType) currencies.GetValue(nextCurrencyIndex);
-                        Planet targetPlanet = planetPriorities[i + random.Next(PlanetsToChooseFrom)].Planet;
-                        gameActionList.Add(new DiplomacyAction(0, leader, targetPlanet, currencyToIncrease, currencyToDecrease));
-                    }
-                    break;
-                case ActionTypes.TradeAction:
-                    goto case ActionTypes.DiplomacyAction;
-            }
-        }
-
-        public void UpdateYieldPriorities() {
-            UpdateAffluencePriority();
-            UpdatePoliticsPriority();
-            UpdateIntelligencePriority();
-        }
-
-        public void UpdatePlanetPriorities() {
-            planetPriorities = leader.GetAscendingSortedPlanetInfluences();
-        }
-
-        private void UpdateAffluencePriority() {
-            float surplusFactor = 1 - (Mathf.Clamp(leader.AffluenceStockpile, 0, 1_000) / (ComfortableAffluenceSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
-            float yieldFactor = 1 - (Mathf.Clamp(leader.AffluenceYield, 0, 1_000) / (ComfortableAffluenceYield * 2 * (1 - hoarder)));
-            float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
-            affluencePriority = Mathf.Clamp(sumFactors, 0, 1);
-        }
-
-        private void UpdatePoliticsPriority() {
-            float surplusFactor = 1 - (Mathf.Clamp(leader.PoliticsStockpile, 0, 1_000) / (ComfortablePoliticsSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
-            float yieldFactor = 1 - (Mathf.Clamp(leader.PoliticsYield, 0, 1_000) / (ComfortablePoliticsYield * 2 * (1 - hoarder)));
-            float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
-            politicsPriority = Mathf.Clamp(sumFactors, 0, 1);
-        }
-
-        private void UpdateIntelligencePriority() {
-            float surplusFactor = 1 - (Mathf.Clamp(leader.IntelligenceStockpile, 0, 1_000) / (ComfortableIntelligenceSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
-            float yieldFactor = 1 - (Mathf.Clamp(leader.IntelligenceYield, 0, 1_000) / (ComfortableIntelligenceYield * 2 * (1 - hoarder)));
-            float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
-            intelligencePriority = Mathf.Clamp(sumFactors, 0, 1);
-        }
-    }
-}
-
-public class Relationship {
-    #region Fields
-    private Leader originLeader;
-    private Leader targetLeader;
-    private float opinionValue;
-    #endregion
-
-    #region Properties
-    public string TargetLeaderName => targetLeader.Name;
-    public float OpinionValue => opinionValue;
-    #endregion
-
-    #region Constructors
-    public Relationship(Leader originLeader, Leader targetLeader, float opinionValue = 0) {
-        this.originLeader = originLeader;
-        this.targetLeader = targetLeader;
-        this.opinionValue = opinionValue;
-    }
-    #endregion
-
-    // public void UpdateRelationship(Action)
 }
 
 public class Influence {
@@ -341,4 +217,52 @@ public class Influence {
         this.isLeader = isLeader;
         return previousIsLeader;
     }
+}
+
+public class Relationship {
+    #region Game Constants
+    private const float StartingRelationshipValue = 0.5f;
+    private const float IncomingTradeWeightModifier = 0.05f;
+    #endregion
+
+    #region Properties
+    // public string TargetLeaderName => targetLeader.Name;
+    public Leader Leader1 { get; }
+    public Leader Leader2 { get; }
+    public float RelationshipValue { get; set; }
+    #endregion
+
+    #region Constructors
+    public Relationship(Leader leader1, Leader leader2) {
+        Leader1 = leader1;
+        Leader2 = leader2;
+        RelationshipValue = StartingRelationshipValue;
+    }
+    #endregion
+
+    public void ProcessTradeOutcome(int incomingTradeWeight) {
+        RelationshipValue += IncomingTradeWeightModifier * incomingTradeWeight;
+    }
+
+    public Leader GetOtherLeader(string leaderName) {
+        return (leaderName == Leader1.Name) ? Leader2 : Leader1;
+    }
+}
+
+public class LeaderVisibility {
+    #region Properties
+    public Leader OriginLeader { get; }
+    public Leader TargetLeader { get; }
+
+    public bool TargetLeaderPoliticsVisible { get; }
+    public bool TargetLeaderAffluenceVisible { get; }
+    public bool TargetLeaderIntellectVisible { get; }
+    #endregion
+
+    #region Constructors
+    public LeaderVisibility(Leader originLeader, Leader targetLeader) { 
+        OriginLeader = originLeader;
+        TargetLeader = targetLeader;
+    }
+    #endregion
 }

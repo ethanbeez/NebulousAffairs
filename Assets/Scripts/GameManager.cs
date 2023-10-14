@@ -33,11 +33,11 @@ public class GameManager : MonoBehaviour {
         InputManager.SPressed += ToggleNebulaOrbits;
         InputManager.TPressed += ToggleGalaxyMotionTrails;
         InputManager.EscapePressed += QuitGame;
-
         InputManager.SpacePressed += HandleTurnAdvancement;
-        uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo(), gameHandler.GetPlanetsControlled(), 0);
-        uiController.playerLeader = gameHandler.getPlayerLeader();
         PlanetController.PlanetClicked += HandlePlanetClick;
+
+        uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo(), gameHandler.GetPlayerPlanetsControlled(), 0);
+        uiController.playerLeader = gameHandler.GetPlayerLeader();
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
     }
@@ -90,13 +90,13 @@ public class GameManager : MonoBehaviour {
         // TODO: Remove following, for rush proto
         int won = 0;
         if (gameTurnInfo.CurrentTurn > 20) {
-            if (gameHandler.GetPlanetsControlled() < 7) won = 1;
-            if (gameHandler.GetPlanetsControlled() >= 7) won = 2;
+            if (gameHandler.GetPlayerPlanetsControlled() < 7) won = 1;
+            if (gameHandler.GetPlayerPlanetsControlled() >= 7) won = 2;
         } else {
-            if (gameHandler.GetPlanetsControlled() == 0) won = 1;
-            if (gameHandler.GetPlanetsControlled() == 12) won = 2;
+            if (gameHandler.GetPlayerPlanetsControlled() == 0) won = 1;
+            if (gameHandler.GetPlayerPlanetsControlled() == 12) won = 2;
         }
-        uiController.updateTurnDisplay(gameTurnInfo.ToString(), gameHandler.GetPlanetsControlled(), won);
+        uiController.updateTurnDisplay(gameTurnInfo.ToString(), gameHandler.GetPlayerPlanetsControlled(), won);
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {

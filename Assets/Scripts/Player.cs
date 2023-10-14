@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player {
-    
+
     public Leader Leader { get; }
 
     #region Properties
@@ -20,17 +20,25 @@ public class Player {
     #region Game Constants
     private static int ActionsPerTurn = 3;
     #endregion
+
+    public Player() {
+        Leader = new("Leader 1", 10, 10, 10);
+    }
+
     public int PlayerTurnActionsLeft { get; set; }
 
     public void AddOutstandingTrade(TradeAction outstandingTrade) {
         OutstandingTrades.Add(outstandingTrade.OriginLeader.Name, outstandingTrade);
     }
 
-    public void ProcessOutstandingTrade(TradeAction outstandingTrade) {
-        if (!OutstandingTrades.ContainsKey(outstandingTrade.OriginLeader.Name)) { 
-            Debug.LogError("Player.ProcessOutstandingTrade: There was no outstanding trade from the leader " +  outstandingTrade.OriginLeader.Name + ".");
+    public void ProcessOutstandingTrade(string originLeader, bool accepted) {
+        if (!OutstandingTrades.ContainsKey(originLeader)) { 
+            Debug.LogError("Player.ProcessOutstandingTrade: There was no outstanding trade from the leader " + originLeader + ".");
         }
-
+        TradeAction trade = OutstandingTrades[originLeader];
+        trade.Accepted = accepted;
+        if (accepted) Leader.AcceptIncomingTrade(trade);
+        else Leader.RefuseIncomingTrade(trade);
     }
 
     public void ResetPlayerActionsLeft() {
@@ -40,8 +48,6 @@ public class Player {
     public Player(Leader leader) {
         Leader = leader;
     }
-
-
 
     public void ProcessPlayerAction(GameAction action) { 
     
