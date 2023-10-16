@@ -40,7 +40,7 @@ public class OpponentHandler {
         originOpponent.ProcessOutgoingTradeOutcome(tradeAction);
         string accepted = (tradeAction.Accepted) ? "accepted" : "refused";
         Debug.Log($"{originOpponent.Leader.Name} sent {targetOpponent.Leader.Name} a trade offer. They asked for:\n{tradeAction.RequestedAffluence} money\n{tradeAction.RequestedIntellect} intellect" +
-            $"\nand {tradeAction.RequestedPolitics} politics.\nThey offered:\n{tradeAction.OfferedAffluence} money\n{tradeAction.OfferedIntellect} intellect\nand {tradeAction.RequestedPolitics} politics.\n" +
+            $"\nand {tradeAction.RequestedPolitics} politics.\nThey offered:\n{tradeAction.OfferedAffluence} money\n{tradeAction.OfferedIntellect} intellect\nand {tradeAction.OfferedPolitics} politics.\n" +
             $"{targetOpponent.Leader.Name} {accepted} the deal.");
     }
 

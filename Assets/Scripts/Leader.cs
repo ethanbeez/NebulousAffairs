@@ -316,9 +316,9 @@ public class Relationship {
 }
 
 public class LeaderVisibility {
-    private const bool PoliticsPrefVisibleDefault = false;
-    private const bool AffluencePrefVisibleDefault = false;
-    private const bool IntellectPrefVisibleDefault = false;
+    private const bool PoliticsPrefVisibleDefault = true;
+    private const bool AffluencePrefVisibleDefault = true;
+    private const bool IntellectPrefVisibleDefault = true;
     #region Properties
     public Leader OriginLeader { get; }
     public Leader TargetLeader { get; }

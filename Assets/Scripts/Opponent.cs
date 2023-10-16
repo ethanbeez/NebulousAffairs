@@ -283,13 +283,13 @@ public class Opponent {
             // Only request as much as the target leader has stockpiled.
             requestAmount = Math.Min(requestAmount, targetLeaderCurrencyStockpile);
             int knownRequestWeight = requestAmount;
-            if (targetLeader.GetRelationshipValue(leader.Name) < MinimumEquivalentDealRelationshipValue) {
-                knownRequestWeight += RelationshipTradePenalty;
-            }
             if (leader.GetLeaderPreferenceVisibility(targetLeader, requestedCurrency)) {
                 knownRequestWeight += targetLeader.GetCurrencyPreferenceFromType(requestedCurrency);
             }
             int knownOfferWeight = 0;
+            if (targetLeader.GetRelationshipValue(leader.Name) < MinimumEquivalentDealRelationshipValue) {
+                knownOfferWeight += RelationshipTradePenalty;
+            }
             List<(CurrencyType, int)> offeredAmounts = new();
             for (int i = 0; i < offerableAmounts.Count && knownOfferWeight < requestAmount; i++) {
                 (CurrencyType, int) offerableAmount = offerableAmounts[i];
@@ -305,10 +305,10 @@ public class Opponent {
                 float currencyDistribution = currencyDistributions[offerableAmount.Item1];
                 int requestWeightPortion = (int) (currencyDistribution * knownRequestWeight);
                 int actualOfferAmount = Math.Min(offerableAmount.Item2, requestWeightPortion);
-                knownOfferWeight += actualOfferAmount + knownModifier;
+                knownOfferWeight = knownOfferWeight + actualOfferAmount + knownModifier;
                 offeredAmounts.Add((offerableAmount.Item1, actualOfferAmount));
             }
-            requestAmount = knownOfferWeight;
+            requestAmount = Math.Min(requestAmount, knownOfferWeight - targetLeader.GetCurrencyPreferenceFromType(requestedCurrency));
             return offeredAmounts;
         }
 
@@ -430,7 +430,11 @@ public class Opponent {
             // TODO: The following commented out logic is for AI trades that offer more than one currency.   
             List<(CurrencyType, int)> offeredCurrencyAmounts = new();
             foreach (CurrencyType currencyType in offerableCurrencies) {
-                offeredCurrencyAmounts.Add((currencyType, ComputeOfferableCurrencyAmount(currencyType)));
+                int offerableCurencyAmount = ComputeOfferableCurrencyAmount(currencyType);
+                if (offerableCurencyAmount <= 0) {
+                    continue;
+                }
+                offeredCurrencyAmounts.Add((currencyType, offerableCurencyAmount));
             }
             /*int maxOfferedCurrencyAmount;
             switch (offeredCurrency) {
@@ -456,6 +460,9 @@ public class Opponent {
         private int ComputeOfferableCurrencyAmount(CurrencyType currencyType) {
             int currencyStockpile = leader.GetStockpileFromCurrencyType(currencyType);
             int currencyYield = leader.GetYieldFromCurrencyType(currencyType);
+            if (currencyYield < 0) { 
+                return (int) (0.25 *  currencyStockpile);
+            }
             int comfortableExcess = currencyStockpile - GetComfortableCurrencyAmountFromType(currencyType);
             int offerableAmount = Math.Min(currencyStockpile, currencyYield * (int) (TurnHandler.TurnLimit * 0.1));
             if (comfortableExcess > 0) {
@@ -525,22 +532,22 @@ public class Opponent {
         }
 
         private void UpdateAffluencePriority() {
-            float surplusFactor = 1 - (Mathf.Clamp(leader.AffluenceStockpile, 0, 1_000) / (ComfortableAffluenceSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
-            float yieldFactor = 1 - (Mathf.Clamp(leader.AffluenceYield, 0, 1_000) / (ComfortableAffluenceYield * 2 * (1 - hoarder)));
+            float surplusFactor = 1 - (Mathf.Clamp(leader.AffluenceStockpile, 0, 1_000) / (ComfortableAffluenceSurplus * 2)); // Calculate actual theoretical maximums
+            float yieldFactor = 1 - (Mathf.Clamp(leader.AffluenceYield, 0, 1_000) / (ComfortableAffluenceYield * 2));
             float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
             affluencePriority = Mathf.Clamp(sumFactors, 0, 1);
         }
 
         private void UpdatePoliticsPriority() {
-            float surplusFactor = 1 - (Mathf.Clamp(leader.PoliticsStockpile, 0, 1_000) / (ComfortablePoliticsSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
-            float yieldFactor = 1 - (Mathf.Clamp(leader.PoliticsYield, 0, 1_000) / (ComfortablePoliticsYield * 2 * (1 - hoarder)));
+            float surplusFactor = 1 - (Mathf.Clamp(leader.PoliticsStockpile, 0, 1_000) / (ComfortablePoliticsSurplus * 2)); // Calculate actual theoretical maximums
+            float yieldFactor = 1 - (Mathf.Clamp(leader.PoliticsYield, 0, 1_000) / (ComfortablePoliticsYield * 2));
             float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
             politicsPriority = Mathf.Clamp(sumFactors, 0, 1);
         }
 
         private void UpdateIntelligencePriority() {
-            float surplusFactor = 1 - (Mathf.Clamp(leader.IntelligenceStockpile, 0, 1_000) / (ComfortableIntelligenceSurplus * 2 * hoarder)); // Calculate actual theoretical maximums
-            float yieldFactor = 1 - (Mathf.Clamp(leader.IntelligenceYield, 0, 1_000) / (ComfortableIntelligenceYield * 2 * (1 - hoarder)));
+            float surplusFactor = 1 - (Mathf.Clamp(leader.IntelligenceStockpile, 0, 1_000) / (ComfortableIntelligenceSurplus * 2)); // Calculate actual theoretical maximums
+            float yieldFactor = 1 - (Mathf.Clamp(leader.IntelligenceYield, 0, 1_000) / (ComfortableIntelligenceYield * 2));
             float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
             intelligencePriority = Mathf.Clamp(sumFactors, 0, 1);
         }
