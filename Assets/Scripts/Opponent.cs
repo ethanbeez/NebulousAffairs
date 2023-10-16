@@ -11,7 +11,7 @@ public class Opponent {
     public static int ActionsPerTurn { get; } = 1;
 
     private OpponentDecisionProfile decisionProfile;
-    
+
     public Leader Leader { get; }
 
     public Opponent(Leader leader, float hoarder, float loner, float affluenceBias, float politicsBias, float intelligenceBias) {
@@ -80,6 +80,8 @@ public class Opponent {
         private const int TradeCurrenciesToChooseFrom = 1;
         private const float TradeCurrencyRequestAggression = 0.9f;
         private const float TradeCurrencyOfferAggression = 0.3f; // The minimum percentage of the leader's trade-offered currency stockpile that they will offer.
+        private const int MinRequestAmountIfComfortable = 3; // The minimum amount of currency the AI requests if they have a comfortable amount of their most-desired currency.
+        private const int MaxRequestAmountIfComfortable = 8; // The maximum amount of currency the AI requests if they have a comfortable amount of their most-desired currency.
 
         public const float MinimumEquivalentDealRelationshipValue = 1.0f;
         public const int RelationshipTradePenalty = -1;
@@ -108,7 +110,7 @@ public class Opponent {
         public float AffluencePriority => affluencePriority;
         public float PoliticsPriority => politicsPriority;
         public float IntelligencePriority => intelligencePriority;
-        public List<(CurrencyType, float)> CurrencyPriorities  { get; private set; } 
+        public List<(CurrencyType, float)> CurrencyPriorities { get; private set; }
         public List<Influence> PlanetPriorities => planetPriorities;
 
         public OpponentDecisionProfile(Leader leader, float hoarder, float loner, float affluenceBias, float politicsBias, float intelligenceBias) {
@@ -202,10 +204,18 @@ public class Opponent {
         public void ComputeLikelyTradeActions(List<GameAction> gameActionList, int numOfTradeActions) {
             for (int i = 0; i < numOfTradeActions; i++) {
                 Leader targetLeader = leaderPriorities[i].GetOtherLeader(leader.Name); // TODO: Key way duplicate trades are prevented right now (10/13). Maybe do something smarter.
-                CurrencyType offeredCurrency = CurrencyPriorities[^1].Item1;
-                int offeredCurrencyAmount = ComputeTradeOfferedCurrencyAmount(offeredCurrency, targetLeader);
+                CurrencyType requestedCurrency = CurrencyPriorities[0].Item1;
+                int requestAmount = ComputeNeededRequestCurrencyAmount(requestedCurrency);
+                List<CurrencyType> offerableCurrencies = new() { CurrencyPriorities[1].Item1, CurrencyPriorities[2].Item1 };
+                List<(CurrencyType, int)> offerableCurrencyAmounts = ComputeOfferableCurrencyAmounts(offerableCurrencies, requestAmount, targetLeader);
+                List<(CurrencyType, int)> offeredAmounts = MaximizeOffer(offerableCurrencyAmounts, GetOfferedCurrencyDistributions(offerableCurrencies), requestedCurrency, ref requestAmount, targetLeader);
+                gameActionList.Add(BuildTradeActionFromValues(offeredAmounts, requestedCurrency, requestAmount, targetLeader));
+                /*Leader targetLeader = leaderPriorities[i].GetOtherLeader(leader.Name); // TODO: Key way duplicate trades are prevented right now (10/13). Maybe do something smarter.
+                CurrencyType offeredCurrency = FindTradableCurrency();
+                if (offeredCurrency == CurrencyPriorities[0].Item1) return; // If the only currency the leader has to trade is the currency they want to request, trade cannot be performed; return early.
+                int offeredCurrencyAmount = ComputeTradeOfferedCurrencyAmount(offeredCurrency, targetLeader); // Starts out at the absolute maximum value of currency they have to offer.
                 CurrencyType requestedCurrency = CurrencyPriorities[random.Next(TradeCurrenciesToChooseFrom)].Item1;
-                int requestedCurrencyAmount = ComputeTradeRequestedCurrencyAmount(requestedCurrency, offeredCurrency, offeredCurrencyAmount, targetLeader);
+                int requestedCurrencyAmount = ComputeTradeRequestedCurrencyAmount(requestedCurrency, offeredCurrency, ref offeredCurrencyAmount, targetLeader);
 
                 int requestedAffluence, requestedPolitics, requestedIntellect, offeredAffluence, offeredPolitics, offeredIntellect;
                 requestedAffluence = requestedPolitics = requestedIntellect = offeredAffluence = offeredPolitics = offeredIntellect = 0;
@@ -232,27 +242,142 @@ public class Opponent {
                         break;
                 }
                 TradeAction tradeAction = new(0, leader, targetLeader, offeredAffluence, offeredPolitics, offeredIntellect, requestedAffluence, requestedPolitics, requestedIntellect);
-                gameActionList.Add(tradeAction);
+                gameActionList.Add(tradeAction);*/
             }
-            
-            
+
+
         }
 
-        private int ComputeTradeRequestedCurrencyAmount(CurrencyType requestedCurrency, CurrencyType offeredCurrency, int offeredCurrencyAmount, Leader targetLeader) {
-            int effectiveOfferWeight = offeredCurrencyAmount;
+        private TradeAction BuildTradeActionFromValues(List<(CurrencyType, int)> offeredAmounts, CurrencyType requestedCurrencyType, int requestedCurrencyAmount, Leader targetLeader) {
+            int requestedAffluence, requestedPolitics, requestedIntellect, offeredAffluence, offeredPolitics, offeredIntellect;
+            requestedAffluence = requestedPolitics = requestedIntellect = offeredAffluence = offeredPolitics = offeredIntellect = 0;
+            foreach ((CurrencyType, int) offeredAmount in offeredAmounts) {
+                switch (offeredAmount.Item1) {
+                    case CurrencyType.Affluence:
+                        offeredAffluence = offeredAmount.Item2;
+                        break;
+                    case CurrencyType.Politics:
+                        offeredPolitics = offeredAmount.Item2;
+                        break;
+                    case CurrencyType.Intellect:
+                        offeredIntellect = offeredAmount.Item2;
+                        break;
+                }
+            }
+            switch (requestedCurrencyType) {
+                case CurrencyType.Affluence:
+                    requestedAffluence = requestedCurrencyAmount;
+                    break;
+                case CurrencyType.Politics:
+                    requestedPolitics = requestedCurrencyAmount;
+                    break;
+                case CurrencyType.Intellect:
+                    requestedIntellect = requestedCurrencyAmount;
+                    break;
+            }
+            return new(0, leader, targetLeader, offeredAffluence, offeredPolitics, offeredIntellect, requestedAffluence, requestedPolitics, requestedIntellect);
+        }
+
+        private List<(CurrencyType, int)> MaximizeOffer(List<(CurrencyType, int)> offerableAmounts, Dictionary<CurrencyType, float> currencyDistributions, CurrencyType requestedCurrency, ref int requestAmount, Leader targetLeader) {
+            int targetLeaderCurrencyStockpile = targetLeader.GetStockpileFromCurrencyType(requestedCurrency);
+            // Only request as much as the target leader has stockpiled.
+            requestAmount = Math.Min(requestAmount, targetLeaderCurrencyStockpile);
+            int knownRequestWeight = requestAmount;
+            if (targetLeader.GetRelationshipValue(leader.Name) < MinimumEquivalentDealRelationshipValue) {
+                knownRequestWeight += RelationshipTradePenalty;
+            }
+            if (leader.GetLeaderPreferenceVisibility(targetLeader, requestedCurrency)) {
+                knownRequestWeight += targetLeader.GetCurrencyPreferenceFromType(requestedCurrency);
+            }
+            int knownOfferWeight = 0;
+            List<(CurrencyType, int)> offeredAmounts = new();
+            for (int i = 0; i < offerableAmounts.Count && knownOfferWeight < requestAmount; i++) {
+                (CurrencyType, int) offerableAmount = offerableAmounts[i];
+                int knownModifier = 0;
+                if (leader.GetLeaderPreferenceVisibility(targetLeader, offerableAmount.Item1)) {
+                    knownModifier = targetLeader.GetCurrencyPreferenceFromType(offerableAmount.Item1);
+                }
+                // If the currency pref value is less than 0 and the amount that we're willing to offer has a resultant effective weight of 0 or less,
+                // offering this currency in the trade provides 0/negative value; remove this currency from the offerable amounts.
+                if (knownModifier < 0 && offerableAmount.Item2 + knownModifier <= 0) {
+                    continue;
+                }
+                float currencyDistribution = currencyDistributions[offerableAmount.Item1];
+                int requestWeightPortion = (int) (currencyDistribution * knownRequestWeight);
+                int actualOfferAmount = Math.Min(offerableAmount.Item2, requestWeightPortion);
+                knownOfferWeight += actualOfferAmount + knownModifier;
+                offeredAmounts.Add((offerableAmount.Item1, actualOfferAmount));
+            }
+            requestAmount = knownOfferWeight;
+            return offeredAmounts;
+        }
+
+        private CurrencyType FindTradableCurrency() {
+            CurrencyType offeredCurrency = CurrencyPriorities[0].Item1;
+            bool foundTradableCurrency = false;
+            for (int j = CurrencyPriorities.Count - 1; j >= 0; j--) {
+                offeredCurrency = CurrencyPriorities[j].Item1;
+                switch (offeredCurrency) {
+                    case CurrencyType.Affluence:
+                        if (leader.AffluenceStockpile >= 1) {
+                            foundTradableCurrency = true;
+                        }
+                        break;
+                    case CurrencyType.Politics:
+                        if (leader.PoliticsStockpile >= 1) {
+                            foundTradableCurrency = true;
+                        }
+                        break;
+                    case CurrencyType.Intellect:
+                        if (leader.IntelligenceStockpile >= 1) {
+                            foundTradableCurrency = true;
+                        }
+                        break;
+                }
+                if (foundTradableCurrency) break;
+            }
+            return offeredCurrency;
+
+        }
+
+        private int ComputeNeededRequestCurrencyAmount(CurrencyType requestedCurrency) {
+            int neededAmount;
+            switch (requestedCurrency) {
+                case CurrencyType.Affluence:
+                    neededAmount = ComfortableAffluenceSurplus - leader.AffluenceStockpile;
+                    break;
+                case CurrencyType.Politics:
+                    neededAmount = ComfortablePoliticsSurplus - leader.PoliticsStockpile;
+                    break;
+                case CurrencyType.Intellect:
+                    neededAmount = ComfortablePoliticsSurplus - leader.IntelligenceStockpile;
+                    break;
+                default:
+                    Debug.LogError("OpponentDecisionProfile.ComputeNeededRequestCurrencyAmount: A target requested currency had an invalid CurrencyType enum type.");
+                    neededAmount = 0;
+                    break;
+            }
+            if (neededAmount < 0) {
+                neededAmount = random.Next(MinRequestAmountIfComfortable, MaxRequestAmountIfComfortable);
+            }
+            return neededAmount;
+        }
+
+        private int ComputeTradeRequestedCurrencyAmount(CurrencyType requestedCurrency, CurrencyType offeredCurrency, ref int offeredCurrencyAmount, Leader targetLeader) {
+            int offerModifiers = 0;
             // Accounts for targetLeader relationship value.
             if (targetLeader.GetRelationshipValue(leader.Name) < MinimumEquivalentDealRelationshipValue) {
-                effectiveOfferWeight += RelationshipTradePenalty;
+                offerModifiers += RelationshipTradePenalty;
             }
             switch (offeredCurrency) {
                 case CurrencyType.Affluence:
-                    effectiveOfferWeight += targetLeader.AffluencePreference;
+                    offerModifiers += targetLeader.AffluencePreference;
                     break;
                 case CurrencyType.Politics:
-                    effectiveOfferWeight += targetLeader.PoliticsPreference;
+                    offerModifiers += targetLeader.PoliticsPreference;
                     break;
                 case CurrencyType.Intellect:
-                    effectiveOfferWeight += targetLeader.IntellectPreference;
+                    offerModifiers += targetLeader.IntellectPreference;
                     break;
             }
 
@@ -261,35 +386,99 @@ public class Opponent {
             int targetRequestedStockpile;
             switch (requestedCurrency) {
                 case CurrencyType.Affluence:
-                    effectiveOfferWeight -= targetLeader.AffluencePreference;
+                    offerModifiers -= targetLeader.AffluencePreference;
                     targetRequestedStockpile = targetLeader.AffluenceStockpile;
-                    maxRequestableAmount = Math.Min(effectiveOfferWeight, targetRequestedStockpile);
-                    maxWantedAmount = Math.Clamp(ComfortableAffluenceSurplus - leader.AffluenceStockpile, 1, maxRequestableAmount);
+                    maxRequestableAmount = Math.Min(offeredCurrencyAmount + offerModifiers, targetRequestedStockpile);
+                    if (maxRequestableAmount < 1) {
+                        maxWantedAmount = 1;
+                    } else {
+                        maxWantedAmount = Math.Clamp(ComfortableAffluenceSurplus - leader.AffluenceStockpile, 1, maxRequestableAmount);
+                    }
                     break;
                 case CurrencyType.Politics:
-                    effectiveOfferWeight -= targetLeader.PoliticsPreference;
+                    offerModifiers -= targetLeader.PoliticsPreference;
                     targetRequestedStockpile = targetLeader.PoliticsStockpile;
-                    maxRequestableAmount = Math.Min(effectiveOfferWeight, targetRequestedStockpile);
-                    maxWantedAmount = Math.Clamp(ComfortablePoliticsSurplus - leader.PoliticsStockpile, 1, maxRequestableAmount);
+                    maxRequestableAmount = Math.Min(offeredCurrencyAmount + offerModifiers, targetRequestedStockpile);
+                    if (maxRequestableAmount < 1) {
+                        maxWantedAmount = 1;
+                    } else {
+                        maxWantedAmount = Math.Clamp(ComfortablePoliticsSurplus - leader.PoliticsStockpile, 1, maxRequestableAmount);
+                    }
                     break;
                 case CurrencyType.Intellect:
-                    effectiveOfferWeight -= targetLeader.IntellectPreference;
+                    offerModifiers -= targetLeader.IntellectPreference;
                     targetRequestedStockpile = targetLeader.IntelligenceStockpile;
-                    maxRequestableAmount = Math.Min(effectiveOfferWeight, targetRequestedStockpile);
-                    maxWantedAmount = Math.Clamp(ComfortableIntelligenceSurplus - leader.IntelligenceStockpile, 1, maxRequestableAmount);
+                    maxRequestableAmount = Math.Min(offeredCurrencyAmount + offerModifiers, targetRequestedStockpile);
+                    if (maxRequestableAmount < 1) {
+                        maxWantedAmount = 1;
+                    } else {
+                        maxWantedAmount = Math.Clamp(ComfortableIntelligenceSurplus - leader.IntelligenceStockpile, 1, maxRequestableAmount);
+                    }
                     break;
                 default:
                     Debug.LogError("OpponentDecisionProfile.ComputeTradeRequestedCurrencyAmount: A target requested currency had an invalid CurrencyType enum type.");
                     maxWantedAmount = 0;
                     break;
             }
-            int minWantedAmount = (int) (maxWantedAmount * TradeCurrencyRequestAggression);
-            return random.Next(minWantedAmount, maxWantedAmount);
+            int minWantedAmount = Math.Clamp((int) (maxWantedAmount * TradeCurrencyRequestAggression), 1, maxWantedAmount);
+            int amountToRequest = random.Next(minWantedAmount, maxWantedAmount);
+            offeredCurrencyAmount = Math.Clamp(amountToRequest - offerModifiers, 1, 1000); // TODO: 1000 temp here.
+            return amountToRequest;
         }
 
-        private int ComputeTradeOfferedCurrencyAmount(CurrencyType offeredCurrency, Leader targetLeader) {
-            // TODO: The following commented out logic is for AI trades that offer more than one currency.
-            /*List<(float, CurrencyType)> offeredCurrenciesDistribution = new();
+        private List<(CurrencyType, int)> ComputeOfferableCurrencyAmounts(List<CurrencyType> offerableCurrencies, int wantedRequestAmount, Leader targetLeader) {
+            // TODO: The following commented out logic is for AI trades that offer more than one currency.   
+            List<(CurrencyType, int)> offeredCurrencyAmounts = new();
+            foreach (CurrencyType currencyType in offerableCurrencies) {
+                offeredCurrencyAmounts.Add((currencyType, ComputeOfferableCurrencyAmount(currencyType)));
+            }
+            /*int maxOfferedCurrencyAmount;
+            switch (offeredCurrency) {
+                case CurrencyType.Affluence:
+                    maxOfferedCurrencyAmount = leader.AffluenceStockpile - TradeAction.AffluenceCost;
+                    break;
+                case CurrencyType.Politics:
+                    maxOfferedCurrencyAmount = leader.PoliticsStockpile - TradeAction.PoliticsCost;
+                    break;
+                case CurrencyType.Intellect:
+                    maxOfferedCurrencyAmount = leader.IntelligenceStockpile - TradeAction.IntellectCost;
+                    break;
+                default:
+                    Debug.LogError("OpponentDecisionProfile.ComputeTradeMaxOfferedCurrencyAmount: A target requested currency had an invalid CurrencyType enum type.");
+                    maxOfferedCurrencyAmount = 0;
+                    break;
+            }*/
+            // int minOfferedCurrencyAmount = (int) (maxOfferedCurrencyAmount * TradeCurrencyOfferAggression);
+            // return random.Next(minOfferedCurrencyAmount, maxOfferedCurrencyAmount);
+            return offeredCurrencyAmounts;
+        }
+
+        private int ComputeOfferableCurrencyAmount(CurrencyType currencyType) {
+            int currencyStockpile = leader.GetStockpileFromCurrencyType(currencyType);
+            int currencyYield = leader.GetYieldFromCurrencyType(currencyType);
+            int comfortableExcess = currencyStockpile - GetComfortableCurrencyAmountFromType(currencyType);
+            int offerableAmount = Math.Min(currencyStockpile, currencyYield * (int) (TurnHandler.TurnLimit * 0.1));
+            if (comfortableExcess > 0) {
+                return offerableAmount + comfortableExcess;
+            }
+            return offerableAmount;
+        }
+
+        private static int GetComfortableCurrencyAmountFromType(CurrencyType currencyType) {
+            switch (currencyType) {
+                case CurrencyType.Affluence:
+                    return ComfortableAffluenceSurplus;
+                case CurrencyType.Politics:
+                    return ComfortablePoliticsSurplus;
+                case CurrencyType.Intellect:
+                    return ComfortableIntelligenceSurplus;
+            }
+            Debug.LogError("OpponentDecisionProfile.GetComfortableCurrencyAmountFromType: An invalid CurrencyType enum value was provided! Default returning 0.");
+            return 0;
+        }
+
+        private Dictionary<CurrencyType, float> GetOfferedCurrencyDistributions(List<CurrencyType> offeredCurrencies) {
+            Dictionary<CurrencyType, float> offeredCurrenciesDistribution = new();
             float totalPriority = 0f;
             foreach (CurrencyType currencyType in offeredCurrencies) {
                 switch (currencyType) {
@@ -307,56 +496,17 @@ public class Opponent {
             foreach (CurrencyType currencyType in offeredCurrencies) {
                 switch (currencyType) {
                     case CurrencyType.Affluence:
-                        offeredCurrenciesDistribution.Add((1 - (affluencePriority / totalPriority), CurrencyType.Affluence));
+                        offeredCurrenciesDistribution.Add(CurrencyType.Affluence, 1 - (affluencePriority / totalPriority));
                         break;
                     case CurrencyType.Politics:
-                        offeredCurrenciesDistribution.Add((1 - (politicsPriority / totalPriority), CurrencyType.Politics));
+                        offeredCurrenciesDistribution.Add(CurrencyType.Politics, 1 - (politicsPriority / totalPriority));
                         break;
                     case CurrencyType.Intellect:
-                        offeredCurrenciesDistribution.Add((1 - (intelligencePriority / totalPriority), CurrencyType.Intellect));
+                        offeredCurrenciesDistribution.Add(CurrencyType.Intellect, 1 - (intelligencePriority / totalPriority));
                         break;
                 }
             }
-            foreach ((CurrencyType, float) offeredCurrency in offeredCurrenciesDistribution) {
-                CurrencyType offeredCurrencyType = offeredCurrency.Item1;
-                switch (offeredCurrencyType) {
-                    case CurrencyType.Affluence:
-                        offeredCurrencyAmount = leader.AffluenceStockpile;
-                        maxOfferedCurrencyAmount = Math.Clamp(ComfortableAffluenceSurplus - leader.AffluenceStockpile, 0, offeredCurrencyAmount);
-                        break;
-                    case CurrencyType.Politics:
-                        offeredCurrencyAmount = leader.PoliticsStockpile;
-                        maxOfferedCurrencyAmount = Math.Clamp(ComfortablePoliticsSurplus - leader.PoliticsStockpile, 0, offeredCurrencyAmount);
-                        break;
-                    case CurrencyType.Intellect:
-                        offeredCurrencyAmount = leader.IntelligenceStockpile;
-                        maxOfferedCurrencyAmount = Math.Clamp(ComfortableIntelligenceSurplus - leader.IntelligenceStockpile, 0, offeredCurrencyAmount);
-                        break;
-                    default:
-                        Debug.LogError("OpponentDecisionProfile.ComputeTradeOfferedCurrencyAmount: A target requested currency had an invalid CurrencyType enum type.");
-                        maxRequestedCurrencyAmount = 0;
-                        break;
-                }
-            }*/
-
-            int maxOfferedCurrencyAmount;
-            switch (offeredCurrency) {
-                case CurrencyType.Affluence:
-                    maxOfferedCurrencyAmount = leader.AffluenceStockpile - TradeAction.AffluenceCost;
-                    break;
-                case CurrencyType.Politics:
-                    maxOfferedCurrencyAmount = leader.PoliticsStockpile - TradeAction.PoliticsCost;
-                    break;
-                case CurrencyType.Intellect:
-                    maxOfferedCurrencyAmount = leader.IntelligenceStockpile - TradeAction.IntellectCost;
-                    break;
-                default:
-                    Debug.LogError("OpponentDecisionProfile.ComputeTradeMaxOfferedCurrencyAmount: A target requested currency had an invalid CurrencyType enum type.");
-                    maxOfferedCurrencyAmount = 0;
-                    break;
-            }
-            int minOfferedCurrencyAmount = (int) (maxOfferedCurrencyAmount * TradeCurrencyOfferAggression);
-            return random.Next(minOfferedCurrencyAmount, maxOfferedCurrencyAmount);
+            return offeredCurrenciesDistribution;
         }
 
         public void UpdateYieldPriorities() {
@@ -394,7 +544,6 @@ public class Opponent {
             float sumFactors = Mathf.Clamp(surplusFactor, 0, 1) + Mathf.Clamp(yieldFactor, 0, 1);
             intelligencePriority = Mathf.Clamp(sumFactors, 0, 1);
         }
-
 
     }
 }

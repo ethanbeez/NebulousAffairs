@@ -5,28 +5,69 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 public class GameHandler {
-
+    #region Game Constants
+    public const int TotalSessionPlayers = 6;
+    #endregion
     Player player;
     OpponentHandler opponentHandler;
     PlanetHandler planetHandler;
-
+    
     public GameHandler(int leadersPerPlanet) {
-        planetHandler = new();
         opponentHandler = new();
         player = new();
-        planetHandler.BuildRandomPlanets(12);
-        opponentHandler.BuildRandomOpponents(5);
+        BuildLeadersFromGameData();
+        planetHandler = new();
+        BuildPlanetsFromGameData();
         BuildConnections(leadersPerPlanet);
+    }
+
+    private void BuildLeadersFromGameData() {
+        List<Leader> leaders = new();
+        Dictionary<string, Dictionary<CurrencyType, int>> leaderPreferences = GameDataManager.LeaderPreferences;
+        foreach (KeyValuePair<string, Dictionary<CurrencyType, int>> leaderData in leaderPreferences) {
+            Leader leader = new(leaderData.Key, leaderData.Value[CurrencyType.Affluence], leaderData.Value[CurrencyType.Politics], leaderData.Value[CurrencyType.Intellect]);
+            leaders.Add(leader);
+        }
+        player.AssignLeader(leaders[5]); // TODO: Assuming the spreadsheet parse order is not changed, this should be Foran Jes (as of 10/14).
+        opponentHandler.BuildOpponentsFromLeaders(leaders.GetRange(0, 5));
+    }
+
+    private void BuildPlanetsFromGameData() {
+        Dictionary<string, Dictionary<CurrencyType, int>> planetPreferences = GameDataManager.PlanetPreferences;
+        foreach (KeyValuePair<string, Dictionary<CurrencyType, int>> planetData in planetPreferences) {
+            Planet planet = new(planetData.Key, planetData.Value[CurrencyType.Affluence], planetData.Value[CurrencyType.Politics], planetData.Value[CurrencyType.Intellect]);
+            planetHandler.AddPlanet(planet);
+        }
     }
 
     public void BuildConnections(int leadersPerPlanet) {
         BuildInfluenceProfiles();
-        BuildPlanetLeaders(leadersPerPlanet);
+        BuildPlanetLeaders();
         BuildRelationshipProfiles();
+        BuildVisibilities();
         BuildInitialPriorities();
+    }
+
+    private void BuildVisibilities() {
+        foreach (Opponent opponent in opponentHandler.opponents.Values) {
+            Leader opponentLeader = opponent.Leader;
+            LeaderVisibility leaderVisibility = new(player.Leader, opponentLeader);
+            player.Leader.AddNewLeaderVisiblity(leaderVisibility);
+        }
+
+        foreach (Opponent opponent1 in opponentHandler.opponents.Values) {
+            Leader opponentLeader1 = opponent1.Leader;
+            foreach (Opponent opponent2 in opponentHandler.opponents.Values) {
+                if (opponent1 == opponent2) continue;
+                Leader opponentLeader2 = opponent2.Leader;
+                LeaderVisibility leaderVisibility = new(opponentLeader1, opponentLeader2);
+                opponentLeader1.AddNewLeaderVisiblity(leaderVisibility);
+            }
+        }
     }
 
     public void BuildInfluenceProfiles() {
@@ -66,20 +107,18 @@ public class GameHandler {
         }
     }
 
-    public void BuildPlanetLeaders(int leadersPerPlanet) {
+    public void BuildPlanetLeaders() {
         List<Planet> planetList = planetHandler.planets.Values.ToList();
-        int planetIndex = 0;
-        // Adding the player as the leader of their starting planets.
-        while (planetIndex < planetList.Count && player.Leader.PlanetControlCount < 2) {
-            BuildPlanetLeader(player.Leader, planetList[planetIndex++]);
-        }
-
-        // Adding the opponents' planet leaderships.
-        foreach (Opponent opponent in opponentHandler.opponents.Values) {
-            Leader opponentLeader = opponent.Leader;
-            while (planetIndex < planetList.Count && opponentLeader.PlanetControlCount < 2) {
-                BuildPlanetLeader(opponentLeader, planetList[planetIndex++]);
+        Dictionary<string, string> initialPlanetLeaders = GameDataManager.InitialPlanetLeaders;
+        foreach (Planet planet in planetList) {
+            string initialLeaderName = initialPlanetLeaders[planet.Name];
+            Leader initialLeader;
+            if (initialLeaderName == player.Leader.Name) {
+                initialLeader = player.Leader;
+            } else {
+                initialLeader = opponentHandler.opponents[initialLeaderName].Leader;
             }
+            BuildPlanetLeader(initialLeader, planet);
         }
     }
 
@@ -141,8 +180,16 @@ public class GameHandler {
     }
 
     public void AdvanceTurn(TurnHandler.GameTurns gameTurns) {
+        AccrueLeaderYields();
         ExecuteOpponentTurns(gameTurns);
         player.ResetPlayerActionsLeft();
+    }
+
+    private void AccrueLeaderYields() {
+        player.Leader.AccrueYields();
+        foreach (Opponent opponent in opponentHandler.opponents.Values) {
+            opponent.Leader.AccrueYields();
+        }
     }
 
     public void ExecuteOpponentTurns(TurnHandler.GameTurns gameTurns) {

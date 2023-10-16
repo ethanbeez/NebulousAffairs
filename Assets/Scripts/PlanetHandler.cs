@@ -10,9 +10,13 @@ public class PlanetHandler {
         planets = new();
     }
 
+    public void AddPlanet(Planet planet) { 
+        planets.Add(planet.Name, planet);
+    }
+
     public void BuildRandomPlanets(int planetsToCreate) {
         for (int i = 1; i <= planetsToCreate; i++) {
-            Planet planet = new("Planet " + i, (float) random.NextDouble(), (float) random.NextDouble(), (float) random.NextDouble(), random.Next(-2, 2), random.Next(-2, 2), random.Next(-2, 2));
+            Planet planet = new("Planet " + i, random.Next(-2, 2), random.Next(-2, 2), random.Next(-2, 2));
             planets.Add(planet.Name, planet);
         }
     }

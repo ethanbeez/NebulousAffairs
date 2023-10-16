@@ -19,14 +19,28 @@ public class OpponentHandler {
         }
     }
 
+    /// <summary>
+    /// Builds opponents with AI values interpolated from their leader's preference values.
+    /// </summary>
+    /// <param name="leaders"></param>
+    public void BuildOpponentsFromLeaders(List<Leader> leaders) {
+        foreach (Leader leader in leaders) {
+            float politicsBias = (float) (leader.PoliticsPreference + 4) / 8;
+            float affluenceBias = (float) (leader.AffluencePreference + 4) / 8;
+            float intellectBias = (float) (leader.IntellectPreference + 4) / 8;
+            Opponent opponent = new(leader, (float) random.NextDouble(), (float) random.NextDouble(), affluenceBias, politicsBias, intellectBias);
+            opponents.Add(leader.Name, opponent);
+        }
+    }
+
     public void ProcessOpponentOnlyTradeAction(TradeAction tradeAction) {
         Opponent targetOpponent = opponents[tradeAction.TargetLeader.Name];
         Opponent originOpponent = opponents[tradeAction.OriginLeader.Name];
         targetOpponent.ProcessIncomingTrade(tradeAction);
         originOpponent.ProcessOutgoingTradeOutcome(tradeAction);
         string accepted = (tradeAction.Accepted) ? "accepted" : "refused";
-        Debug.Log($"{originOpponent.Leader.Name} sent {targetOpponent.Leader.Name} a trade offer. They asked for {tradeAction.RequestedAffluence} money, {tradeAction.RequestedIntellect} intellect, " +
-            $"and {tradeAction.RequestedPolitics} politics; they offered {tradeAction.OfferedAffluence} money, {tradeAction.OfferedIntellect} intellect, and {tradeAction.RequestedPolitics} politics. " +
+        Debug.Log($"{originOpponent.Leader.Name} sent {targetOpponent.Leader.Name} a trade offer. They asked for:\n{tradeAction.RequestedAffluence} money\n{tradeAction.RequestedIntellect} intellect" +
+            $"\nand {tradeAction.RequestedPolitics} politics.\nThey offered:\n{tradeAction.OfferedAffluence} money\n{tradeAction.OfferedIntellect} intellect\nand {tradeAction.RequestedPolitics} politics.\n" +
             $"{targetOpponent.Leader.Name} {accepted} the deal.");
     }
 

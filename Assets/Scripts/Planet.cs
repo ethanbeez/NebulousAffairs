@@ -12,7 +12,7 @@ public class Planet {
     #region Fields
     private int affluenceYield;
     private int politicsYield;
-    private int intelligenceYield;
+    private int intellectYield;
     private Leader? currentLeader;
 
 
@@ -28,7 +28,7 @@ public class Planet {
     public int ID => id;
     public int AffluenceYield => affluenceYield;
     public int PoliticsYield => politicsYield;
-    public int IntelligenceYield => intelligenceYield;
+    public int IntellectYield => intellectYield;
     // Personality
     public float AffluencePriority => affluencePriority;
     public float PoliticsPriority => politicsPriority;
@@ -37,17 +37,20 @@ public class Planet {
     #endregion
 
     #region Constructors
-    public Planet(string name, float affluencePriority, float politicsPriority, float intelligencePriority, int affluenceYield = 1, int politicsYield = 1, int intelligenceYield = 1) {
+    public Planet(string name, int affluenceYield, int politicsYield, int intellectYield) {
         this.name = name;
         id = nextPlanetID++;
-        // Priorities
-        this.affluencePriority = affluencePriority;
-        this.politicsPriority = politicsPriority;
-        this.intelligencePriority = intelligencePriority;
+        
+
         // Yields
         this.affluenceYield = affluenceYield;
         this.politicsYield = politicsYield;
-        this.intelligenceYield = intelligenceYield;
+        this.intellectYield = intellectYield;
+
+        // Priorities
+        affluencePriority = (float) (affluenceYield + 4) / 8;
+        politicsPriority = (float) (politicsYield + 4) / 8;
+        intelligencePriority = (float) (intellectYield + 4) / 8;
         influences = new();
     }
     #endregion
@@ -82,7 +85,7 @@ public class Planet {
     }
 
     public void SetIntelligenceYield(int intelligenceYield) {
-        this.intelligenceYield = intelligenceYield;
+        this.intellectYield = intelligenceYield;
     }
     #endregion
 

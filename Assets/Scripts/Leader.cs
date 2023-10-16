@@ -16,6 +16,7 @@ public class Leader {
     // Relationships and influence.
     private Dictionary<string, Relationship> relationships; // (Leader Name) -> (Leader Relationship)
     private Dictionary<string, Influence> influences; // (Planet Name) -> (Planet Relationship)
+    private Dictionary<string, LeaderVisibility> visibilities; // (Target Leader Name) -> (Leader Visibility)
     private Dictionary<string, Planet> controlledPlanets;
     private int planetControlCount;
 
@@ -44,8 +45,9 @@ public class Leader {
     #endregion
 
     #region Constructors & Builders
-    public Leader(string name, int startingAffluence = 0, int startingPolitics = 0, int startingIntelligence = 0,
-        int affluenceYield = 1, int politicsYield = 1, int intelligenceYield = 1) {
+    public Leader(string name, int affluencePreference, int politicsPreference, int intellectPreference,
+        int startingAffluence = 10, int startingPolitics = 10, int startingIntelligence = 10,
+        int affluenceYield = 0, int politicsYield = 0, int intelligenceYield = 0) {
         AffluenceYield = affluenceYield;
         PoliticsYield = politicsYield;
         IntelligenceYield = intelligenceYield;
@@ -56,9 +58,18 @@ public class Leader {
         PoliticsStockpile = startingPolitics;
         IntelligenceStockpile = startingIntelligence;
 
+        AffluencePreference = affluencePreference;
+        PoliticsPreference = politicsPreference;
+        IntellectPreference = intellectPreference;
+
         influences = new();
         controlledPlanets = new();
         relationships = new();
+        visibilities = new();
+    }
+
+    public void AddNewLeaderVisiblity(LeaderVisibility visibility) {
+        visibilities.Add(visibility.TargetLeader.Name, visibility);
     }
 
     public void AddNewInfluence(Influence influence) {
@@ -73,6 +84,49 @@ public class Leader {
     #endregion
 
     #region Getters/Setters
+    public bool GetLeaderPreferenceVisibility(Leader targetLeader, CurrencyType currencyType) {
+        return visibilities[targetLeader.Name].GetPreferenceVisibilityFromType(currencyType);
+    }
+
+    public int GetCurrencyPreferenceFromType(CurrencyType currencyType) {
+        switch (currencyType) {
+            case CurrencyType.Affluence:
+                return AffluencePreference;
+            case CurrencyType.Politics:
+                return PoliticsPreference;
+            case CurrencyType.Intellect:
+                return IntellectPreference;
+        }
+        Debug.LogError("Leader.GetCurrencyPreferenceFromType: An invalid CurrencyType enum value was provided! Default returning 0.");
+        return 0;
+    }
+
+    public int GetStockpileFromCurrencyType(CurrencyType currencyType) {
+        switch (currencyType) {
+            case CurrencyType.Affluence:
+                return AffluenceStockpile;
+            case CurrencyType.Politics:
+                return PoliticsStockpile;
+            case CurrencyType.Intellect:
+                return IntelligenceStockpile;
+        }
+        Debug.LogError("Leader.GetStockpileFromCurrency: An invalid CurrencyType enum value was provided! Default returning 0.");
+        return 0;
+    }
+
+    public int GetYieldFromCurrencyType(CurrencyType currencyType) {
+        switch (currencyType) {
+            case CurrencyType.Affluence:
+                return AffluenceYield;
+            case CurrencyType.Politics:
+                return PoliticsYield;
+            case CurrencyType.Intellect:
+                return IntelligenceYield;
+        }
+        Debug.LogError("Leader.GetYieldFromCurrencyType: An invalid CurrencyType enum value was provided! Default returning 0.");
+        return 0;
+    }
+
     public float GetRelationshipValue(string leaderName) {
         return relationships[leaderName].RelationshipValue;
     }
@@ -120,6 +174,12 @@ public class Leader {
     #endregion
 
     #region Game Actions
+    public void AccrueYields() {
+        AffluenceStockpile += AffluenceYield;
+        IntelligenceStockpile += IntelligenceYield;
+        PoliticsStockpile += PoliticsYield;
+    }
+
     public void ProcessIncomingTradeAction(TradeAction tradeAction) {
         AffluenceStockpile += tradeAction.OfferedAffluence;
         IntelligenceStockpile += tradeAction.OfferedIntellect;
@@ -162,6 +222,9 @@ public class Leader {
         if (!wasLeader) {
             controlledPlanets.Add(planet.Name, planet);
             planetControlCount++;
+            AffluenceYield += planet.AffluenceYield;
+            PoliticsYield += planet.PoliticsYield;
+            IntelligenceYield += planet.IntellectYield;
         }
     }
 
@@ -170,6 +233,9 @@ public class Leader {
         if (wasLeader) {
             controlledPlanets.Remove(planet.Name, out _);
             planetControlCount--;
+            AffluenceYield -= planet.AffluenceYield;
+            PoliticsYield -= planet.PoliticsYield;
+            IntelligenceYield -= planet.IntellectYield;
         }
     }
     #endregion
@@ -250,19 +316,37 @@ public class Relationship {
 }
 
 public class LeaderVisibility {
+    private const bool PoliticsPrefVisibleDefault = false;
+    private const bool AffluencePrefVisibleDefault = false;
+    private const bool IntellectPrefVisibleDefault = false;
     #region Properties
     public Leader OriginLeader { get; }
     public Leader TargetLeader { get; }
 
-    public bool TargetLeaderPoliticsVisible { get; }
-    public bool TargetLeaderAffluenceVisible { get; }
-    public bool TargetLeaderIntellectVisible { get; }
+    public bool TargetLeaderPoliticsPrefVisible { get; set; } = PoliticsPrefVisibleDefault;
+    public bool TargetLeaderAffluencePrefVisible { get; set; } = AffluencePrefVisibleDefault;
+    public bool TargetLeaderIntellectPrefVisible { get; set; } = IntellectPrefVisibleDefault;
     #endregion
 
     #region Constructors
     public LeaderVisibility(Leader originLeader, Leader targetLeader) { 
         OriginLeader = originLeader;
         TargetLeader = targetLeader;
+    }
+    #endregion
+
+    #region Getters
+    public bool GetPreferenceVisibilityFromType(CurrencyType currencyType) {
+        switch (currencyType) {
+            case CurrencyType.Affluence:
+                return TargetLeaderAffluencePrefVisible;
+            case CurrencyType.Politics:
+                return TargetLeaderPoliticsPrefVisible;
+            case CurrencyType.Intellect:
+                return TargetLeaderIntellectPrefVisible;
+        }
+        Debug.LogError("LeaderVisibility.GetPreferenceVisibilityFromType: An invalid CurrencyType enum value was provided! Default returning false.");
+        return false;
     }
     #endregion
 }

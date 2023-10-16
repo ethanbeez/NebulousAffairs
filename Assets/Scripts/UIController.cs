@@ -99,9 +99,9 @@ public class UIController : MonoBehaviour {
             DerenderPanels();
             planetName.text = clickedPlanet.Name;
             planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
-            planetIntelligencePriority.text = clickedPlanet.IntelligencePriority.ToString();
-            planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
-            planetWealthPriority.text = clickedPlanet.PoliticsPriority.ToString();
+            planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
+            planetPoliticsPriority.text = clickedPlanet.PoliticsYield.ToString();
+            planetWealthPriority.text = clickedPlanet.AffluenceYield.ToString();
 
             //this is about to be the world's shnastiest code
             foreach ((Leader, float) influenceRatio in influenceRatios) {

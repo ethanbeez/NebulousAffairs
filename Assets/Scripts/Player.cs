@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player {
 
-    public Leader Leader { get; }
+    public Leader Leader { get; private set; }
 
     #region Properties
     public Dictionary<string, TradeAction> OutstandingTrades { get; }
@@ -22,7 +22,15 @@ public class Player {
     #endregion
 
     public Player() {
-        Leader = new("Leader 1", 10, 10, 10);
+        
+    }
+
+    public Player(Leader leader) {
+        Leader = leader;
+    }
+
+    public void AssignLeader(Leader leader) {
+        Leader = leader;
     }
 
     public int PlayerTurnActionsLeft { get; set; }
@@ -43,10 +51,6 @@ public class Player {
 
     public void ResetPlayerActionsLeft() {
         PlayerTurnActionsLeft = ActionsPerTurn;
-    }
-
-    public Player(Leader leader) {
-        Leader = leader;
     }
 
     public void ProcessPlayerAction(GameAction action) { 

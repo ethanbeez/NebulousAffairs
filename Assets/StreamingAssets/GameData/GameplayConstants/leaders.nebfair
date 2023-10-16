@@ -1,0 +1,6 @@
+leader_name: 'Aris Yve' .politics_preference: -1 .money_preference: 2 .intellect_preference: 2
+leader_name: 'Krayxic' .politics_preference: 1 .money_preference: -1 .intellect_preference: 3
+leader_name: 'Mother Stacy' .politics_preference: 1 .money_preference: 3 .intellect_preference: -1
+leader_name: 'Nyco Harp' .politics_preference: 0 .money_preference: 1 .intellect_preference: 2
+leader_name: 'Fortuna' .politics_preference: 4 .money_preference: 0 .intellect_preference: -1
+leader_name: 'Foran Jes' .politics_preference: 0 .money_preference: 0 .intellect_preference: 0

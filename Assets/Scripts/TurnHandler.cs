@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class TurnHandler {
+    public static int TurnLimit = 20; // TODO: Make everything else static in refactor (10/15).
     private int turnLimit; // TODO: Remove
     private int startingYear;
     private int yearsPerTurn;

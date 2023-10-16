@@ -1,0 +1,12 @@
+planet_name: 'Rhollian Remnants' .initial_leader: 'Foran Jes' .politics_preference: 1 .money_preference: 0 .intellect_preference: 2
+planet_name: 'Pykien' .initial_leader: 'Foran Jes' .politics_preference: 0 .money_preference: 3 .intellect_preference: 0
+planet_name: 'Havis-4' .initial_leader: 'Nyco Harp' .politics_preference: 1 .money_preference: 0 .intellect_preference: 2
+planet_name: 'Sevshaa' .initial_leader: 'Nyco Harp' .politics_preference: -1 .money_preference: -1 .intellect_preference: 3
+planet_name: 'Pa'an' .initial_leader: 'Mother Stacy' .politics_preference: -1 .money_preference: 1 .intellect_preference: 3
+planet_name: 'Lore's Hope' .initial_leader: 'Mother Stacy' .politics_preference: 1 .money_preference: 3 .intellect_preference: -1
+planet_name: 'Tau Haren' .initial_leader: 'Krayxic' .politics_preference: 4 .money_preference: 1 .intellect_preference: -2
+planet_name: 'Sotaldi' .initial_leader: 'Krayxic' .politics_preference: 0 .money_preference: 2 .intellect_preference: 1
+planet_name: 'Xyda-6' .initial_leader: 'Aris Yve' .politics_preference: 3 .money_preference: -1 .intellect_preference: 1
+planet_name: 'Jocania' .initial_leader: 'Aris Yve' .politics_preference: -2 .money_preference: 1 .intellect_preference: 4
+planet_name: 'Tacto' .initial_leader: 'Fortuna' .politics_preference: 2 .money_preference: 2 .intellect_preference: -1
+planet_name: 'Gamma Vertera' .initial_leader: 'Fortuna' .politics_preference: 4 .money_preference: -1 .intellect_preference: 0
