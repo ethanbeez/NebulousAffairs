@@ -34,4 +34,8 @@ public class InputManager : MonoBehaviour {
             EscapePressed?.Invoke();
         }
     }
+
+    public void EndTurn() {
+        SpacePressed?.Invoke();
+    }
 }

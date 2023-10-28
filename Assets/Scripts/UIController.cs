@@ -16,22 +16,25 @@ public class UIController : MonoBehaviour {
 
     [Header("Main Screen Components")]
     [SerializeField] Canvas mainScreen;
-    
+    [SerializeField] Animator UIAnim;
     [SerializeField] TextMeshProUGUI playerPolitics;
     [SerializeField] TextMeshProUGUI playerWealth;
     [SerializeField] TextMeshProUGUI playerIntelligence;
+    [SerializeField] TextMeshProUGUI playerPoliticsYield;
+    [SerializeField] TextMeshProUGUI playerWealthYield;
+    [SerializeField] TextMeshProUGUI playerIntelligenceYield;
+
     public Leader playerLeader;
 
     [Header("Planet Screen Components")]
-    [SerializeField] Canvas planetScreen;
     [SerializeField] TextMeshProUGUI planetName;
     [SerializeField] TextMeshProUGUI planetInfo;
     [SerializeField] TextMeshProUGUI planetPoliticsPriority;
     [SerializeField] TextMeshProUGUI planetWealthPriority;
     [SerializeField] TextMeshProUGUI planetIntelligencePriority;
 
-    [Header("Leader Screen Components")]
-    [SerializeField] Canvas leaderScreen;
+    //[Header("Leader Screen Components")]
+    //[SerializeField] Canvas leaderScreen;
     
 
     //Gets the GameHandler from the GameManager on wakeup
@@ -48,27 +51,26 @@ public class UIController : MonoBehaviour {
 
     //Renders the Main Scene
     public void RenderMainScene(float delayTime){
-        DerenderPanels();
-       /*  playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
-        playerWealth.text = playerLeader.AffluenceStockpile.ToString();
-        playerPolitics.text = playerLeader.PoliticsStockpile.ToString(); */
-        Invoke("RenderMain", delayTime);
+        UIAnim.SetTrigger("ToNebula");
     }
-
-    //Helper method for RenderMainScene(), used to add a delay time to the Render
-    private void RenderMain() {
-        mainScreen.enabled = true;
-    }
-
 
     //Updates the TurnDisplay to a given String - the expected String is TurnHandler's GameTurns toString.
-    public void updateTurnDisplay(String currentTurn, int planetsControlled, int state) {
+    public void updateTurnDisplay(String TurnInfo) {
         //whatever the turn counter is gonna be = currentTurn;
+
+
+        //UpdateMainScreen
+        playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
+        playerWealth.text = playerLeader.AffluenceStockpile.ToString();
+        playerPolitics.text = playerLeader.PoliticsStockpile.ToString();
+        playerIntelligenceYield.text = "+" + playerLeader.IntelligenceYield.ToString();
+        playerWealthYield.text = "+" + playerLeader.AffluenceYield.ToString();
+        playerPoliticsYield.text = "+" + playerLeader.PoliticsYield.ToString();
+
     }
 
     //Renders the PlanetInfo Screen
     public void RenderPlanetInfo(Planet clickedPlanet, float delayTime, List<(Leader, float)> influenceRatios) {
-         DerenderPanels();
         planetName.text = clickedPlanet.Name;
         planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
         planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
@@ -76,22 +78,17 @@ public class UIController : MonoBehaviour {
         planetWealthPriority.text = clickedPlanet.AffluenceYield.ToString();
     }
 
-    //Derenders all active panels
-    private void DerenderPanels() {
-        mainScreen.enabled = false;
-        planetScreen.enabled = false;
-        leaderScreen.enabled = false;
-    }
-
     //Needs some shit to work first
     public void RenderLeaderInfo(Leader leader){
        
     }
 
-    //TEMP for now - will be deleted after Prototype Build
-    public void RenderLeaderInfo() {
-        DerenderPanels();
-        leaderScreen.enabled = true;
+    public void Back() {
+        if(mainScreen.enabled) {
+            UIAnim.SetTrigger("ToPause");
+        } else {
+            UIAnim.SetTrigger("ToNebula");
+        }
     }
 
 
