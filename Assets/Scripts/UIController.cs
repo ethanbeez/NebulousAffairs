@@ -29,9 +29,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetPoliticsPriority;
     [SerializeField] TextMeshProUGUI planetWealthPriority;
     [SerializeField] TextMeshProUGUI planetIntelligencePriority;
-    [SerializeField] PieChart pieChart;
-    PieChartComponent pcc;
-    [SerializeField] UIDocument pieChartDoc;
+  
 
     [Header("Leader Screen Components")]
     [SerializeField] Canvas leaderScreen;
@@ -40,28 +38,10 @@ public class UIController : MonoBehaviour {
     //Gets the GameHandler from the GameManager on wakeup
     void OnEnable() {
         gameManager = FindObjectOfType<GameManager>();
-        if (GameObject.Find("PlanetScreen/PieChart").GetComponent<PieChartComponent>() == null) {
-            Application.Quit();
-        }
-        pcc = GameObject.Find("PlanetScreen/PieChart").GetComponent<PieChartComponent>();
-        // pieChart = GameObject.Find("PlanetScreen/PieChart").GetComponent<PieChartComponent>().pieChart;
-        // pieChart = FindObjectOfType<PieChartComponent>().pieChart;
-        /*if (pieChart == null) {
-            Instantiate()
-            GameObject.Find().
-        }*/
-        // actualPieChart = pieChart.pieChart;
-        /*if (actualPieChart == null) {
-            Application.Quit();
-        }*/
-
-        pieChartDoc.enabled = true;
-        pieChartDoc.rootVisualElement.style.display = DisplayStyle.None;
     }
 
     //UHHHHHHHHHH
     void Update() {
-        pieChart = pcc.pieChart;
         playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
         playerWealth.text = playerLeader.AffluenceStockpile.ToString();
         playerPolitics.text = playerLeader.PoliticsStockpile.ToString();
@@ -95,52 +75,12 @@ public class UIController : MonoBehaviour {
 
     //Renders the PlanetInfo Screen
     public void RenderPlanetInfo(Planet clickedPlanet, float delayTime, List<(Leader, float)> influenceRatios) {
-        try {
-            DerenderPanels();
-            planetName.text = clickedPlanet.Name;
-            planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
-            planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
-            planetPoliticsPriority.text = clickedPlanet.PoliticsYield.ToString();
-            planetWealthPriority.text = clickedPlanet.AffluenceYield.ToString();
-
-            //this is about to be the world's shnastiest code
-            foreach ((Leader, float) influenceRatio in influenceRatios) {
-                string leaderName = influenceRatio.Item1.Name;
-                switch (leaderName) {
-                    case "Leader 1":
-                        pieChart.leader1 = influenceRatio.Item2;
-                        break;
-                    case "Leader 2":
-                        pieChart.leader2 = influenceRatio.Item2;
-                        break;
-                    case "Leader 3":
-                        pieChart.leader3 = influenceRatio.Item2;
-                        break;
-                    case "Leader 4":
-                        pieChart.leader4 = influenceRatio.Item2;
-                        break;
-                    case "Leader 5":
-                        pieChart.leader5 = influenceRatio.Item2;
-                        break;
-                    case "Leader 6":
-                        pieChart.leader6 = influenceRatio.Item2;
-                        break;
-                }
-
-            }
-
-
-            Invoke("RenderPlanet", delayTime);
-        } catch (Exception e) {
-            Application.Quit();
-        }
-        
-    }
-
-    //Delayed method for RenderPlanetInfo
-    private void RenderPlanet() {
-        planetScreen.enabled = true;
-        pieChartDoc.rootVisualElement.style.display = DisplayStyle.Flex;
+         DerenderPanels();
+        planetName.text = clickedPlanet.Name;
+        planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
+        planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
+        planetPoliticsPriority.text = clickedPlanet.PoliticsYield.ToString();
+        planetWealthPriority.text = clickedPlanet.AffluenceYield.ToString();
     }
 
     //Derenders all active panels
@@ -148,7 +88,6 @@ public class UIController : MonoBehaviour {
         mainScreen.enabled = false;
         planetScreen.enabled = false;
         leaderScreen.enabled = false;
-        pieChartDoc.rootVisualElement.style.display = DisplayStyle.None;
     }
 
     //Needs some shit to work first
