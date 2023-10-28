@@ -16,7 +16,7 @@ public class UIController : MonoBehaviour {
 
     [Header("Main Screen Components")]
     [SerializeField] Canvas mainScreen;
-    [SerializeField] TextMeshProUGUI turnDisplay;
+    
     [SerializeField] TextMeshProUGUI playerPolitics;
     [SerializeField] TextMeshProUGUI playerWealth;
     [SerializeField] TextMeshProUGUI playerIntelligence;
@@ -29,7 +29,6 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetPoliticsPriority;
     [SerializeField] TextMeshProUGUI planetWealthPriority;
     [SerializeField] TextMeshProUGUI planetIntelligencePriority;
-  
 
     [Header("Leader Screen Components")]
     [SerializeField] Canvas leaderScreen;
@@ -42,17 +41,17 @@ public class UIController : MonoBehaviour {
 
     //UHHHHHHHHHH
     void Update() {
-        playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
+        /* playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
         playerWealth.text = playerLeader.AffluenceStockpile.ToString();
-        playerPolitics.text = playerLeader.PoliticsStockpile.ToString();
+        playerPolitics.text = playerLeader.PoliticsStockpile.ToString(); */
     }
 
     //Renders the Main Scene
     public void RenderMainScene(float delayTime){
         DerenderPanels();
-        playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
+       /*  playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
         playerWealth.text = playerLeader.AffluenceStockpile.ToString();
-        playerPolitics.text = playerLeader.PoliticsStockpile.ToString();
+        playerPolitics.text = playerLeader.PoliticsStockpile.ToString(); */
         Invoke("RenderMain", delayTime);
     }
 
@@ -64,13 +63,7 @@ public class UIController : MonoBehaviour {
 
     //Updates the TurnDisplay to a given String - the expected String is TurnHandler's GameTurns toString.
     public void updateTurnDisplay(String currentTurn, int planetsControlled, int state) {
-        turnDisplay.text = currentTurn;
-        turnDisplay.text += ", Planets Controlled: " + planetsControlled;
-        if (state == 1) {
-            turnDisplay.text += "\nYOU LOST!";
-        } else if (state == 2) {
-            turnDisplay.text += "\nYOU WON!";
-        }
+        //whatever the turn counter is gonna be = currentTurn;
     }
 
     //Renders the PlanetInfo Screen
@@ -92,14 +85,7 @@ public class UIController : MonoBehaviour {
 
     //Needs some shit to work first
     public void RenderLeaderInfo(Leader leader){
-        /*
-            Process for Rendering Leader Info:
-            Create an Event that represents whether a button has been clicked or not
-            Update that event when a button is clicked, passing in a reference to the Leader's name
-            Check for that Event being called in GameManager
-            Call GameManager.gameHandler.leaderHandler.leaders.get(name), passing in a Leader to RenderLeaderInfo()
-            Render the Leader Info
-        */
+       
     }
 
     //TEMP for now - will be deleted after Prototype Build
