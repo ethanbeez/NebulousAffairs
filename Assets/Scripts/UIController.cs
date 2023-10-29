@@ -7,15 +7,12 @@ using System.Runtime.InteropServices;
 using System;
 using UnityEngine.UI;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEngine.UIElements;
-
 public class UIController : MonoBehaviour {
 
     GameManager gameManager;
+    InputManager inputManager;
 
     [Header("Main Screen Components")]
-    [SerializeField] Canvas mainScreen;
     [SerializeField] Animator UIAnim;
     [SerializeField] TextMeshProUGUI playerPolitics;
     [SerializeField] TextMeshProUGUI playerWealth;
@@ -32,7 +29,10 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetPoliticsPriority;
     [SerializeField] TextMeshProUGUI planetWealthPriority;
     [SerializeField] TextMeshProUGUI planetIntelligencePriority;
-
+    [SerializeField] TextMeshProUGUI planetPoliticsYield;
+    [SerializeField] TextMeshProUGUI planetWealthYield;
+    [SerializeField] TextMeshProUGUI planetIntelligenceYield;
+ 
     //[Header("Leader Screen Components")]
     //[SerializeField] Canvas leaderScreen;
     
@@ -40,14 +40,8 @@ public class UIController : MonoBehaviour {
     //Gets the GameHandler from the GameManager on wakeup
     void OnEnable() {
         gameManager = FindObjectOfType<GameManager>();
-    }
-
-    //UHHHHHHHHHH
-    void Update() {
-        /* playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
-        playerWealth.text = playerLeader.AffluenceStockpile.ToString();
-        playerPolitics.text = playerLeader.PoliticsStockpile.ToString(); */
-    }
+        inputManager = FindObjectOfType<InputManager>();
+        }
 
     //Renders the Main Scene
     public void RenderMainScene(float delayTime){
@@ -70,12 +64,19 @@ public class UIController : MonoBehaviour {
     }
 
     //Renders the PlanetInfo Screen
-    public void RenderPlanetInfo(Planet clickedPlanet, float delayTime, List<(Leader, float)> influenceRatios) {
+    public void RenderPlanetInfo(Planet clickedPlanet, List<(Leader, float)> influenceRatios) {
         planetName.text = clickedPlanet.Name;
         planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
+
+        //Espionage Needs Implementation for these
+        planetIntelligencePriority.text = clickedPlanet.IntelligencePriority.ToString();
+        planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
+        planetWealthPriority.text = clickedPlanet.AffluencePriority.ToString();
+        planetPoliticsYield.text = clickedPlanet.PoliticsYield.ToString();
         planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
-        planetPoliticsPriority.text = clickedPlanet.PoliticsYield.ToString();
-        planetWealthPriority.text = clickedPlanet.AffluenceYield.ToString();
+        planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
+
+        UIAnim.SetTrigger("ToPlanet");
     }
 
     //Needs some shit to work first
@@ -84,10 +85,13 @@ public class UIController : MonoBehaviour {
     }
 
     public void Back() {
-        if(mainScreen.enabled) {
+        if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Nebula")) {
+
             UIAnim.SetTrigger("ToPause");
         } else {
             UIAnim.SetTrigger("ToNebula");
+            if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Planet"))
+                inputManager.CameraToMapPosition();
         }
     }
 

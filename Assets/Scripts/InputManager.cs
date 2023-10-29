@@ -38,4 +38,8 @@ public class InputManager : MonoBehaviour {
     public void EndTurn() {
         SpacePressed?.Invoke();
     }
+
+    public void CameraToMapPosition() {
+        MPressed?.Invoke();
+    }
 }

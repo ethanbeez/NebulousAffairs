@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour {
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
-        uiController.RenderPlanetInfo(clickedPlanet, 3.4f, gameHandler.GetPlanetInfluenceRatios(planetName));
+        uiController.RenderPlanetInfo(clickedPlanet, gameHandler.GetPlanetInfluenceRatios(planetName));
         cameraController.StartFly(focusTarget);
     }
 
