@@ -33,8 +33,11 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetWealthYield;
     [SerializeField] TextMeshProUGUI planetIntelligenceYield;
  
-    //[Header("Leader Screen Components")]
-    //[SerializeField] Canvas leaderScreen;
+    [Header("Leader Screen Components")]
+    [SerializeField] Image leaderImage;
+    [SerializeField] TextMeshProUGUI leaderPoliticsPriority;
+    [SerializeField] TextMeshProUGUI leaderIntelligencePriority;
+    [SerializeField] TextMeshProUGUI leaderWealthPriority;
     
 
     //Gets the GameHandler from the GameManager on wakeup
@@ -79,11 +82,22 @@ public class UIController : MonoBehaviour {
         UIAnim.SetTrigger("ToPlanet");
     }
 
-    //Needs some shit to work first
+    //Renders the LeaderInfo Screen Relative to a given Leader
     public void RenderLeaderInfo(Leader leader){
-       
-    }
+       leaderIntelligencePriority.text = leader.IntellectPreference.ToString();
+       leaderPoliticsPriority.text = leader.PoliticsPreference.ToString();
+       leaderWealthPriority.text = leader.AffluencePreference.ToString();
+       //Need Ethan to Work on this
+       //leaderImage.sprite = leader.image;
 
+       //check if coming from Planet
+       if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Planet"))
+            inputManager.CameraToMapPosition();
+        
+        UIAnim.SetTrigger("ToLeader");
+    } 
+
+    //Contains the Functionality of the Back Button
     public void Back() {
         if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Nebula")) {
 

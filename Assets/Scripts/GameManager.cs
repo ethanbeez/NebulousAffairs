@@ -35,12 +35,19 @@ public class GameManager : MonoBehaviour {
         InputManager.TPressed += ToggleGalaxyMotionTrails;
         InputManager.EscapePressed += QuitGame;
         InputManager.SpacePressed += HandleTurnAdvancement;
+        ButtonManager.LeaderButtonPressed += HandleLeaderClick;
         PlanetController.PlanetClicked += HandlePlanetClick;
 
         uiController.playerLeader = gameHandler.GetPlayerLeader();
         uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo());
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
+    }
+
+    private void HandleLeaderClick(int index)
+    {
+        //access leader info
+        //uiController.RenderLeaderInfo();
     }
 
     private void CheckMissingGameDataFiles() {
@@ -88,6 +95,7 @@ public class GameManager : MonoBehaviour {
         uiController.RenderPlanetInfo(clickedPlanet, gameHandler.GetPlanetInfluenceRatios(planetName));
         cameraController.StartFly(focusTarget);
     }
+
 
     private void HandleTurnAdvancement() {
 
