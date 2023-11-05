@@ -1964,6 +1964,8 @@ MonoBehaviour:
   playerPoliticsYield: {fileID: 1032627120}
   playerWealthYield: {fileID: 1540832403}
   playerIntelligenceYield: {fileID: 1735340543}
+  LogData: {fileID: 4322407485815068895}
+  LogPrefab: {fileID: 5330744377749603848, guid: f0b625f8306a75444aebd72d239bd079, type: 3}
   planetName: {fileID: 1586075936}
   planetInfo: {fileID: 2098303138}
   planetPoliticsPriority: {fileID: 1766667516}
@@ -2342,6 +2344,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1259760272488895421, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+      propertyPath: m_Name
+      value: LogText
+      objectReference: {fileID: 0}
     - target: {fileID: 2266873271683937442, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2372,7 +2378,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2297547578712371484, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 319.8427
+      value: 319.84262
       objectReference: {fileID: 0}
     - target: {fileID: 2332264914997270366, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2714,6 +2720,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8924723861568476387, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+      propertyPath: m_text
+      value: Game Started - Good Luck
+      objectReference: {fileID: 0}
     - target: {fileID: 8933817174701698401, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2739,7 +2749,23 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3525297043803413830, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 6916182593872554530, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 7394308875137363106, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 1617644308579093369, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 316787091104342846, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 8450572213629739048, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 836995405520903252, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 7614528706598816024, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 4077296555689899263, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 1844855479456749803, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 7749683045273551932, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 8553001585930246219, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 3655628716567616360, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 8353626407554241931, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 3674279083629365630, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 1259760272488895421, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1055781583913093377, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       insertIndex: -1
@@ -2758,6 +2784,11 @@ PrefabInstance:
 --- !u!224 &4322407485815068894 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1055781583913093377, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+  m_PrefabInstance: {fileID: 4322407485815068893}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &4322407485815068895 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2297547578712371484, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
   m_PrefabInstance: {fileID: 4322407485815068893}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807

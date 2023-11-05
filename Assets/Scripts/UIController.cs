@@ -20,6 +20,8 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI playerPoliticsYield;
     [SerializeField] TextMeshProUGUI playerWealthYield;
     [SerializeField] TextMeshProUGUI playerIntelligenceYield;
+    [SerializeField] Transform LogData;
+    [SerializeField] TextMeshProUGUI LogPrefab;
 
     public Leader playerLeader;
 
@@ -107,6 +109,16 @@ public class UIController : MonoBehaviour {
             if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Planet"))
                 inputManager.CameraToMapPosition();
         }
+    }
+
+    /// <summary>
+    /// Adds a given string into the Log, formatting with Font and Text Size, while making visible to the player
+    /// </summary>
+    /// <param name="LogInfo"> The info that is added to the log</param>
+    /// <returns>the current number of unique text instances within the log</returns>
+    public void addToLog(string LogInfo) {
+        var LogText = Instantiate(LogPrefab, LogData);
+        LogText.text = LogInfo;
     }
 
 
