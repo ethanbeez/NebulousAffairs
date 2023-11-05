@@ -42,6 +42,10 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI leaderPoliticsPriority;
     [SerializeField] TextMeshProUGUI leaderIntelligencePriority;
     [SerializeField] TextMeshProUGUI leaderWealthPriority;
+    [SerializeField] TradeUIController tradeUI;
+
+    private List<(string, string)> leaderButtonData; 
+    Leader currentLeader;
     
 
     //Gets the GameHandler from the GameManager on wakeup
@@ -56,6 +60,7 @@ public class UIController : MonoBehaviour {
     }
 
     public void InstantiateButtons(List<(string, string)> leaderButtonData) {
+        this.leaderButtonData = leaderButtonData;
         buttonController.InstantiateLeaderButtons(leaderButtonData);
     }
 
@@ -98,6 +103,8 @@ public class UIController : MonoBehaviour {
     //Renders the LeaderInfo Screen Relative to a given Leader
     public void RenderLeaderInfo(Leader leader){
 
+
+       currentLeader = leader; 
        // Should be determined by Espionage 
        leaderIntelligencePriority.text = leader.IntellectPreference.ToString();
        leaderPoliticsPriority.text = leader.PoliticsPreference.ToString();
@@ -127,6 +134,11 @@ public class UIController : MonoBehaviour {
             inputManager.CameraToMapPosition();
         }
         UIAnim.SetTrigger("Back");
+    }
+
+    public void Trade() {
+        tradeUI.BeginTrade(playerLeader, currentLeader, leaderButtonData);
+        UIAnim.SetTrigger("Trade");
     }
 
     //TODO: Espionage Detection, Commanding, and 
