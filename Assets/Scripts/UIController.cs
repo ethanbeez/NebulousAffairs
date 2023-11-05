@@ -46,15 +46,19 @@ public class UIController : MonoBehaviour {
     void OnEnable() {
         gameManager = FindObjectOfType<GameManager>();
         inputManager = FindObjectOfType<InputManager>();
-        }
+        AddToLog("Good Luck - The Galaxy Depends on You");
+    }
+
+    void Update() {
+    }
 
     //Renders the Main Scene
     public void RenderMainScene(float delayTime){
-        UIAnim.SetTrigger("ToNebula");
+        UIAnim.SetTrigger("Back");
     }
 
     //Updates the TurnDisplay to a given String - the expected String is TurnHandler's GameTurns toString.
-    public void updateTurnDisplay(String TurnInfo) {
+    public void UpdateTurnDisplay(String TurnInfo) {
         //whatever the turn counter is gonna be = currentTurn;
 
 
@@ -86,6 +90,8 @@ public class UIController : MonoBehaviour {
 
     //Renders the LeaderInfo Screen Relative to a given Leader
     public void RenderLeaderInfo(Leader leader){
+
+       // Should be determined by Espionage 
        leaderIntelligencePriority.text = leader.IntellectPreference.ToString();
        leaderPoliticsPriority.text = leader.PoliticsPreference.ToString();
        leaderWealthPriority.text = leader.AffluencePreference.ToString();
@@ -99,27 +105,24 @@ public class UIController : MonoBehaviour {
         UIAnim.SetTrigger("ToLeader");
     } 
 
-    //Contains the Functionality of the Back Button
-    public void Back() {
-        if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Nebula")) {
-
-            UIAnim.SetTrigger("ToPause");
-        } else {
-            UIAnim.SetTrigger("ToNebula");
-            if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Planet"))
-                inputManager.CameraToMapPosition();
-        }
-    }
-
     /// <summary>
     /// Adds a given string into the Log, formatting with Font and Text Size, while making visible to the player
     /// </summary>
     /// <param name="LogInfo"> The info that is added to the log</param>
     /// <returns>the current number of unique text instances within the log</returns>
-    public void addToLog(string LogInfo) {
+    public void AddToLog(string LogInfo) {
         var LogText = Instantiate(LogPrefab, LogData);
         LogText.text = LogInfo;
     }
+
+    public void Back() {
+        if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Planet")) {
+            inputManager.CameraToMapPosition();
+        }
+        UIAnim.SetTrigger("Back");
+    }
+
+    //TODO: Espionage Detection, Commanding, and 
 
 
 

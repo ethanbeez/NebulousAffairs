@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour {
         PlanetController.PlanetClicked += HandlePlanetClick;
 
         uiController.playerLeader = gameHandler.GetPlayerLeader();
-        uiController.updateTurnDisplay(turnHandler.GetCurrentTurnInfo());
+        uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo());
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
     }
@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour {
             if (gameHandler.GetPlayerPlanetsControlled() == 0) won = 1;
             if (gameHandler.GetPlayerPlanetsControlled() == 12) won = 2;
         }
-        uiController.updateTurnDisplay(gameTurnInfo.ToString());
+        uiController.UpdateTurnDisplay(gameTurnInfo.ToString());
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
