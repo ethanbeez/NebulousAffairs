@@ -11,6 +11,8 @@ public class UIController : MonoBehaviour {
 
     GameManager gameManager;
     InputManager inputManager;
+    ButtonController buttonController;
+    [SerializeField] GameObject leaderButtonPrefab;
 
     [Header("Main Screen Components")]
     [SerializeField] Animator UIAnim;
@@ -44,7 +46,12 @@ public class UIController : MonoBehaviour {
     void OnEnable() {
         gameManager = FindObjectOfType<GameManager>();
         inputManager = FindObjectOfType<InputManager>();
-        }
+        buttonController = new(leaderButtonPrefab);
+    }
+
+    public void InstantiateButtons(List<(string, string)> leaderButtonData) {
+        buttonController.InstantiateLeaderButtons(leaderButtonData);
+    }
 
     //Renders the Main Scene
     public void RenderMainScene(float delayTime){
