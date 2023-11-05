@@ -304,6 +304,10 @@ public class GameHandler {
         return leaderDebugInfo;
     }
 
+    public Leader GetOpponentLeader(string leaderName) { 
+        return opponentHandler.opponents[leaderName].Leader;    
+    }
+
     public Leader GetPlayerLeader() {
         return player.Leader;
     }
