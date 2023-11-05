@@ -20,6 +20,7 @@ public class Leader {
     private Dictionary<string, Planet> controlledPlanets;
     private int planetControlCount;
 
+    private LeaderResources leaderResources;
     #endregion
 
     #region Properties
@@ -66,6 +67,11 @@ public class Leader {
         controlledPlanets = new();
         relationships = new();
         visibilities = new();
+        leaderResources = new(name);
+    }
+
+    public string GetLeaderImagePath(LeaderResources.Perspectives perspective, LeaderResources.Expressions expression) {
+        return leaderResources.GetLeaderImagePath(perspective, expression);
     }
 
     public void AddNewLeaderVisiblity(LeaderVisibility visibility) {
@@ -239,6 +245,33 @@ public class Leader {
         }
     }
     #endregion
+}
+
+public class LeaderResources {
+    public enum Expressions { 
+        Default = 0,
+        Neutral = 1,
+        Happy = 2,
+        Sad = 3,
+        Angry = 4,
+        Curious = 5
+    }
+
+    public enum Perspectives { 
+        Default = 0,
+        Portrait = 1,
+        Full = 2
+    }
+
+    private Dictionary<Perspectives, Dictionary<Expressions, string>> imagePaths;
+
+    public LeaderResources(string leaderName) {
+        imagePaths = FileManager.GetLeaderImagePaths(leaderName);
+    }
+
+    public string GetLeaderImagePath(Perspectives perspective, Expressions expression) {
+        return imagePaths[perspective][expression];
+    }
 }
 
 public class Influence {

@@ -44,6 +44,16 @@ public class GameHandler {
         }
     }
 
+    public List<(string, string)> GetLeaderButtonData() {
+        List<(string, string)> leaderButtonData = new();
+        foreach (Opponent opponent in opponentHandler.opponents.Values) {
+            Leader opponentLeader = opponent.Leader;
+            (string, string) buttonData = (opponentLeader.Name, opponentLeader.GetLeaderImagePath(LeaderResources.Perspectives.Portrait, LeaderResources.Expressions.Neutral)); 
+            leaderButtonData.Add(buttonData);
+        }
+        return leaderButtonData;
+    }
+
     public void BuildConnections(int leadersPerPlanet) {
         BuildInfluenceProfiles();
         BuildPlanetLeaders();

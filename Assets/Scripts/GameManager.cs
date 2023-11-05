@@ -28,14 +28,14 @@ public class GameManager : MonoBehaviour {
         if (uiController == null) {
             uiController = GameObject.Find("UIController").GetComponent<UIController>();
         }
-
+        uiController.InstantiateButtons(gameHandler.GetLeaderButtonData());
         GenerateNebula();
         InputManager.MPressed += CameraToMapPosition;
         InputManager.SPressed += ToggleNebulaOrbits;
         InputManager.TPressed += ToggleGalaxyMotionTrails;
         InputManager.EscapePressed += QuitGame;
         InputManager.SpacePressed += HandleTurnAdvancement;
-        ButtonManager.LeaderButtonPressed += HandleLeaderClick;
+        // ButtonController.LeaderButtonPressed += HandleLeaderClick;
         PlanetController.PlanetClicked += HandlePlanetClick;
 
         uiController.playerLeader = gameHandler.GetPlayerLeader();

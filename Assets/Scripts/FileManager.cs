@@ -5,15 +5,21 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEngine;
 
 public static class FileManager {
+    private static readonly Regex whitespaceTrim = new(@"\s+");
+
     private const string MissingValueQualifier = "NOT_DEFINED";
     private static int MissingLeaderNameInt = 1;
     private static int MissingPlanetNameInt = 1;
     private const string GameDataFileExtension = ".nebfair";
+    private const string ResourcesFolder = "/Resources";
     private const string GameDataFolder = "/GameData";
+    private const string LeaderImageExtension = ".png";
     private const string GameplayConstantsFolder = "/GameplayConstants";
+    private const string LeadersResourceFolder = "/Leaders";
     private const string LeaderGameplayDataFile = "/leaders";
     private const string PlanetGameplayDataFile = "/planets";
     private static readonly List<string> GameplayConstantsFiles = new(){ LeaderGameplayDataFile, PlanetGameplayDataFile };
@@ -159,5 +165,25 @@ public static class FileManager {
             Debug.LogError(e.Message);
         }
         return initialPlanetLeaders;
+    }
+
+    public static Sprite GetLeaderImageFromFileName(string name) {
+        string leaderImageFilePath = "LeaderImages/" +  whitespaceTrim.Replace(name, "");
+        if (Resources.Load<Sprite>(leaderImageFilePath) == null) {
+            Debug.Log("):");
+        }
+        return Resources.Load<Sprite>(leaderImageFilePath);
+    }
+
+    public static Dictionary<LeaderResources.Perspectives, Dictionary<LeaderResources.Expressions, string>> GetLeaderImagePaths(string leaderName) {
+        Dictionary<LeaderResources.Perspectives, Dictionary<LeaderResources.Expressions, string>> leaderImagePaths = new();
+        foreach (LeaderResources.Perspectives perspective in Enum.GetValues(typeof(LeaderResources.Perspectives))) {
+            Dictionary<LeaderResources.Expressions, string> expressions = new();
+            foreach (LeaderResources.Expressions expression in Enum.GetValues(typeof(LeaderResources.Expressions))) {
+                expressions.Add(expression, $"{leaderName}_{perspective.ToString().ToLower()}_{expression.ToString().ToLower()}");
+            }
+            leaderImagePaths.Add(perspective, expressions);
+        }
+        return leaderImagePaths;
     }
 }
