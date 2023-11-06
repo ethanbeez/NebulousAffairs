@@ -61,7 +61,7 @@ public class UIController : MonoBehaviour {
 
     public void InstantiateButtons(List<(string, string)> leaderButtonData) {
         this.leaderButtonData = leaderButtonData;
-        buttonController.InstantiateLeaderButtons(leaderButtonData);
+        //buttonController.InstantiateLeaderButtons(leaderButtonData);
     }
 
     //Renders the Main Scene
