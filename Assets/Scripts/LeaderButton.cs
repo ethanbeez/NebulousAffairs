@@ -3,30 +3,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class LeaderButton {
     public const float PortraitScale = 0.2f;
 
-    public delegate void LeaderButtonHandler(int index);
+    public delegate void LeaderButtonHandler(string leaderName);
     public static event LeaderButtonHandler? LeaderButtonPressed;
     // public GameObject buttonObject;
     private GameObject leaderButtonGameObject;
+    private UnityAction buttonPressed;
     public string LeaderName { get; private set; }
     public string ImagePath { get; private set; }
     private Image leaderImage;
     private Button button;
+    private string leaderName;
 
     public LeaderButton(string leaderName, string imagePath, GameObject leaderButtonGameObject) {
         this.leaderButtonGameObject = leaderButtonGameObject;
-        // button = new();
+        leaderButtonGameObject.AddComponent<Button>();
         LeaderName = leaderName;
+        this.leaderName = leaderName;
         ImagePath = imagePath;
-        // leaderImage = new();
-        // button.clicked += LeaderClicked;
+        //leaderImage = new Image();
+        buttonPressed += LeaderClicked;
+       leaderButtonGameObject.GetComponent<Button>().onClick.AddListener(buttonPressed);
     }
 
-    public static void LeaderClicked() { 
-        
+    public void LeaderClicked() {
+        LeaderButtonPressed.Invoke(leaderName);
     }
 }
