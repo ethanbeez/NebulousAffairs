@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour {
         InputManager.TPressed += ToggleGalaxyMotionTrails;
         InputManager.EscapePressed += QuitGame;
         InputManager.SpacePressed += HandleTurnAdvancement;
-        // ButtonController.LeaderButtonPressed += HandleLeaderClick;
+        //ButtonController.LeaderButtonPressed += HandleLeaderClick;
         PlanetController.PlanetClicked += HandlePlanetClick;
 
         uiController.playerLeader = gameHandler.GetPlayerLeader();
@@ -44,10 +44,9 @@ public class GameManager : MonoBehaviour {
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
     }
 
-    private void HandleLeaderClick(int index)
+    private void HandleLeaderClick(string leaderName)
     {
-        //access leader info
-        //uiController.RenderLeaderInfo();
+        uiController.RenderLeaderInfo(gameHandler.GetOpponentLeader(leaderName));
     }
 
     private void CheckMissingGameDataFiles() {
@@ -75,7 +74,7 @@ public class GameManager : MonoBehaviour {
 
     private void CameraToMapPosition() {
         cameraController.StartMapFly();
-        uiController.RenderMainScene(1.8f);
+        uiController.RenderMainScene();
     }
 
     private void ToggleNebulaOrbits() {

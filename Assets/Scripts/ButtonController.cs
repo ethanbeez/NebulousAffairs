@@ -14,6 +14,8 @@ public class ButtonController {
         this.leaderButtonPrefab = leaderButtonPrefab;
         leaderButtons = new();
     }
+    public delegate void leaderButtonHandler(string LeaderName);
+    public static event leaderButtonHandler? LeaderButtonPressed;
 
     public void InstantiateLeaderButtons(List<(string, string)> leaderInfo) {
         Debug.Log(leaderInfo.Count);
@@ -31,6 +33,7 @@ public class ButtonController {
             rectTransform.position = new(order++ * sprite.rect.width * LeaderButton.PortraitScale, 0, 0);
             leaderButtons.Add(leader.Item1, leaderButton);
             leaderButtonGameObject.transform.SetParent(leadersPanelGameObject.transform, false);
+            //
         }
     }
 }

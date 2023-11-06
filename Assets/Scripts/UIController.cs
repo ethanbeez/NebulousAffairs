@@ -65,7 +65,7 @@ public class UIController : MonoBehaviour {
     }
 
     //Renders the Main Scene
-    public void RenderMainScene(float delayTime){
+    public void RenderMainScene(){
         UIAnim.SetTrigger("Back");
     }
 
