@@ -36,6 +36,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetPoliticsYield;
     [SerializeField] TextMeshProUGUI planetWealthYield;
     [SerializeField] TextMeshProUGUI planetIntelligenceYield;
+    [SerializeField] PieChart pieChart;
  
     [Header("Leader Screen Components")]
     [SerializeField] Image leaderImage;
@@ -74,6 +75,10 @@ public class UIController : MonoBehaviour {
         //whatever the turn counter is gonna be = currentTurn;
 
 
+        //Pie Chart should be updated when turn ends. yipee.
+        //pieChart.LoadPieChart(influenceRatios);
+
+
         //UpdateMainScreen
         playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
         playerWealth.text = playerLeader.AffluenceStockpile.ToString();
@@ -96,7 +101,8 @@ public class UIController : MonoBehaviour {
         planetPoliticsYield.text = clickedPlanet.PoliticsYield.ToString();
         planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
-
+        pieChart.LoadPieChart(influenceRatios);
+        
         UIAnim.SetTrigger("ToPlanet");
     }
 
