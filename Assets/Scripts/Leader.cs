@@ -191,8 +191,38 @@ public class Leader {
         PoliticsStockpile += PoliticsYield;
     }
 
-    public void IncurElectionTurnCosts() { 
-        
+    public void IncurElectionTurnCosts() {
+        foreach (string planetName in controlledPlanets.Keys) {
+            TryIncurPlanetUpkeep(CurrencyType.Affluence, planetControlCount, planetName);
+            TryIncurPlanetUpkeep(CurrencyType.Politics, planetControlCount, planetName);
+            TryIncurPlanetUpkeep(CurrencyType.Intellect, planetControlCount, planetName);
+        }
+    }
+
+    private void TryIncurPlanetUpkeep(CurrencyType currencyType, int costPerCurrency, string planetName) {
+        switch (currencyType) {
+            case CurrencyType.Affluence:
+                if (AffluenceStockpile - costPerCurrency < 0) {
+                    influences[planetName].SetInfluence(influences[planetName].InfluenceValue / 2);
+                } else {
+                    AffluenceStockpile -= costPerCurrency;
+                }
+                break;
+            case CurrencyType.Politics:
+                if (PoliticsStockpile - costPerCurrency < 0) {
+                    influences[planetName].SetInfluence(influences[planetName].InfluenceValue / 2);
+                } else {
+                    PoliticsStockpile -= costPerCurrency;
+                }
+                break;
+            case CurrencyType.Intellect:
+                if (IntelligenceStockpile - costPerCurrency < 0) {
+                    influences[planetName].SetInfluence(influences[planetName].InfluenceValue / 2);
+                } else {
+                    IntelligenceStockpile -= costPerCurrency;
+                }
+                break;
+        }
     }
 
     public void ProcessIncomingTradeAction(TradeAction tradeAction) {

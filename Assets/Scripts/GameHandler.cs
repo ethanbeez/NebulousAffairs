@@ -252,7 +252,11 @@ public class GameHandler {
         return planetInfluences;
     }
 
-    public bool ProcessElection(Election electionData) { 
+    public bool ProcessElection(Election electionData) {
+        player.Leader.IncurElectionTurnCosts();
+        foreach (Opponent opponent in opponentHandler.opponents.Values) {
+            opponent.Leader.IncurElectionTurnCosts();
+        }
         foreach (Planet planet in planetHandler.planets.Values) {
             electionData.DeterminePlanetElectionOutcome(planet);
         }

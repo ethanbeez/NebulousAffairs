@@ -118,6 +118,7 @@ public class NebulaController : MonoBehaviour {
             float currentAngle = i * systemAngDisp;
             GameObject starInstance = Instantiate(starPrefab);
             StarController starController = starInstance.GetComponent<StarController>();
+            Debug.Log(blackHoleInstance.GetComponent<BlackHoleController>());
             starController.blackHoleController = blackHoleInstance.GetComponent<BlackHoleController>();
             starInstance.transform.position = new Vector3(Mathf.Cos(currentAngle) * blackHoleStarRadius, galaxyDepth, Mathf.Sin(currentAngle) * blackHoleStarRadius);
             starController.Radius = blackHoleStarRadius; // TODO: Don't hardcode these
