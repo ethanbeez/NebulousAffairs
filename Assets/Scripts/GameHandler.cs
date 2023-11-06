@@ -311,4 +311,8 @@ public class GameHandler {
     public Leader GetPlayerLeader() {
         return player.Leader;
     }
+
+    public int GetPlayerActionsLeft() {
+        return player.PlayerTurnActionsLeft;
+    }
 }
