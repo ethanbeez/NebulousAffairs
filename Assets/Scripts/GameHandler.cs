@@ -173,6 +173,16 @@ public class GameHandler {
         return player.OutstandingTrades;
     }
 
+    /// <summary>
+    /// Returns the outstanding trade from the Leader corresponding to the leader name parameter, if one exists. If no such outstanding 
+    /// trade exists, this method returns null.
+    /// </summary>
+    /// <param name="leaderName">The name of the Leader to get the outstanding treade of</param>
+    /// <returns>The outstanding trade corresponding to the input Leader name</returns>
+    public TradeAction GetOutstandingTrade(string leaderName) {
+        return player.OutstandingTrades[leaderName];   
+    }
+
     public Planet GetPlanet(string planetName) {
         if (planetHandler.planets.TryGetValue(planetName, out Planet planet)) {
             return planet;
