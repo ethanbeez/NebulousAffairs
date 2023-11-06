@@ -47,4 +47,16 @@ public class OpponentHandler {
     public void ProcessPlayerOpponentTradeAction(TradeAction tradeAction) { 
         
     }
+
+    public void HandleLeaderElimination(string leaderName) { 
+        foreach (Opponent opponent in opponents.Values) {
+            if (opponent.Leader.Name == leaderName) continue;
+            opponent.ProcessLeaderElimination(leaderName);
+            opponent.Leader.ProcessLeaderElimination(leaderName);
+        }
+    }
+
+    public void EliminateOpponent(string leaderName) {
+        opponents.Remove(leaderName);
+    }
 }

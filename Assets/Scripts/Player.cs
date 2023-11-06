@@ -56,5 +56,9 @@ public class Player {
     public void ProcessPlayerAction(GameAction action) { 
     
     }
+
+    public void HandleLeaderElimination(string leaderName) {
+        Leader.ProcessLeaderElimination(leaderName);
+    }
 }
 

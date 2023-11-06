@@ -20,4 +20,10 @@ public class PlanetHandler {
             planets.Add(planet.Name, planet);
         }
     }
+
+    public void HandleLeaderElimination(string leaderName) {
+        foreach (Planet planet in planets.Values) {
+            planet.RemoveLeaderInfluence(leaderName);
+        }
+    }
 }

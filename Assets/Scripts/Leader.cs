@@ -177,6 +177,11 @@ public class Leader {
     public List<Influence> GetAllInfluences() {
         return influences.Values.ToList();
     }
+
+    public void ProcessLeaderElimination(string leaderName) {
+        relationships.Remove(leaderName);
+        visibilities.Remove(leaderName);
+    }
     #endregion
 
     #region Game Actions
@@ -184,6 +189,10 @@ public class Leader {
         AffluenceStockpile += AffluenceYield;
         IntelligenceStockpile += IntelligenceYield;
         PoliticsStockpile += PoliticsYield;
+    }
+
+    public void IncurElectionTurnCosts() { 
+        
     }
 
     public void ProcessIncomingTradeAction(TradeAction tradeAction) {

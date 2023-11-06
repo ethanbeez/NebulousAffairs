@@ -104,18 +104,25 @@ public class GameManager : MonoBehaviour {
         gameHandler.AdvanceTurn(gameTurnInfo);
         if (gameTurnInfo.ElectionTurn) {
             Election election = new(gameTurnInfo.CurrentTurn - 1, gameTurnInfo.CurrentYear - gameTurnInfo.YearsPerTurn);
-            gameHandler.ProcessElection(election);
+            if (gameHandler.ProcessElection(election)) {
+                HandlePlayerLoss();
+            }
         }
         // TODO: Remove following, for rush proto
-        int won = 0;
+        /*int won = 0;
         if (gameTurnInfo.CurrentTurn > 20) {
             if (gameHandler.GetPlayerPlanetsControlled() < 7) won = 1;
             if (gameHandler.GetPlayerPlanetsControlled() >= 7) won = 2;
         } else {
             if (gameHandler.GetPlayerPlanetsControlled() == 0) won = 1;
             if (gameHandler.GetPlayerPlanetsControlled() == 12) won = 2;
-        }
+        }*/
         uiController.UpdateTurnDisplay(gameTurnInfo.ToString());
+    }
+
+    private void HandlePlayerLoss() {
+        Debug.Log("Player lost!");
+        Application.Quit();
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {

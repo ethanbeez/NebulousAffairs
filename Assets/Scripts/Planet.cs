@@ -56,6 +56,10 @@ public class Planet {
     #endregion
 
     #region Getters/Setters
+    public void RemoveLeaderInfluence(string leaderName) { 
+        influences.Remove(leaderName);
+    }
+
     public void SetCurrentLeader(Leader leader) {
         this.currentLeader = leader;
     }

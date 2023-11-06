@@ -242,7 +242,7 @@ public class GameHandler {
         return planetInfluences;
     }
 
-    public void ProcessElection(Election electionData) { 
+    public bool ProcessElection(Election electionData) { 
         foreach (Planet planet in planetHandler.planets.Values) {
             electionData.DeterminePlanetElectionOutcome(planet);
         }
@@ -253,11 +253,32 @@ public class GameHandler {
         }
         foreach (KeyValuePair<string, HashSet<Planet>> lostPlanets in electionData.LostPlanetLeaders) {
             foreach (Planet lostPlanet in lostPlanets.Value) {
-                opponentHandler.opponents[lostPlanets.Key].Leader.LosePlanetControl(lostPlanet);
+                if (lostPlanets.Key == player.Leader.Name) {
+                    player.Leader.LosePlanetControl(lostPlanet);
+                } else {
+                    opponentHandler.opponents[lostPlanets.Key].Leader.LosePlanetControl(lostPlanet);
+                }
             }
         }
-        
-        Dictionary<string, List<(Leader, float)>> ratios = Election.GetPlanetsInfluenceRatios(planetHandler.planets.Values.ToList());
+        List<string> eliminatedLeaderNames = new();
+        foreach (Opponent opponent in opponentHandler.opponents.Values) {
+            if (opponent.Leader.PlanetControlCount == 0) {
+                Debug.Log(opponent.Leader.Name + " WAS ELIMINATED!");
+                planetHandler.HandleLeaderElimination(opponent.Leader.Name);
+                player.HandleLeaderElimination(opponent.Leader.Name);
+                opponentHandler.HandleLeaderElimination(opponent.Leader.Name);
+                eliminatedLeaderNames.Add(opponent.Leader.Name);
+            }
+        }
+        // Additional loop necessary to handle concurrent modification.
+        foreach (string eliminatedLeaderName in eliminatedLeaderNames) {
+            opponentHandler.EliminateOpponent(eliminatedLeaderName);
+        }
+        if (player.Leader.PlanetControlCount == 0) {
+            return true;
+        }
+        return false;
+        /*Dictionary<string, List<(Leader, float)>> ratios = Election.GetPlanetsInfluenceRatios(planetHandler.planets.Values.ToList());
         // TODO: FOLLOWING IS DEBUG ONLY!
         StringBuilder sb = new();
         foreach (KeyValuePair<string, List<(Leader, float)>> kvp in ratios) {
@@ -271,7 +292,7 @@ public class GameHandler {
             }
             sb.Append("\n");
         }
-        Debug.Log(sb.ToString());
+        Debug.Log(sb.ToString());*/
     }
 
     private void HandleDiplomacyAction(DiplomacyAction diplomacyAction) {

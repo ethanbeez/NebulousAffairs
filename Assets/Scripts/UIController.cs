@@ -50,13 +50,14 @@ public class UIController : MonoBehaviour {
 
     //Gets the GameHandler from the GameManager on wakeup
     void OnEnable() {
+        buttonController = new(leaderButtonPrefab);
         gameManager = FindObjectOfType<GameManager>();
         inputManager = FindObjectOfType<InputManager>();
         AddToLog("Good Luck - The Galaxy Depends on You");
     }
 
     void Update() {
-        buttonController = new(leaderButtonPrefab);
+        
     }
 
     public void InstantiateButtons(List<(string, string)> leaderButtonData) {

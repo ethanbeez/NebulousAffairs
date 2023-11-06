@@ -60,6 +60,10 @@ public class Opponent {
         Leader.ProcessOutgoingTradeOutcome(trade);
     }
 
+    public void ProcessLeaderElimination(string leaderName) {
+        decisionProfile.RemoveRelationship(leaderName);
+    }
+
     // TODO: REMOVE
     /*public void AddNewInfluence(Influence influence) {
         Leader.AddNewInfluence(influence);
@@ -125,6 +129,16 @@ public class Opponent {
             planetPriorities = new();
             leaderPriorities = new();
             CurrencyPriorities = new() { (CurrencyType.Affluence, 1.0f), (CurrencyType.Politics, 1.0f), (CurrencyType.Intellect, 1.0f) };
+        }
+
+        public void RemoveRelationship(string leaderName) {
+            for (int i = 0; i < leaderPriorities.Count; i++) { 
+                Relationship relationship = leaderPriorities[i];
+                if (relationship.GetOtherLeader(leader.Name).Name == leaderName) {
+                    leaderPriorities.RemoveAt(i);
+                    return;
+                }
+            }
         }
 
         public void AddNewPlanet(Influence influence) {
