@@ -133,30 +133,11 @@ public class GameManager : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            Debug.Log(gameHandler.DEBUG_GetLeaderInfoString("Aris Yve"));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            Debug.Log(gameHandler.DEBUG_GetLeaderInfoString("Krayxic"));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            Debug.Log(gameHandler.DEBUG_GetLeaderInfoString("Mother Stacy"));
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha4)) {
-            Debug.Log(gameHandler.DEBUG_GetLeaderInfoString("Nyco Harp"));
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha5)) {
-            Debug.Log(gameHandler.DEBUG_GetLeaderInfoString("Fortuna"));
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha6)) {
-            Debug.Log(gameHandler.DEBUG_GetLeaderInfoString("Foran Jes"));
+            string eventHistory = "";
+            foreach (GameEvent gameEvent in gameHandler.GetEventHistory()) {
+                eventHistory += gameEvent.ToString() + "\n";
+            }
+            Debug.Log(eventHistory);
         }
     }
 }

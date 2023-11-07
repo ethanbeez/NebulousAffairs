@@ -261,8 +261,9 @@ public class Leader {
     /// This method does nothing if this leader was already the leader of the planet.
     /// </summary>
     /// <param name="planet"></param>
-    public void GainPlanetControl(Planet planet) {
+    public Leader GainPlanetControl(Planet planet) {
         bool wasLeader = influences[planet.Name].SetIsLeader(true);
+        Leader previousLeader = influences[planet.Name].Planet.CurrentLeader!;
         influences[planet.Name].Planet.SetCurrentLeader(this);
         if (!wasLeader) {
             controlledPlanets.Add(planet.Name, planet);
@@ -271,6 +272,7 @@ public class Leader {
             PoliticsYield += planet.PoliticsYield;
             IntelligenceYield += planet.IntellectYield;
         }
+        return previousLeader;
     }
 
     public void LosePlanetControl(Planet planet) {

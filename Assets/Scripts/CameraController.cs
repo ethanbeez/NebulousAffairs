@@ -2,16 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour {
+    public CanvasGroup canvas;
+    public VisualEffect warpVFX;
+    private bool warpActive;
     public AnimationCurve freeCamReturnCurve;
     public AnimationCurve flyToCurve;
     public AnimationCurve flyToWarpCurve;
+    // public AnimationCurve introCurve;
     private Vector3 freeCamStartMarker;
     public Vector3 freeCamEndMarker;
     public GameObject focusTarget;
     private Vector3 mapCamLocation = new(0, 0, 0);
+    private Vector3 introCamLocation = new(0, 2000, 0);
     private Quaternion freeCamStartRotation;
     private Quaternion freeCamEndRotation = Quaternion.LookRotation(new Vector3(0, -1, 0), Vector3.up);
     private float startTime;
@@ -34,10 +40,13 @@ public class CameraController : MonoBehaviour {
     public float dampingCoefficient = 5;
     public float lookSensitivity = 1;
     public bool freeCam = false;
+    public bool introFlyComplete;
+    public bool screenFadedIn;
 
     public Vector3 planetClickCameraOffset = new();
 
-    public PostProcessVolume ppVolume;
+    public UnityEngine.Rendering.VolumeProfile volumeProfile;
+    public UnityEngine.Rendering.Universal.LensDistortion lensDistortion;
 
     bool FreeCam { 
         get => freeCam;
@@ -50,10 +59,26 @@ public class CameraController : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        ppVolume = GameObject.Find("PostProcessVolume").GetComponent<PostProcessVolume>();
+        volumeProfile = GameObject.Find("PostProcessVolume").GetComponent<UnityEngine.Rendering.Volume>()?.profile;
+        if (volumeProfile.TryGet(out UnityEngine.Rendering.Universal.LensDistortion distort)) {
+            lensDistortion = distort;
+        }
+        // if (!volumeProfile) throw new System.NullReferenceException(nameof(UnityEngine.Rendering.VolumeProfile));
+
+        // You can leave this variable out of your function, so you can reuse it throughout your class.
+
+        // if (!volumeProfile.TryGet(out UnityEngine.Rendering.Universal. vignette)) throw new System.NullReferenceException(nameof(vignette));
+
+        // vignette.intensity.Override(0.5f);
+        // ppVolume = GameObject.Find("PostProcessVolume").GetComponent<PostProcessVolume>();
         // planetClickCameraOffset = new();
+        // transform.position = new(0, 5000, 0);
         freeCamReturnComplete = true;
         flyToLocationComplete = true;
+        introFlyComplete = false;
+        screenFadedIn = false;
+        warpVFX.Stop();
+        StartIntroFly();
     }
 
     // Update is called once per frame
@@ -67,8 +92,12 @@ public class CameraController : MonoBehaviour {
             velocity = Vector3.Lerp(velocity, Vector3.zero, dampingCoefficient * Time.deltaTime);
             transform.position += velocity * Time.deltaTime;
         } else {
-            if (!freeCamReturnComplete) {
+            if (!introFlyComplete) {
+                if (!screenFadedIn) FadeScreen(3);
+                FlyToMapPosition(13);
+            } else if (!freeCamReturnComplete) {
                 // Debug.Log(freeCamEndMarker);
+                // FlyToMapPosition(10);
                 FlyToMapPosition();
             } else if (!flyToLocationComplete) {
                 FlyToLocation();
@@ -94,12 +123,31 @@ public class CameraController : MonoBehaviour {
         freeCamStartRotation = transform.rotation;
     }
 
+    public void StartIntroFly() {
+        FreeCam = false;
+        focusTarget = null;
+        freeCamReturnComplete = false;
+        startTime = Time.time;
+        freeCamStartMarker = introCamLocation;
+        freeCamEndMarker = mapCamLocation;
+        center = (freeCamStartMarker + freeCamEndMarker) * 0.5f;
+        center -= new Vector3(0, 1, 0);
+        freeCamStartMarker -= center;
+        freeCamEndMarker -= center;
+        // freeCamReturnLength = Vector3.Distance(freeCamStartMarker, freeCamEndMarker);
+        
+        freeCamStartRotation = transform.rotation;
+        lensDistortion.intensity.value = -1f;
+        warpActive = true;
+        warpVFX.Play();
+    }
+
     void FlyToMapPosition() {
         // Debug.Log("Flying...");
         float completion = (Time.time - startTime) / freeCamReturnTime;
         // float journeyCompletion = distanceCovered / freeCamReturnLength;
         if (completion >= 1) {
-            freeCamReturnComplete = true;
+            introFlyComplete = true;
             // freeCamEndMarker = new(0, 0, 0);
             // return;
         }
@@ -110,6 +158,37 @@ public class CameraController : MonoBehaviour {
         if (freeCamReturnComplete) {
             transform.position = new(0, 0, 0);
         }
+    }
+
+    void FlyToMapPosition(float duration) {
+        // Debug.Log("Flying...");
+        float completion = (Time.time - startTime) / duration;
+        if (completion >= 1) {
+            freeCamReturnComplete = true;
+            warpVFX.Stop();
+        }
+        // TODO: Take optimization!
+        transform.position = Vector3.Lerp(freeCamStartMarker, freeCamEndMarker, flyToWarpCurve.Evaluate(completion));
+        float value = Mathf.Lerp(-1, 0, flyToWarpCurve.Evaluate(completion));
+        float vfxValue = Mathf.Lerp(1, 0, flyToWarpCurve.Evaluate(completion));
+        // Debug.Log(value);
+        warpVFX.SetFloat("WarpAmount", Mathf.Clamp(vfxValue - 0.4f, 0, 1));
+        lensDistortion.intensity.value = value;
+        lensDistortion.scale.value = Mathf.Clamp(value + 1.5f, 0.01f, 1);
+        // transform.rotation = Quaternion.Lerp(freeCamStartRotation, freeCamEndRotation, freeCamReturnCurve.Evaluate(completion));
+        transform.position += center;
+        if (freeCamReturnComplete) {
+            transform.position = new(0, 0, 0);
+        }
+    }
+
+    void FadeScreen(float duration) {
+        float completion = (Time.time - startTime) / duration;
+        if (completion >= 1) {
+            screenFadedIn = true;
+            canvas.alpha = 1;
+        }
+        canvas.alpha = Mathf.Lerp(0, 1, flyToWarpCurve.Evaluate(completion));
     }
 
     void UpdateInput() {

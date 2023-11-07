@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -15,7 +16,8 @@ public class GameHandler {
     Player player;
     OpponentHandler opponentHandler;
     PlanetHandler planetHandler;
-    
+    GameHistory gameHistory;
+
     public GameHandler(int leadersPerPlanet) {
         opponentHandler = new();
         player = new();
@@ -23,6 +25,7 @@ public class GameHandler {
         planetHandler = new();
         BuildPlanetsFromGameData();
         BuildConnections(leadersPerPlanet);
+        gameHistory = new();
     }
 
     private void BuildLeadersFromGameData() {
@@ -224,12 +227,15 @@ public class GameHandler {
                 switch (opponentAction) {
                     case DiplomacyAction diplomacy:
                         HandleDiplomacyAction(diplomacy);
+                        if (GameHistory.LogIncludesDiplomacyActions) gameHistory.LogGameEvent(new(diplomacy.ToString()));
                         break;
                     case EspionageAction espionage:
                         HandleEspionageAction(espionage);
+                        if (GameHistory.LogIncludesDiplomacyActions) gameHistory.LogGameEvent(new(espionage.ToString()));
                         break;
                     case TradeAction trade:
                         HandleTradeAction(trade);
+                        if (GameHistory.LogIncludesDiplomacyActions) gameHistory.LogGameEvent(new(trade.ToString()));
                         break;
                 }
             }
@@ -260,9 +266,15 @@ public class GameHandler {
         foreach (Planet planet in planetHandler.planets.Values) {
             electionData.DeterminePlanetElectionOutcome(planet);
         }
+        
         foreach (KeyValuePair<string, HashSet<Planet>> gainedPlanets in electionData.GainedPlanetLeaders) {
             foreach (Planet gainedPlanet in gainedPlanets.Value) {
-                opponentHandler.opponents[gainedPlanets.Key].Leader.GainPlanetControl(gainedPlanet);
+                Leader previousLeader = opponentHandler.opponents[gainedPlanets.Key].Leader.GainPlanetControl(gainedPlanet);
+                if (GameHistory.LogIncludesElectionOutcomes) {
+                    List<(Leader, float)> influenceRatios = GetPlanetInfluenceRatios(gainedPlanet.Name); // TODO: This can be simplified.
+                    string electedLeaderPercent = influenceRatios[0].Item2.ToString("P2", new NumberFormatInfo { PercentPositivePattern = 1, PercentNegativePattern = 1 });
+                    gameHistory.LogGameEvent(new($"{gainedPlanets.Key} was elected ruler of {gainedPlanet.Name} with {electedLeaderPercent} of the vote, ousting {previousLeader.Name} in the process!"));
+                }
             }
         }
         foreach (KeyValuePair<string, HashSet<Planet>> lostPlanets in electionData.LostPlanetLeaders) {
@@ -277,7 +289,7 @@ public class GameHandler {
         List<string> eliminatedLeaderNames = new();
         foreach (Opponent opponent in opponentHandler.opponents.Values) {
             if (opponent.Leader.PlanetControlCount == 0) {
-                Debug.Log(opponent.Leader.Name + " WAS ELIMINATED!");
+                // Debug.Log(opponent.Leader.Name + " WAS ELIMINATED!");
                 planetHandler.HandleLeaderElimination(opponent.Leader.Name);
                 player.HandleLeaderElimination(opponent.Leader.Name);
                 opponentHandler.HandleLeaderElimination(opponent.Leader.Name);
@@ -287,6 +299,7 @@ public class GameHandler {
         // Additional loop necessary to handle concurrent modification.
         foreach (string eliminatedLeaderName in eliminatedLeaderNames) {
             opponentHandler.EliminateOpponent(eliminatedLeaderName);
+            gameHistory.LogGameEvent(new($"{eliminatedLeaderName} was eliminated from the game!"));
         }
         if (player.Leader.PlanetControlCount == 0) {
             return true;
@@ -349,5 +362,9 @@ public class GameHandler {
 
     public int GetPlayerActionsLeft() {
         return player.PlayerTurnActionsLeft;
+    }
+
+    public IEnumerable<GameEvent> GetEventHistory() { 
+        return gameHistory.GetEventHistory();
     }
 }

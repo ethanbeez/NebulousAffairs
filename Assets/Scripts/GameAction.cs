@@ -16,6 +16,7 @@ public enum CurrencyType {
 }
 
 public abstract class GameAction {
+    
     private readonly int turnOccurred;
     public readonly Leader originLeader;
     public int TurnOccurred => turnOccurred;
@@ -25,6 +26,8 @@ public abstract class GameAction {
         this.turnOccurred = turnOccurred;
         this.originLeader = originLeader;
     }
+
+    public abstract override string ToString();
 }
 
 public class TradeAction : GameAction {
@@ -77,8 +80,9 @@ public class TradeAction : GameAction {
         TradeWeight = effectiveOfferWeight - effectiveRequestWeight;
     }
 
-    public static float ComputeSpecificDecisionWeight(Leader originLeader, Leader targetLeader) {
-        throw new System.NotImplementedException();
+    public override string ToString() {
+        string accepted = Accepted ? "accepted" : "refused";
+        return $"{originLeader.Name} sent {TargetLeader.Name} a trade offer, and {TargetLeader.Name} {accepted} the deal.";
     }
 }
 
@@ -102,6 +106,10 @@ public class DiplomacyAction : GameAction {
     public static float ComputeSpecificDecisionWeight() {
         throw new System.NotImplementedException();
     }
+
+    public override string ToString() {
+        return $"{originLeader.Name} campaigned on {targetPlanet.Name}, increasing their {CurrencyToIncrease} and decreasing their {CurrencyToDecrease}.";
+    }
 }
 
 public class EspionageAction : GameAction {
@@ -116,5 +124,9 @@ public class EspionageAction : GameAction {
     public static float ComputeSpecificDecisionWeight() {
 
         throw new System.NotImplementedException();
+    }
+
+    public override string ToString() {
+        return $"{originLeader.Name} spied on {targetLeader.Name}.";
     }
 }
