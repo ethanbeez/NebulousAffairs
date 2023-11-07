@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour {
         LeaderButton.LeaderButtonPressed += HandleLeaderClick;
         PlanetController.PlanetClicked += HandlePlanetClick;
         TradeUIController.TradeConfirmPressed += HandlePlayerTrade;
+        UIController.ConfirmEspionage += HandlePlayerEspionage;
 
         uiController.playerLeader = gameHandler.GetPlayerLeader();
         uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo());
@@ -127,11 +128,15 @@ public class GameManager : MonoBehaviour {
     }
 
     private void HandlePlayerTrade(int[] vals, Leader enemyLeader) {
-        Debug.Log("Fuck");
         TradeAction trade = new TradeAction(0, gameHandler.GetPlayerLeader(), enemyLeader, vals[2], vals[0], vals[1], vals[5], vals[3], vals[4] );
         gameHandler.ProcessPlayerInitiatedTrade(trade);
         uiController.RenderLeaderInfo(enemyLeader);
         uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
+    }
+
+    private void HandlePlayerEspionage(int resource, Leader leader) {
+        //TODO: Ethan set up the Espionage Action from the player to the given leader based on the resource counter
+        //0 = Politics, 1 = Influence/Intellect, 2 = Wealth / Affluence
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {

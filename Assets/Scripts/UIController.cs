@@ -47,11 +47,13 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI leaderPoliticsStockpile;
     [SerializeField] TextMeshProUGUI leaderIntelligenceStockpile;
     [SerializeField] TextMeshProUGUI leaderWealthStockpile;
-
     [SerializeField] TradeUIController tradeUI;
 
     private List<(string, string)> leaderButtonData; 
     Leader currentLeader;
+    private int espionageResource;
+    public delegate void EspionageConfirm(int resource, Leader enemyLeader);
+    public static event EspionageConfirm? ConfirmEspionage;
     
 
     //Gets the GameHandler from the GameManager on wakeup
@@ -177,10 +179,19 @@ public class UIController : MonoBehaviour {
         UIAnim.SetTrigger("Trade");
     }
 
-    //TODO: Espionage Detection, Commanding, and 
-
     public void UpdateActionDisplay(int PlayerTurnActionsLeft) {
         actionCounter.UpdateActionDisplay(PlayerTurnActionsLeft);
+    }
+
+    public void ChooseEspionage(int resource) {
+        espionageResource = resource;
+        UIAnim.SetTrigger("ToConfirm");
+
+    }
+
+    public void CompleteEspionage() {
+        ConfirmEspionage.Invoke(espionageResource, currentLeader);
+        UIAnim.SetTrigger("ToLeader");
     }
 
     
