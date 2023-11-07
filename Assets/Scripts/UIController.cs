@@ -63,7 +63,7 @@ public class UIController : MonoBehaviour {
 
     public void InstantiateButtons(List<(string, string)> leaderButtonData) {
         this.leaderButtonData = leaderButtonData;
-        //buttonController.InstantiateLeaderButtons(leaderButtonData);
+        buttonController.InstantiateLeaderButtons(leaderButtonData);
     }
 
     //Renders the Main Scene
@@ -113,23 +113,23 @@ public class UIController : MonoBehaviour {
 
        currentLeader = leader; 
        // Should be determined by Espionage
-       if(playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Intellect)) {
+       if(!playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Intellect)) {
             leaderIntelligencePriority.text = leader.IntellectPreference.ToString();
        }
        else {
             leaderIntelligencePriority.text = "?";
        }
-       if(playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Politics)) {
+       if(!playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Politics)) {
             leaderPoliticsPriority.text = leader.PoliticsPreference.ToString();
        }
        else {
-            leaderIntelligencePriority.text = "?";
+            leaderPoliticsPriority.text = "?";
        }
-       if(playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Affluence)) {
+       if(!playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Affluence)) {
             leaderWealthPriority.text = leader.AffluencePreference.ToString();
        }
        else {
-            leaderIntelligencePriority.text = "?";
+            leaderWealthPriority.text = "?";
        }
        
        //Need Ethan to Work on this
