@@ -43,6 +43,10 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI leaderPoliticsPriority;
     [SerializeField] TextMeshProUGUI leaderIntelligencePriority;
     [SerializeField] TextMeshProUGUI leaderWealthPriority;
+    [SerializeField] TextMeshProUGUI leaderPoliticsStockpile;
+    [SerializeField] TextMeshProUGUI leaderIntelligenceStockpile;
+    [SerializeField] TextMeshProUGUI leaderWealthStockpile;
+
     [SerializeField] TradeUIController tradeUI;
 
     private List<(string, string)> leaderButtonData; 
@@ -131,9 +135,13 @@ public class UIController : MonoBehaviour {
        else {
             leaderWealthPriority.text = "?";
        }
+
+       leaderIntelligenceStockpile.text = leader.IntelligenceStockpile.ToString();
+       leaderPoliticsStockpile.text = leader.PoliticsStockpile.ToString();
+       leaderWealthStockpile.text = leader.AffluenceStockpile.ToString();
        
        //Need Ethan to Work on this
-       //leaderImage.sprite = leader.image;
+       leaderImage.sprite = FileManager.GetLeaderImageFromFileName(leader.GetLeaderImagePath(LeaderResources.Perspectives.Full, LeaderResources.Expressions.Neutral));
 
        //check if coming from Planet
        if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Planet"))

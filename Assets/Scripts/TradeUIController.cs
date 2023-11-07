@@ -26,6 +26,9 @@ public class TradeUIController : MonoBehaviour
     // 6
     [SerializeField] TextMeshProUGUI leaderWealth;
     [SerializeField] Image leaderIcon;
+    Leader enemyLeader;
+    public delegate void TradeHandler(int[] vals, Leader enemyLeader);
+    public static event TradeHandler? TradeConfirmPressed;
 
     int[] vals;
     int[] maxes;
@@ -35,7 +38,7 @@ public class TradeUIController : MonoBehaviour
         vals  =  new int[]{0, 0, 0, 0, 0, 0};
         maxes = new int[]{playerLeader.PoliticsStockpile, playerLeader.IntelligenceStockpile, playerLeader.AffluenceStockpile, 
             enemyLeader.PoliticsStockpile, enemyLeader.IntelligenceStockpile, enemyLeader.AffluenceStockpile};
-
+        this.enemyLeader = enemyLeader;
         foreach((string, string) leader in leaderButtonData) {
             if(leader.Item1.Equals(playerLeader.Name)) {
                 playerIcon.sprite = FileManager.GetLeaderImageFromFileName(leader.Item2);
@@ -49,11 +52,12 @@ public class TradeUIController : MonoBehaviour
 
     public void ChangeValue(int buttonIndex) {
         if(buttonIndex > 0) {
-            buttonIndex = Math.Abs(buttonIndex) - 1;
+            buttonIndex = buttonIndex - 1;
             if(++vals[buttonIndex] > maxes[buttonIndex])
                 vals[buttonIndex] = 0;
         }
         else {
+            buttonIndex = Math.Abs(buttonIndex) - 1;
             if(--vals[buttonIndex] < 0)
                 vals[buttonIndex] = maxes[buttonIndex];
         }
@@ -71,6 +75,6 @@ public class TradeUIController : MonoBehaviour
     }
 
     public void Confirm() {
-        //Do the Trade
+        TradeConfirmPressed.Invoke(vals, enemyLeader);
     }
 }
