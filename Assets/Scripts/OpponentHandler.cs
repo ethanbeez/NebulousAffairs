@@ -38,14 +38,15 @@ public class OpponentHandler {
         Opponent originOpponent = opponents[tradeAction.OriginLeader.Name];
         targetOpponent.ProcessIncomingTrade(tradeAction);
         originOpponent.ProcessOutgoingTradeOutcome(tradeAction);
-        string accepted = (tradeAction.Accepted) ? "accepted" : "refused";
+        /*string accepted = (tradeAction.Accepted) ? "accepted" : "refused";
         Debug.Log($"{originOpponent.Leader.Name} sent {targetOpponent.Leader.Name} a trade offer. They asked for:\n{tradeAction.RequestedAffluence} money\n{tradeAction.RequestedIntellect} intellect" +
             $"\nand {tradeAction.RequestedPolitics} politics.\nThey offered:\n{tradeAction.OfferedAffluence} money\n{tradeAction.OfferedIntellect} intellect\nand {tradeAction.OfferedPolitics} politics.\n" +
-            $"{targetOpponent.Leader.Name} {accepted} the deal.");
+            $"{targetOpponent.Leader.Name} {accepted} the deal.");*/
     }
 
-    public void ProcessPlayerOpponentTradeAction(TradeAction tradeAction) { 
-        
+    public void ProcessPlayerInitiatedTradeAction(TradeAction tradeAction) {
+        Opponent targetOpponent = opponents[tradeAction.TargetLeader.Name];
+        targetOpponent.ProcessIncomingTrade(tradeAction);
     }
 
     public void HandleLeaderElimination(string leaderName) { 
