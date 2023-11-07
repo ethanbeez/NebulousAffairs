@@ -57,6 +57,10 @@ public class Player {
     
     }
 
+    public void ProcessOutgoingTradeOutcome(TradeAction tradeAction) {
+        Leader.ProcessOutgoingTradeOutcome(tradeAction);
+    }
+
     public void HandleLeaderElimination(string leaderName) {
         Leader.ProcessLeaderElimination(leaderName);
     }
