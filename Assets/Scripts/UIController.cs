@@ -112,10 +112,26 @@ public class UIController : MonoBehaviour {
 
 
        currentLeader = leader; 
-       // Should be determined by Espionage 
-       leaderIntelligencePriority.text = leader.IntellectPreference.ToString();
-       leaderPoliticsPriority.text = leader.PoliticsPreference.ToString();
-       leaderWealthPriority.text = leader.AffluencePreference.ToString();
+       // Should be determined by Espionage
+       if(playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Intellect)) {
+            leaderIntelligencePriority.text = leader.IntellectPreference.ToString();
+       }
+       else {
+            leaderIntelligencePriority.text = "?";
+       }
+       if(playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Politics)) {
+            leaderPoliticsPriority.text = leader.PoliticsPreference.ToString();
+       }
+       else {
+            leaderIntelligencePriority.text = "?";
+       }
+       if(playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Affluence)) {
+            leaderWealthPriority.text = leader.AffluencePreference.ToString();
+       }
+       else {
+            leaderIntelligencePriority.text = "?";
+       }
+       
        //Need Ethan to Work on this
        //leaderImage.sprite = leader.image;
 

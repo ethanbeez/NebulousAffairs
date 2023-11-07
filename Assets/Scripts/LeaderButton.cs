@@ -25,6 +25,8 @@ public class LeaderButton {
         LeaderName = leaderName;
         this.leaderName = leaderName;
         ImagePath = imagePath;
+        leaderImage = leaderButtonGameObject.GetComponent<Image>();
+        leaderImage.sprite = FileManager.GetLeaderImageFromFileName(ImagePath);
         buttonPressed += LeaderClicked;
         leaderButtonGameObject.GetComponent<Button>().onClick.AddListener(LeaderClicked);
     }
