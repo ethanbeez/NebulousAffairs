@@ -9,13 +9,14 @@ public class ButtonController {
     GameObject leadersPanelGameObject;
     GameObject leaderButtonPrefab;
     public Dictionary<string, LeaderButton> leaderButtons;
+    public delegate void leaderButtonHandler(string LeaderName);
+    public static event leaderButtonHandler? LeaderButtonPressed;
+
     public ButtonController(GameObject leaderButtonPrefab) {
         leadersPanelGameObject = GameObject.Find("LeadersPanel");
         this.leaderButtonPrefab = leaderButtonPrefab;
         leaderButtons = new();
     }
-    public delegate void leaderButtonHandler(string LeaderName);
-    public static event leaderButtonHandler? LeaderButtonPressed;
 
     public void InstantiateLeaderButtons(List<(string, string)> leaderInfo) {
         Debug.Log(leaderInfo.Count);

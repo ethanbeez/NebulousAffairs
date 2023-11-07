@@ -36,6 +36,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetPoliticsYield;
     [SerializeField] TextMeshProUGUI planetWealthYield;
     [SerializeField] TextMeshProUGUI planetIntelligenceYield;
+    [SerializeField] PieChart pieChart;
  
     [Header("Leader Screen Components")]
     [SerializeField] Image leaderImage;
@@ -62,7 +63,7 @@ public class UIController : MonoBehaviour {
 
     public void InstantiateButtons(List<(string, string)> leaderButtonData) {
         this.leaderButtonData = leaderButtonData;
-        buttonController.InstantiateLeaderButtons(leaderButtonData);
+        //buttonController.InstantiateLeaderButtons(leaderButtonData);
     }
 
     //Renders the Main Scene
@@ -73,6 +74,10 @@ public class UIController : MonoBehaviour {
     //Updates the TurnDisplay to a given String - the expected String is TurnHandler's GameTurns toString.
     public void UpdateTurnDisplay(String TurnInfo) {
         //whatever the turn counter is gonna be = currentTurn;
+
+
+        //Pie Chart should be updated when turn ends. yipee.
+        //pieChart.LoadPieChart(influenceRatios);
 
 
         //UpdateMainScreen
@@ -97,7 +102,8 @@ public class UIController : MonoBehaviour {
         planetPoliticsYield.text = clickedPlanet.PoliticsYield.ToString();
         planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
-
+        pieChart.LoadPieChart(influenceRatios);
+        
         UIAnim.SetTrigger("ToPlanet");
     }
 
