@@ -199,6 +199,49 @@ public class Leader {
         }
     }
 
+    public void IncurGameActionCosts(GameAction action) {
+        switch (action) {
+            case DiplomacyAction diplomacy:
+                IncurTradeCosts();
+                break;
+            case EspionageAction espionage:
+                IncurDiplomacyCosts();
+                break;
+            case TradeAction trade:
+                IncurEspionageCosts();
+                break;
+        }
+    }
+
+    public void IncurTradeCosts() {
+        AffluenceStockpile -= TradeAction.AffluenceCost;
+        IntelligenceStockpile -= TradeAction.IntellectCost;
+        PoliticsStockpile -= TradeAction.PoliticsCost;
+    }
+
+    public void IncurDiplomacyCosts() {
+        AffluenceStockpile -= DiplomacyAction.AffluenceCost;
+        IntelligenceStockpile -= DiplomacyAction.IntellectCost;
+        PoliticsStockpile -= DiplomacyAction.PoliticsCost;
+    }
+    public void IncurEspionageCosts() {
+        AffluenceStockpile -= EspionageAction.AffluenceCost;
+        IntelligenceStockpile -= EspionageAction.IntellectCost;
+        PoliticsStockpile -= EspionageAction.PoliticsCost;
+    }
+
+    public bool CanAffordTrade() { 
+        return AffluenceStockpile >= TradeAction.AffluenceCost && IntelligenceStockpile >= TradeAction.IntellectCost && PoliticsStockpile >= TradeAction.PoliticsCost;
+    }
+
+    public bool CanAffordEspionage() {
+        return AffluenceStockpile >= EspionageAction.AffluenceCost && IntelligenceStockpile >= EspionageAction.IntellectCost && PoliticsStockpile >= EspionageAction.PoliticsCost;
+    }
+
+    public bool CanAffordDiplomacy() {
+        return AffluenceStockpile >= DiplomacyAction.AffluenceCost && IntelligenceStockpile >= DiplomacyAction.IntellectCost && PoliticsStockpile >= DiplomacyAction.PoliticsCost;
+    }
+
     private void TryIncurPlanetUpkeep(CurrencyType currencyType, int costPerCurrency, string planetName) {
         switch (currencyType) {
             case CurrencyType.Affluence:
@@ -225,7 +268,7 @@ public class Leader {
         }
     }
 
-    public void ProcessIncomingTradeAction(TradeAction tradeAction) {
+    /*public void ProcessIncomingTradeAction(TradeAction tradeAction) {
         AffluenceStockpile += tradeAction.OfferedAffluence;
         IntelligenceStockpile += tradeAction.OfferedIntellect;
         PoliticsStockpile += tradeAction.OfferedPolitics;
@@ -234,7 +277,7 @@ public class Leader {
         AffluenceStockpile -= tradeAction.RequestedAffluence;
         IntelligenceStockpile -= tradeAction.RequestedIntellect;
         PoliticsStockpile -= tradeAction.RequestedPolitics;
-    }
+    }*/
 
     public void ProcessOutgoingTradeOutcome(TradeAction tradeAction) {
         AffluenceStockpile -= tradeAction.OfferedAffluence;
@@ -247,14 +290,18 @@ public class Leader {
     }
 
     public void AcceptIncomingTrade(TradeAction tradeAction) {
-        AffluenceStockpile += tradeAction.OfferedAffluence;
-        IntelligenceStockpile += tradeAction.OfferedIntellect;
-        PoliticsStockpile += tradeAction.OfferedPolitics;
+        AffluenceStockpile += tradeAction.OfferedAffluence - tradeAction.RequestedAffluence;
+        IntelligenceStockpile += tradeAction.OfferedIntellect - tradeAction.RequestedIntellect;
+        PoliticsStockpile += tradeAction.OfferedPolitics - tradeAction.RequestedPolitics;
         relationships[tradeAction.OriginLeader.Name].ProcessTradeOutcome(tradeAction.TradeWeight);
     }
 
     public void RefuseIncomingTrade(TradeAction tradeAction) {
         relationships[tradeAction.OriginLeader.Name].ProcessTradeOutcome(tradeAction.TradeWeight);
+    }
+
+    public void UpdateLeaderPreferenceVisibility(string targetLeaderName, CurrencyType targetPreferenceType, bool visible) {
+        visibilities[targetLeaderName].SetPreferenceVisibilityFromType(targetPreferenceType, visible);
     }
 
     /// <summary>
@@ -421,6 +468,20 @@ public class LeaderVisibility {
         }
         Debug.LogError("LeaderVisibility.GetPreferenceVisibilityFromType: An invalid CurrencyType enum value was provided! Default returning false.");
         return false;
+    }
+
+    public void SetPreferenceVisibilityFromType(CurrencyType currencyType, bool visible) {
+        switch (currencyType) {
+            case CurrencyType.Affluence:
+                TargetLeaderAffluencePrefVisible = visible;
+                break;
+            case CurrencyType.Politics:
+                TargetLeaderPoliticsPrefVisible = visible;
+                break;
+            case CurrencyType.Intellect:
+                TargetLeaderIntellectPrefVisible = visible;
+                break;
+        }
     }
     #endregion
 }

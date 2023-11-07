@@ -22,11 +22,12 @@ public class Player {
     #endregion
 
     public Player() {
-        
+        OutstandingTrades = new();
     }
 
     public Player(Leader leader) {
         Leader = leader;
+        OutstandingTrades = new();
     }
 
     public void AssignLeader(Leader leader) {
@@ -36,7 +37,9 @@ public class Player {
     public int PlayerTurnActionsLeft { get; set; }
 
     public void AddOutstandingTrade(TradeAction outstandingTrade) {
-        OutstandingTrades.Add(outstandingTrade.OriginLeader.Name, outstandingTrade);
+        if (!OutstandingTrades.ContainsKey(outstandingTrade.originLeader.Name)) {
+            OutstandingTrades.Add(outstandingTrade.OriginLeader.Name, outstandingTrade);
+        }
     }
 
     public void ProcessOutstandingTrade(string originLeader, bool accepted) {

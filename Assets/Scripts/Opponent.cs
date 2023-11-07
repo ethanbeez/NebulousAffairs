@@ -64,6 +64,10 @@ public class Opponent {
         decisionProfile.RemoveRelationship(leaderName);
     }
 
+    public void PayForGameAction(GameAction action) { 
+    
+    }
+
     // TODO: REMOVE
     /*public void AddNewInfluence(Influence influence) {
         Leader.AddNewInfluence(influence);

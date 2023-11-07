@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour {
     public AnimationCurve freeCamReturnCurve;
     public AnimationCurve flyToCurve;
     public AnimationCurve flyToWarpCurve;
+    public AnimationCurve flyToDistortionCurve;
     // public AnimationCurve introCurve;
     private Vector3 freeCamStartMarker;
     public Vector3 freeCamEndMarker;
@@ -94,7 +95,7 @@ public class CameraController : MonoBehaviour {
         } else {
             if (!introFlyComplete) {
                 if (!screenFadedIn) FadeScreen(3);
-                FlyToMapPosition(13);
+                FlyToMapPosition(9);
             } else if (!freeCamReturnComplete) {
                 // Debug.Log(freeCamEndMarker);
                 // FlyToMapPosition(10);
@@ -108,6 +109,7 @@ public class CameraController : MonoBehaviour {
     }
 
     public void StartMapFly() {
+        if (!freeCamReturnComplete) return;
         FreeCam = false;
         focusTarget = null;
         freeCamReturnComplete = false;
@@ -146,7 +148,7 @@ public class CameraController : MonoBehaviour {
         float completion = (Time.time - startTime) / freeCamReturnTime;
         // float journeyCompletion = distanceCovered / freeCamReturnLength;
         if (completion >= 1) {
-            introFlyComplete = true;
+            freeCamReturnComplete = true;
             // freeCamEndMarker = new(0, 0, 0);
             // return;
         }
@@ -168,16 +170,18 @@ public class CameraController : MonoBehaviour {
         }
         // TODO: Take optimization!
         transform.position = Vector3.Lerp(freeCamStartMarker, freeCamEndMarker, flyToWarpCurve.Evaluate(completion));
-        float value = Mathf.Lerp(-1, 0, flyToWarpCurve.Evaluate(completion));
+        float value = Mathf.Lerp(0, -1, flyToDistortionCurve.Evaluate(completion));
         float vfxValue = Mathf.Lerp(1, 0, flyToWarpCurve.Evaluate(completion));
         // Debug.Log(value);
-        warpVFX.SetFloat("WarpAmount", Mathf.Clamp(vfxValue - 0.4f, 0, 1));
+        warpVFX.SetFloat("WarpAmount", Mathf.Clamp(vfxValue - 0.45f, 0, 1));
         lensDistortion.intensity.value = value;
-        lensDistortion.scale.value = Mathf.Clamp(value + 1.5f, 0.01f, 1);
+        lensDistortion.scale.value = Mathf.Clamp(value + 1.4f, 0.01f, 1);
         // transform.rotation = Quaternion.Lerp(freeCamStartRotation, freeCamEndRotation, freeCamReturnCurve.Evaluate(completion));
         transform.position += center;
         if (introFlyComplete) {
             transform.position = new(0, 0, 0);
+            lensDistortion.intensity.value = 0;
+            lensDistortion.scale.value = 0;
         }
     }
 
@@ -200,6 +204,7 @@ public class CameraController : MonoBehaviour {
     }
 
     public void StartFly(GameObject focusTarget) {
+        if (!introFlyComplete && !flyToLocationComplete) return;
         this.focusTarget = focusTarget;
         flyToLocationComplete = false;
         flyToStartMarker = transform.position;

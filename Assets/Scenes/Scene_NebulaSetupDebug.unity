@@ -359,17 +359,59 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.73288
-      value: 0.91037744
-      inSlope: 0.63776904
-      outSlope: 0.63776904
+      time: 0.44529387
+      value: 0.106138304
+      inSlope: 5.056317
+      outSlope: 5.056317
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.16307881
+      outWeight: 0.038777787
     - serializedVersion: 3
       time: 1
       value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  flyToDistortionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.08612393
+      value: 0.99292374
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.48677284
+      value: 0.96462345
+      inSlope: -0.3870184
+      outSlope: -0.3870184
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.15113673
+    - serializedVersion: 3
+      time: 0.99999994
+      value: 0.0023584906
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -957,7 +999,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!73398921 &1580984645
 VFXRenderer:
   serializedVersion: 1
@@ -966,7 +1008,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1580984644}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1641,7 +1683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6528741892594560896, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -6891.954
+      value: -385560.56
       objectReference: {fileID: 0}
     - target: {fileID: 6739747916446022443, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_CullTransparentMesh

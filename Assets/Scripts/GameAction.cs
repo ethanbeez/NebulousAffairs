@@ -113,9 +113,9 @@ public class DiplomacyAction : GameAction {
 }
 
 public class EspionageAction : GameAction {
-    private const int AffluenceCost = 0;
-    private const int PoliticsCost = 0;
-    private const int IntellectCost = 5;
+    public const int AffluenceCost = 0;
+    public const int PoliticsCost = 0;
+    public const int IntellectCost = 5;
     private readonly Leader targetLeader;
     public EspionageAction(int turnOccurred, Leader originLeader, Leader targetLeader) : base(turnOccurred, originLeader) {
         this.targetLeader = targetLeader;

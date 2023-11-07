@@ -39,14 +39,14 @@ public class TradeUIController : MonoBehaviour
         maxes = new int[]{playerLeader.PoliticsStockpile, playerLeader.IntelligenceStockpile, playerLeader.AffluenceStockpile, 
             enemyLeader.PoliticsStockpile, enemyLeader.IntelligenceStockpile, enemyLeader.AffluenceStockpile};
         this.enemyLeader = enemyLeader;
-        foreach((string, string) leader in leaderButtonData) {
-            if(leader.Item1.Equals(playerLeader.Name)) {
-                playerIcon.sprite = FileManager.GetLeaderImageFromFileName(leader.Item2);
-            }
-            if(leader.Item1.Equals(enemyLeader.Name)) {
-                leaderIcon.sprite = FileManager.GetLeaderImageFromFileName(leader.Item2);
-            }
-        }
+        //foreach((string, string) leader in leaderButtonData) {
+            // if(leader.Item1.Equals(playerLeader.Name)) {
+            playerIcon.sprite = FileManager.GetLeaderImageFromFileName(playerLeader.GetLeaderImagePath(LeaderResources.Perspectives.Portrait, LeaderResources.Expressions.Neutral));
+            // }
+            // if(leader.Item1.Equals(enemyLeader.Name)) {
+            leaderIcon.sprite = FileManager.GetLeaderImageFromFileName(enemyLeader.GetLeaderImagePath(LeaderResources.Perspectives.Portrait, LeaderResources.Expressions.Neutral));
+            // }
+        // }
         UpdateText();
     }
 

@@ -175,6 +175,12 @@ public static class FileManager {
         return Resources.Load<Sprite>(leaderImageFilePath);
     }
 
+    // TODO: Somewhat deprecated.
+    /*public static Sprite GetLeaderImageFromType(string leaderName, LeaderResources.Perspectives perspective, LeaderResources.Expressions expression) {
+        string leaderImageFilePath = "LeaderImages/";
+
+    }*/
+
     public static Dictionary<LeaderResources.Perspectives, Dictionary<LeaderResources.Expressions, string>> GetLeaderImagePaths(string leaderName) {
         Dictionary<LeaderResources.Perspectives, Dictionary<LeaderResources.Expressions, string>> leaderImagePaths = new();
         foreach (LeaderResources.Perspectives perspective in Enum.GetValues(typeof(LeaderResources.Perspectives))) {

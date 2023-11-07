@@ -68,8 +68,10 @@ public class GameHandler {
     private void BuildVisibilities() {
         foreach (Opponent opponent in opponentHandler.opponents.Values) {
             Leader opponentLeader = opponent.Leader;
-            LeaderVisibility leaderVisibility = new(player.Leader, opponentLeader);
-            player.Leader.AddNewLeaderVisiblity(leaderVisibility);
+            LeaderVisibility playerToOpponentVisibility = new(player.Leader, opponentLeader);
+            player.Leader.AddNewLeaderVisiblity(playerToOpponentVisibility);
+            LeaderVisibility opponentToPlayerVisibility = new(opponentLeader, player.Leader);
+            opponentLeader.AddNewLeaderVisiblity(opponentToPlayerVisibility);
         }
 
         foreach (Opponent opponent1 in opponentHandler.opponents.Values) {
@@ -107,6 +109,7 @@ public class GameHandler {
             Leader opponentLeader = opponent.Leader;
             Relationship relationship = new(player.Leader, opponentLeader);
             player.Leader.AddNewRelationship(relationship);
+            opponentLeader.AddNewRelationship(relationship);
         }
 
         foreach (Opponent opponent1 in opponentHandler.opponents.Values) {
@@ -156,6 +159,38 @@ public class GameHandler {
         // - pass the offer/request values in the order that they appear for the constructor
         opponentHandler.ProcessPlayerInitiatedTradeAction(tradeAction);
         player.ProcessOutgoingTradeOutcome(tradeAction);
+    }
+
+    public void IntitiatePlayerTrade() {
+        player.PlayerTurnActionsLeft--;
+        player.Leader.IncurTradeCosts();
+    }
+
+    public void ProcessPlayerEspionage(string targetLeaderName, CurrencyType targetCurrency) {
+        player.PlayerTurnActionsLeft--;
+        player.Leader.IncurEspionageCosts();
+        player.Leader.UpdateLeaderPreferenceVisibility(targetLeaderName, targetCurrency, true);
+    }
+
+    public void ProcessPlayerDiplomacy(string targetPlanetName, CurrencyType currencyToIncrease, CurrencyType currencyToDecrease) {
+        player.PlayerTurnActionsLeft--;
+        player.Leader.IncurDiplomacyCosts();
+        Planet targetPlanet = planetHandler.planets[targetPlanetName];
+        DiplomacyAction diplomacy = new(0, player.Leader, targetPlanet, currencyToIncrease, currencyToDecrease);
+        
+        targetPlanet.HandleDiplomacyAction(diplomacy);
+    }
+
+    public bool CheckPlayerCanAffordTrade() {
+        return player.Leader.CanAffordTrade();
+    }
+
+    public bool CheckPlayerCanAffordEspionage() {
+        return player.Leader.CanAffordEspionage();
+    }
+
+    public bool CheckPlayerCanAffordDiplomacy() {
+        return player.Leader.CanAffordDiplomacy();
     }
 
     public void ProcessPlayerOutstandingTrade(string originLeader, bool accepted) {
@@ -235,7 +270,7 @@ public class GameHandler {
                         if (GameHistory.LogIncludesDiplomacyActions) gameHistory.LogGameEvent(new(diplomacy.ToString()));
                         break;
                     case EspionageAction espionage:
-                        HandleEspionageAction(espionage);
+                        // HandleEspionageAction(espionage);
                         if (GameHistory.LogIncludesDiplomacyActions) gameHistory.LogGameEvent(new(espionage.ToString()));
                         break;
                     case TradeAction trade:
@@ -310,51 +345,25 @@ public class GameHandler {
             return true;
         }
         return false;
-        /*Dictionary<string, List<(Leader, float)>> ratios = Election.GetPlanetsInfluenceRatios(planetHandler.planets.Values.ToList());
-        // TODO: FOLLOWING IS DEBUG ONLY!
-        StringBuilder sb = new();
-        foreach (KeyValuePair<string, List<(Leader, float)>> kvp in ratios) {
-            sb.Append(kvp.Key);
-            sb.Append(": ");
-            foreach ((Leader, float) leaderWeight in kvp.Value) {
-                sb.Append(leaderWeight.Item1.Name);
-                sb.Append("\t");
-                sb.Append(leaderWeight.Item2);
-                sb.Append("\n");
-            }
-            sb.Append("\n");
-        }
-        Debug.Log(sb.ToString());*/
     }
 
     private void HandleDiplomacyAction(DiplomacyAction diplomacyAction) {
+        diplomacyAction.originLeader.IncurDiplomacyCosts();
         Planet targetPlanet = planetHandler.planets[diplomacyAction.TargetPlanet.Name];
         targetPlanet.HandleDiplomacyAction(diplomacyAction);
     }
-
-    private void HandleEspionageAction(EspionageAction espionageAction) {
+    // TODO: Implement for AI
+    /*private void HandleEspionageAction(EspionageAction espionageAction) {
         throw new NotImplementedException("Espionage action is not implemented to be handled yet.");
-    }
+    }*/
 
     private void HandleTradeAction(TradeAction tradeAction) {
+        tradeAction.originLeader.IncurTradeCosts();
         if (tradeAction.TargetLeader == player.Leader) { // Should be reference equality, this is intentional.
             player.AddOutstandingTrade(tradeAction);
             return;
         }
         opponentHandler.ProcessOpponentOnlyTradeAction(tradeAction);
-    }
-
-    public string DEBUG_GetLeaderInfoString(string leaderName) {
-        Leader leader = opponentHandler.opponents[leaderName].Leader;
-        string leaderDebugInfo = "Leader Name: " + leader.Name;
-        leaderDebugInfo += "\nMoney Stockpile: " + leader.AffluenceStockpile + ", Money Yield: " + leader.AffluenceYield;
-        leaderDebugInfo += "\nPolitics Stockpile: " + leader.PoliticsStockpile + ", Politics Yield: " + leader.PoliticsYield;
-        leaderDebugInfo += "\nIntellect Stockpile: " + leader.IntelligenceStockpile + ", Intellect Yield: " + leader.IntelligenceYield;
-        leaderDebugInfo += "\nControlled Planets: ";
-        foreach (Planet controlledPlanet in leader.GetControlledPlanets()) {
-            leaderDebugInfo += controlledPlanet.Name + " (Influence: " + leader.GetPlanetInfluence(controlledPlanet.Name).InfluenceValue + "), ";
-        }
-        return leaderDebugInfo;
     }
 
     public Leader GetOpponentLeader(string leaderName) { 
