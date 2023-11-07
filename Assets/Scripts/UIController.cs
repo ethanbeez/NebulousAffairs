@@ -16,6 +16,7 @@ public class UIController : MonoBehaviour {
 
     [Header("Main Screen Components")]
     [SerializeField] Animator UIAnim;
+    [SerializeField] ActionCounter actionCounter;
     [SerializeField] TextMeshProUGUI playerPolitics;
     [SerializeField] TextMeshProUGUI playerWealth;
     [SerializeField] TextMeshProUGUI playerIntelligence;
@@ -82,16 +83,18 @@ public class UIController : MonoBehaviour {
 
         //Pie Chart should be updated when turn ends. yipee.
         //pieChart.LoadPieChart(influenceRatios);
+        UpdateMainScreen();
+        UpdateActionDisplay(3);
 
+    }
 
-        //UpdateMainScreen
+    private void UpdateMainScreen() {
         playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
         playerWealth.text = playerLeader.AffluenceStockpile.ToString();
         playerPolitics.text = playerLeader.PoliticsStockpile.ToString();
         playerIntelligenceYield.text = "+" + playerLeader.IntelligenceYield.ToString();
         playerWealthYield.text = "+" + playerLeader.AffluenceYield.ToString();
         playerPoliticsYield.text = "+" + playerLeader.PoliticsYield.ToString();
-
     }
 
     //Renders the PlanetInfo Screen
@@ -148,6 +151,8 @@ public class UIController : MonoBehaviour {
             inputManager.CameraToMapPosition();
         
         UIAnim.SetTrigger("ToLeader");
+
+        UpdateMainScreen();
     } 
 
     /// <summary>
@@ -174,7 +179,9 @@ public class UIController : MonoBehaviour {
 
     //TODO: Espionage Detection, Commanding, and 
 
-
+    public void UpdateActionDisplay(int PlayerTurnActionsLeft) {
+        actionCounter.UpdateActionDisplay(PlayerTurnActionsLeft);
+    }
 
     
 }

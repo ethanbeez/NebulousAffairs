@@ -131,6 +131,7 @@ public class GameManager : MonoBehaviour {
         TradeAction trade = new TradeAction(0, gameHandler.GetPlayerLeader(), enemyLeader, vals[2], vals[0], vals[1], vals[5], vals[3], vals[4] );
         gameHandler.ProcessPlayerInitiatedTrade(trade);
         uiController.RenderLeaderInfo(enemyLeader);
+        uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
