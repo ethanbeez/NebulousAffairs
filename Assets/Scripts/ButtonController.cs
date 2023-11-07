@@ -33,7 +33,7 @@ public class ButtonController {
             rectTransform.position = new(order++ * sprite.rect.width * LeaderButton.PortraitScale, 0, 0);
             leaderButtons.Add(leader.Item1, leaderButton);
             leaderButtonGameObject.transform.SetParent(leadersPanelGameObject.transform, false);
-            //
+            
         }
     }
 }

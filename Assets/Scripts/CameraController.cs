@@ -126,7 +126,6 @@ public class CameraController : MonoBehaviour {
     public void StartIntroFly() {
         FreeCam = false;
         focusTarget = null;
-        freeCamReturnComplete = false;
         startTime = Time.time;
         freeCamStartMarker = introCamLocation;
         freeCamEndMarker = mapCamLocation;
@@ -164,7 +163,7 @@ public class CameraController : MonoBehaviour {
         // Debug.Log("Flying...");
         float completion = (Time.time - startTime) / duration;
         if (completion >= 1) {
-            freeCamReturnComplete = true;
+            introFlyComplete = true;
             warpVFX.Stop();
         }
         // TODO: Take optimization!
@@ -177,7 +176,7 @@ public class CameraController : MonoBehaviour {
         lensDistortion.scale.value = Mathf.Clamp(value + 1.5f, 0.01f, 1);
         // transform.rotation = Quaternion.Lerp(freeCamStartRotation, freeCamEndRotation, freeCamReturnCurve.Evaluate(completion));
         transform.position += center;
-        if (freeCamReturnComplete) {
+        if (introFlyComplete) {
             transform.position = new(0, 0, 0);
         }
     }
@@ -204,6 +203,7 @@ public class CameraController : MonoBehaviour {
         this.focusTarget = focusTarget;
         flyToLocationComplete = false;
         flyToStartMarker = transform.position;
+        Debug.Log(flyToStartMarker);
         flyToStartRotation = transform.rotation;
         flyToEndMarker = focusTarget.transform.position;
         flyToEndRotation = focusTarget.transform.rotation;

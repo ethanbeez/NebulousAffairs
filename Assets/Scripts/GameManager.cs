@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour {
         InputManager.TPressed += ToggleGalaxyMotionTrails;
         InputManager.EscapePressed += QuitGame;
         InputManager.SpacePressed += HandleTurnAdvancement;
-        //ButtonController.LeaderButtonPressed += HandleLeaderClick;
+        LeaderButton.LeaderButtonPressed += HandleLeaderClick;
         PlanetController.PlanetClicked += HandlePlanetClick;
 
         uiController.playerLeader = gameHandler.GetPlayerLeader();

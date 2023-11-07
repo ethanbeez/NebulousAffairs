@@ -17,7 +17,6 @@ public class LeaderButton {
     public string LeaderName { get; private set; }
     public string ImagePath { get; private set; }
     private Image leaderImage;
-    private Button button;
     private string leaderName;
 
     public LeaderButton(string leaderName, string imagePath, GameObject leaderButtonGameObject) {
@@ -26,12 +25,11 @@ public class LeaderButton {
         LeaderName = leaderName;
         this.leaderName = leaderName;
         ImagePath = imagePath;
-        //leaderImage = new Image();
         buttonPressed += LeaderClicked;
-       leaderButtonGameObject.GetComponent<Button>().onClick.AddListener(buttonPressed);
+        leaderButtonGameObject.GetComponent<Button>().onClick.AddListener(LeaderClicked);
     }
 
     public void LeaderClicked() {
-        LeaderButtonPressed.Invoke(leaderName);
+        LeaderButtonPressed!.Invoke(leaderName);
     }
 }
