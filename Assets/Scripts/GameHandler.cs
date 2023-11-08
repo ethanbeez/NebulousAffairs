@@ -158,6 +158,7 @@ public class GameHandler {
         // - you'll need player leader and target leader references for next params
         // - pass the offer/request values in the order that they appear for the constructor
         bool output = opponentHandler.ProcessPlayerInitiatedTradeAction(tradeAction);
+        player.Leader.IncurTradeCosts();
         player.ProcessOutgoingTradeOutcome(tradeAction);
         player.PlayerTurnActionsLeft--;
         return output;

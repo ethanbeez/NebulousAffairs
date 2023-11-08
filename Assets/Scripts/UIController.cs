@@ -16,7 +16,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] GameObject leaderButtonPrefab;
 
     [Header("Main Screen Components")]
-    [SerializeField] Animator UIAnim;
+    [SerializeField] public Animator UIAnim;
     [SerializeField] ActionCounter actionCounter;
     [SerializeField] TextMeshProUGUI playerPolitics;
     [SerializeField] TextMeshProUGUI playerWealth;
@@ -38,6 +38,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetWealthYield;
     [SerializeField] TextMeshProUGUI planetIntelligenceYield;
     [SerializeField] PieChart pieChart;
+    [SerializeField] Campaign campaign;
  
     [Header("Leader Screen Components")]
     [SerializeField] Image leaderImage;
@@ -114,6 +115,8 @@ public class UIController : MonoBehaviour {
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
         pieChart.LoadPieChart(influenceRatios);
         
+        campaign.planet = clickedPlanet;
+        
         UIAnim.SetTrigger("ToPlanet");
     }
 
@@ -152,16 +155,13 @@ public class UIController : MonoBehaviour {
             inputManager.CameraToMapPosition();
         
         UIAnim.SetTrigger("ToLeader");
-        for(int i = LogData.childCount; i > 0; i--) {
-            GameObject.Destroy(LogData.GetChild(0).gameObject);
-        }
         UpdateMainScreen();
     } 
 
     public void UpdateLog(IEnumerable<GameEvent> gameEvents) {
         Debug.Log(gameEvents);
         for(int i = LogData.childCount; i > 0; i--) {
-            GameObject.Destroy(LogData.GetChild(0).gameObject);
+            GameObject.Destroy(LogData.GetChild(i - 1).gameObject);
         }
         foreach(GameEvent gameEvent in gameEvents) {
             AddToLog(gameEvent.ToString());
@@ -181,6 +181,9 @@ public class UIController : MonoBehaviour {
     public void Back() {
         if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Planet")) {
             inputManager.CameraToMapPosition();
+        }
+        for(int i = converseData.childCount; i > 0; i--) {
+            GameObject.Destroy(converseData.GetChild(i - 1).gameObject);
         }
         UIAnim.SetTrigger("Back");
     }

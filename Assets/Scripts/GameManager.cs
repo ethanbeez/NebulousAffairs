@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour {
         LeaderButton.LeaderButtonPressed += HandleLeaderClick;
         PlanetController.PlanetClicked += HandlePlanetClick;
         TradeUIController.TradeConfirmPressed += HandlePlayerTrade;
+        Campaign.ConfirmCampaign += HandlePlayerCampaign;
         UIController.ConfirmEspionage += HandlePlayerEspionage;
 
         uiController.playerLeader = gameHandler.GetPlayerLeader();
@@ -140,6 +141,13 @@ public class GameManager : MonoBehaviour {
         uiController.RenderLeaderInfo(enemyLeader);
         uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
         uiController.UpdateLog(gameHandler.GetEventHistory());
+    }
+
+    private void HandlePlayerCampaign(CurrencyType increased, CurrencyType decreased, Planet planet)
+    {
+        gameHandler.ProcessPlayerDiplomacy(planet.Name, increased, decreased);
+        uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
+        uiController.RenderPlanetInfo(planet, gameHandler.GetPlanetInfluenceRatios(planet.Name));
     }
 
     private void HandlePlayerEspionage(int resource, Leader leader) {
