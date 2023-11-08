@@ -2058,6 +2058,7 @@ MonoBehaviour:
   planetPoliticsYield: {fileID: 1477062491}
   planetWealthYield: {fileID: 1721047996}
   planetIntelligenceYield: {fileID: 926905301}
+  planetImage: {fileID: 4322407485815068895}
   pieChart: {fileID: 1028563486}
   campaign: {fileID: 793902141}
   leaderImage: {fileID: 1804925540}
@@ -2809,6 +2810,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3643306163934028544, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
   m_PrefabInstance: {fileID: 4322407485815068893}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4322407485815068895 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5583618904489297183, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+  m_PrefabInstance: {fileID: 4322407485815068893}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
