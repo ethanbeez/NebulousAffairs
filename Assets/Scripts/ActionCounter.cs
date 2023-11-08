@@ -12,6 +12,8 @@ public class ActionCounter : MonoBehaviour
     Animator actionCounter;
 
     public void UpdateActionDisplay(int PlayerTurnActionsLeft) {
+        
+        Debug.Log(PlayerTurnActionsLeft);
         for(int i = 0; i < images.Length; i++) {
             if(PlayerTurnActionsLeft > i) {
                 images[i].sprite = fullSprite;

@@ -34,7 +34,7 @@ public class Player {
         Leader = leader;
     }
 
-    public int PlayerTurnActionsLeft { get; set; }
+    public int PlayerTurnActionsLeft { get; set; } = 3;
 
     public void AddOutstandingTrade(TradeAction outstandingTrade) {
         if (!OutstandingTrades.ContainsKey(outstandingTrade.originLeader.Name)) {

@@ -36,7 +36,7 @@ public class TradeUIController : MonoBehaviour
     //Called when Trade Begins, fills out the trade menu
     public void BeginTrade(Leader playerLeader, Leader enemyLeader, List<(string, string)> leaderButtonData ) {
         vals  =  new int[]{0, 0, 0, 0, 0, 0};
-        maxes = new int[]{playerLeader.PoliticsStockpile, playerLeader.IntelligenceStockpile, playerLeader.AffluenceStockpile, 
+        maxes = new int[]{playerLeader.PoliticsStockpile, playerLeader.IntelligenceStockpile, playerLeader.AffluenceStockpile - 2, 
             enemyLeader.PoliticsStockpile, enemyLeader.IntelligenceStockpile, enemyLeader.AffluenceStockpile};
         this.enemyLeader = enemyLeader;
         //foreach((string, string) leader in leaderButtonData) {
@@ -52,7 +52,7 @@ public class TradeUIController : MonoBehaviour
 
     public void ChangeValue(int buttonIndex) {
         if(buttonIndex > 0) {
-            buttonIndex = buttonIndex - 1;
+            buttonIndex--;
             if(++vals[buttonIndex] > maxes[buttonIndex])
                 vals[buttonIndex] = 0;
         }

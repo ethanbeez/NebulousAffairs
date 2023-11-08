@@ -159,6 +159,7 @@ public class GameHandler {
         // - pass the offer/request values in the order that they appear for the constructor
         opponentHandler.ProcessPlayerInitiatedTradeAction(tradeAction);
         player.ProcessOutgoingTradeOutcome(tradeAction);
+        player.PlayerTurnActionsLeft--;
     }
 
     public void IntitiatePlayerTrade() {

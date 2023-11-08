@@ -135,8 +135,18 @@ public class GameManager : MonoBehaviour {
     }
 
     private void HandlePlayerEspionage(int resource, Leader leader) {
-        //TODO: Ethan set up the Espionage Action from the player to the given leader based on the resource counter
-        //0 = Politics, 1 = Influence/Intellect, 2 = Wealth / Affluence
+        switch(resource) {
+            case 0:
+                gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Politics);
+                break;
+            case 1:
+                gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Intellect);
+                break;
+            case 2:
+                gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Affluence);
+                break;
+        }
+        uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
