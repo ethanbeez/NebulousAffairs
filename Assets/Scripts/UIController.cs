@@ -111,7 +111,7 @@ public class UIController : MonoBehaviour {
         planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
         planetWealthPriority.text = clickedPlanet.AffluencePriority.ToString();
         planetPoliticsYield.text = clickedPlanet.PoliticsYield.ToString();
-        planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
+        planetIntelligenceYield.text = clickedPlanet.IntellectYield.ToString();
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
         pieChart.LoadPieChart(influenceRatios);
 
@@ -130,7 +130,7 @@ public class UIController : MonoBehaviour {
         planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
         planetWealthPriority.text = clickedPlanet.AffluencePriority.ToString();
         planetPoliticsYield.text = clickedPlanet.PoliticsYield.ToString();
-        planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
+        planetIntelligenceYield.text = clickedPlanet.IntellectYield.ToString();
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
         pieChart.LoadPieChart(influenceRatios);
         

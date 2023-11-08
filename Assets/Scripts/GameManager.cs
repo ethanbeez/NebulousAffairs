@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour {
 
     private void HandlePlayerEspionage(int resource, Leader leader) {
 
-        // should be moved into Espionage Class
+        // TODO: should be moved into Espionage Class
         switch(resource) {
             case 0:
                 gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Politics);

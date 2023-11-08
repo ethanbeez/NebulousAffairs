@@ -101,14 +101,17 @@ public class Planet {
         switch (diplomacyAction.CurrencyToIncrease) {
             case CurrencyType.Affluence:
                 currencyIncreasePriority = affluencePriority;
+                affluencePriority++;
                 increasedCurrency = "Gold";
                 break;
             case CurrencyType.Politics:
                 currencyIncreasePriority = politicsPriority;
+                politicsPriority++;
                 increasedCurrency = "Politics";
                 break;
             case CurrencyType.Intellect:
                 currencyIncreasePriority = intelligencePriority;
+                intelligencePriority++;
                 increasedCurrency = "Intellect";
                 break;
         }
@@ -117,14 +120,17 @@ public class Planet {
         switch (diplomacyAction.CurrencyToDecrease) {
             case CurrencyType.Affluence:
                 currencyDecreasePriority = affluencePriority;
+                affluencePriority--;
                 decreasedCurrency = "Gold";
                 break;
             case CurrencyType.Politics:
                 currencyDecreasePriority = politicsPriority;
+                politicsPriority--;
                 decreasedCurrency = "Politics";
                 break;
             case CurrencyType.Intellect:
                 currencyDecreasePriority = intelligencePriority;
+                intelligencePriority--;
                 decreasedCurrency = "Intellect";
                 break;
         }
