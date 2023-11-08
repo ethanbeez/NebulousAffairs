@@ -25,7 +25,6 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI playerIntelligenceYield;
     [SerializeField] Transform LogData;
     [SerializeField] TextMeshProUGUI LogPrefab;
-
     public Leader playerLeader;
 
     [Header("Planet Screen Components")]
@@ -157,12 +156,22 @@ public class UIController : MonoBehaviour {
         UpdateMainScreen();
     } 
 
+    public void UpdateLog(IEnumerable<GameEvent> gameEvents) {
+        Debug.Log(gameEvents);
+        for(int i = LogData.childCount; i > 0; i--) {
+            GameObject.Destroy(LogData.GetChild(0).gameObject);
+        }
+        foreach(GameEvent gameEvent in gameEvents) {
+            AddToLog(gameEvent.ToString());
+        }
+    }
+    
     /// <summary>
     /// Adds a given string into the Log, formatting with Font and Text Size, while making visible to the player
     /// </summary>
     /// <param name="LogInfo"> The info that is added to the log</param>
     /// <returns>the current number of unique text instances within the log</returns>
-    public void AddToLog(string LogInfo) {
+    private void AddToLog(string LogInfo) {
         var LogText = Instantiate(LogPrefab, LogData);
         LogText.text = LogInfo;
     }

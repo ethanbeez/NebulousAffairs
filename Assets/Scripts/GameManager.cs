@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour {
 
         uiController.playerLeader = gameHandler.GetPlayerLeader();
         uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo());
+        uiController.UpdateLog(gameHandler.GetEventHistory());
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
     }
@@ -120,6 +121,7 @@ public class GameManager : MonoBehaviour {
             if (gameHandler.GetPlayerPlanetsControlled() == 12) won = 2;
         }*/
         uiController.UpdateTurnDisplay(gameTurnInfo.ToString());
+        uiController.UpdateLog(gameHandler.GetEventHistory());
     }
 
     private void HandlePlayerLoss() {
@@ -132,6 +134,7 @@ public class GameManager : MonoBehaviour {
         gameHandler.ProcessPlayerInitiatedTrade(trade);
         uiController.RenderLeaderInfo(enemyLeader);
         uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
+        uiController.UpdateLog(gameHandler.GetEventHistory());
     }
 
     private void HandlePlayerEspionage(int resource, Leader leader) {
@@ -146,7 +149,9 @@ public class GameManager : MonoBehaviour {
                 gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Affluence);
                 break;
         }
+        uiController.RenderLeaderInfo(leader);
         uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
+        uiController.UpdateLog(gameHandler.GetEventHistory());
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
