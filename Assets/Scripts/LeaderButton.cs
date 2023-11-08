@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class LeaderButton {
-    public const float PortraitScale = 0.2f;
+    public const float PortraitScale = 0.1f;
 
     public delegate void LeaderButtonHandler(string leaderName);
     public static event LeaderButtonHandler? LeaderButtonPressed;

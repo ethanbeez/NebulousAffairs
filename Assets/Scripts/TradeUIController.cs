@@ -77,4 +77,15 @@ public class TradeUIController : MonoBehaviour
     public void Confirm() {
         TradeConfirmPressed.Invoke(vals, enemyLeader);
     }
+
+    public void Reset() {
+        playerPolitics.text = 0.ToString();
+        playerInfluence.text = 0.ToString();
+        playerWealth.text = 0.ToString();
+        leaderPolitics.text = 0.ToString();
+        leaderInfluence.text = 0.ToString();
+        leaderWealth.text = 0.ToString();
+
+        FindObjectOfType<UIController>().UIAnim.SetTrigger("Back");
+    }
 }
