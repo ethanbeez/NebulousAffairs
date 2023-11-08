@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour {
     private Quaternion freeCamEndRotation = Quaternion.LookRotation(new Vector3(0, -1, 0), Vector3.up);
     private float startTime;
     // private float freeCamReturnLength; // TODO: REMOVE
-    private bool freeCamReturnComplete;
+    public bool freeCamReturnComplete;
     private float freeCamReturnTime = 1.75f;
     private Vector3 center;
     public float speed;
@@ -31,7 +31,7 @@ public class CameraController : MonoBehaviour {
     private Vector3 flyToEndMarker;
     private Quaternion flyToStartRotation;
     private Quaternion flyToEndRotation = Quaternion.identity;
-    private bool flyToLocationComplete;
+    public bool flyToLocationComplete;
     private float flyToTime = 1.75f;
     private float startingDistance;
 
@@ -109,7 +109,7 @@ public class CameraController : MonoBehaviour {
     }
 
     public void StartMapFly() {
-        if (!freeCamReturnComplete) return;
+        if (!introFlyComplete || !freeCamReturnComplete || !flyToLocationComplete) return;
         FreeCam = false;
         focusTarget = null;
         freeCamReturnComplete = false;
@@ -204,7 +204,7 @@ public class CameraController : MonoBehaviour {
     }
 
     public void StartFly(GameObject focusTarget) {
-        if (!introFlyComplete && !flyToLocationComplete) return;
+        if (!introFlyComplete || !flyToLocationComplete || !freeCamReturnComplete) return;
         this.focusTarget = focusTarget;
         flyToLocationComplete = false;
         flyToStartMarker = transform.position;

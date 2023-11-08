@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void CameraToMapPosition() {
+        if (!cameraController.introFlyComplete || !cameraController.freeCamReturnComplete || !cameraController.flyToLocationComplete) return;
         cameraController.StartMapFly();
         uiController.RenderMainScene();
     }
@@ -95,6 +96,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
+        if (!cameraController.introFlyComplete || !cameraController.flyToLocationComplete || !cameraController.freeCamReturnComplete) return;
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
         uiController.RenderPlanetInfo(clickedPlanet, gameHandler.GetPlanetInfluenceRatios(planetName));
         cameraController.StartFly(focusTarget);
