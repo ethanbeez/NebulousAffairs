@@ -38,6 +38,7 @@ public class PieChart : MonoBehaviour
             }
 
         }
-        throw new Exception("Leader Does Not Exist");
+        return (new Leader(leaderName, 0, 0, 0, 0, 0, 0, 0, 0, 0), 0.0f);
+        
     }
 }
