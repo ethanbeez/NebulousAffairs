@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.031163083, g: 0.009459269, b: 0.013044128, a: 1}
+  m_IndirectSpecularColor: {r: 0.031131228, g: 0.009468952, b: 0.013015968, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -423,7 +423,9 @@ MonoBehaviour:
     m_RotationOrder: 4
   freeCamEndMarker: {x: 0, y: 0, z: 0}
   focusTarget: {fileID: 0}
+  freeCamReturnComplete: 0
   speed: 10
+  flyToLocationComplete: 0
   acceleration: 50
   accelerationFastMultiplier: 4
   velocity: {x: 0, y: 0, z: 0}
@@ -684,6 +686,18 @@ MonoBehaviour:
   planetsPerRow: 4
   planetsPerCol: 3
   motionEnabled: 0
+  GammaVerteraPrefab: {fileID: 892838461364764870, guid: c2547a317fd2f9d4a84d8a74c5276f86, type: 3}
+  LoresHopePrefab: {fileID: 4195255877013078965, guid: 823e1d5266806a649aac55a51b7c1681, type: 3}
+  PykienPrefab: {fileID: 4444109716083127220, guid: e59efafa91f92374685ebb490092325c, type: 3}
+  SevShaaPrefab: {fileID: 5978052923854809067, guid: ef89706829863a14c8394f920dcf2897, type: 3}
+  TactoPrefab: {fileID: 8931970391116722440, guid: 6ff106d8d5c2edf48b504073b55acf46, type: 3}
+  HavisFourPrefab: {fileID: 5564145145355984943, guid: 50e0d2dd1453d6e4da94f58dd1645125, type: 3}
+  JocaniaPrefab: {fileID: 4881022585410376767, guid: 2a658738180bfc24d9262319067a6d94, type: 3}
+  PaanPrefab: {fileID: 8206041532671918620, guid: b4b7f15dca376604abc2fca0b0e2096f, type: 3}
+  RhollianRemnantsPrefab: {fileID: 6312865645006346296, guid: 156da6ab66afdaf4786231a9c751a020, type: 3}
+  SotaldiPrefab: {fileID: 4738333893904796164, guid: c8598de9853d522489696adfde06f8a3, type: 3}
+  TauHarenPrefab: {fileID: 160866982345584388, guid: e8ffeb9a05d023e409b43b5b1d90c6a4, type: 3}
+  Xyda6Prefab: {fileID: 8392409314072402440, guid: 31c778bc13e56224ba607a00fb973cbd, type: 3}
 --- !u!4 &829074426
 Transform:
   m_ObjectHideFlags: 0
@@ -1784,7 +1798,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6528741892594560896, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 300
+      value: 587954.94
       objectReference: {fileID: 0}
     - target: {fileID: 6583364071777046369, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_fontSize

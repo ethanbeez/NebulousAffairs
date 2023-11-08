@@ -115,6 +115,11 @@ public class GameManager : MonoBehaviour {
                 HandlePlayerLoss();
             }
         }
+        if (gameTurnInfo.CurrentTurn > gameTurnInfo.TurnLimit) {
+            if (gameHandler.GetPlayerPlanetsControlled() >= 7) { 
+            
+            }
+        }
         // TODO: Remove following, for rush proto
         /*int won = 0;
         if (gameTurnInfo.CurrentTurn > 20) {

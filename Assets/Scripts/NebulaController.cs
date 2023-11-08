@@ -33,6 +33,20 @@ public class NebulaController : MonoBehaviour {
     public bool motionEnabled = false;
     private bool motionTrailsEnabled;
 
+    [SerializeField]
+    public GameObject GammaVerteraPrefab;
+    public GameObject LoresHopePrefab;
+    public GameObject PykienPrefab;
+    public GameObject SevShaaPrefab;
+    public GameObject TactoPrefab;
+    public GameObject HavisFourPrefab;
+    public GameObject JocaniaPrefab;
+    public GameObject PaanPrefab;
+    public GameObject RhollianRemnantsPrefab;
+    public GameObject SotaldiPrefab;
+    public GameObject TauHarenPrefab;
+    public GameObject Xyda6Prefab;
+
     void Start() {
         motionTrailsEnabled = false;
         nebulaMotionEnabled = false;
@@ -139,9 +153,9 @@ public class NebulaController : MonoBehaviour {
         float radiusIncrement = (starPlanetMaxRadius - starPlanetMinRadius) / numPlanets;
         for (int i = 0; i < numPlanets; i++) {
             float currentAngle = i * planetAngDisp;
-            GameObject planetInstance = Instantiate(planetPrefab);
-
-            PlanetController planetController = planetInstance.GetComponent<PlanetController>();
+            GameObject planetInstance = Instantiate(GetPlanetPrefabFromName(starPlanetsInfo[i].name));
+            PlanetController planetController = planetInstance.AddComponent<PlanetController>();
+            //PlanetController planetController = planetInstance.GetComponent<PlanetController>();
             planetController.name = starPlanetsInfo[i].name;
             planetController.planetName = starPlanetsInfo[i].name;
             planetController.planetID = starPlanetsInfo[i].ID;
@@ -161,5 +175,35 @@ public class NebulaController : MonoBehaviour {
 
             planetGameObjects.Add(planetInstance);
         }
+    }
+
+    public GameObject GetPlanetPrefabFromName(string planetName) {
+        switch (planetName) {
+            case "Rhollian Remnants":
+                return RhollianRemnantsPrefab;
+            case "Pykien":
+                return PykienPrefab;
+            case "Havis-4":
+                return HavisFourPrefab;
+            case "Sevshaa":
+                return SevShaaPrefab;
+            case "Pa'an":
+                return PaanPrefab;
+            case "Lore's Hope":
+                return LoresHopePrefab;
+            case "Tau Haren":
+                return TauHarenPrefab;
+            case "Sotaldi":
+                return SotaldiPrefab;
+            case "Xyda-6":
+                return Xyda6Prefab;
+            case "Jocania":
+                return JocaniaPrefab;
+            case "Tacto":
+                return TactoPrefab;
+            case "Gamma Vertera":
+                return GammaVerteraPrefab;
+        }
+        return null;
     }
 }
