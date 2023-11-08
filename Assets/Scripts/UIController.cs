@@ -37,6 +37,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetPoliticsYield;
     [SerializeField] TextMeshProUGUI planetWealthYield;
     [SerializeField] TextMeshProUGUI planetIntelligenceYield;
+    [SerializeField] Image planetImage;
     [SerializeField] PieChart pieChart;
     [SerializeField] Campaign campaign;
  
@@ -114,6 +115,8 @@ public class UIController : MonoBehaviour {
         planetIntelligenceYield.text = clickedPlanet.IntellectYield.ToString();
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
         pieChart.LoadPieChart(influenceRatios);
+        Debug.Log(clickedPlanet.Name);
+        planetImage.sprite = FileManager.GetPlanetImageFromFileName(clickedPlanet.Name);
 
         campaign.planet = clickedPlanet;
         

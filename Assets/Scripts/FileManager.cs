@@ -192,4 +192,14 @@ public static class FileManager {
         }
         return leaderImagePaths;
     }
+    
+    public static Sprite GetPlanetImageFromFileName(string name) {
+        name = name.Replace("-" , "").Replace("'", "");
+        string planetImageFilePath = "PlanetImages/" +  whitespaceTrim.Replace(name, "");
+        Debug.Log(planetImageFilePath);
+        if (Resources.Load<Sprite>(planetImageFilePath) == null) {
+            Debug.Log("):");
+        }
+        return Resources.Load<Sprite>(planetImageFilePath);
+    }
 }
