@@ -117,10 +117,8 @@ public class UIController : MonoBehaviour {
 
     //Renders the LeaderInfo Screen Relative to a given Leader
     public void RenderLeaderInfo(Leader leader){
-
-
-       currentLeader = leader; 
-       // Should be determined by Espionage
+        
+        currentLeader = leader; 
        if(!playerLeader.GetLeaderPreferenceVisibility(leader, CurrencyType.Intellect)) {
             leaderIntelligencePriority.text = leader.IntellectPreference.ToString();
        }

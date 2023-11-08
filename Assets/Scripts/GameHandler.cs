@@ -170,7 +170,7 @@ public class GameHandler {
     public void ProcessPlayerEspionage(string targetLeaderName, CurrencyType targetCurrency) {
         player.PlayerTurnActionsLeft--;
         player.Leader.IncurEspionageCosts();
-        player.Leader.UpdateLeaderPreferenceVisibility(targetLeaderName, targetCurrency, true);
+        player.Leader.UpdateLeaderPreferenceVisibility(targetLeaderName, targetCurrency, false);
     }
 
     public void ProcessPlayerDiplomacy(string targetPlanetName, CurrencyType currencyToIncrease, CurrencyType currencyToDecrease) {
