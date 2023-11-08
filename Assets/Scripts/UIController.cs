@@ -37,6 +37,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI planetPoliticsYield;
     [SerializeField] TextMeshProUGUI planetWealthYield;
     [SerializeField] TextMeshProUGUI planetIntelligenceYield;
+    [SerializeField] TextMeshProUGUI planetDescription;
     [SerializeField] Image planetImage;
     [SerializeField] PieChart pieChart;
     [SerializeField] Campaign campaign;
@@ -66,10 +67,6 @@ public class UIController : MonoBehaviour {
         gameManager = FindObjectOfType<GameManager>();
         inputManager = FindObjectOfType<InputManager>();
         AddToLog("Good Luck - The Galaxy Depends on You");
-    }
-
-    void Update() {
-        
     }
 
     public void InstantiateButtons(List<(string, string)> leaderButtonData) {
@@ -137,6 +134,7 @@ public class UIController : MonoBehaviour {
         planetIntelligenceYield.text = clickedPlanet.IntellectYield.ToString();
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
         pieChart.LoadPieChart(influenceRatios);
+        //planetDescription.text = clickedPlanet. 
         
         campaign.planet = clickedPlanet;
     }

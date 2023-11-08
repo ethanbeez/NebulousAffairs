@@ -64,9 +64,6 @@ public class Campaign : MonoBehaviour
         }
     }
 
-    private void DisableButtons(GameObject[] gameObjects, int preserved) {
-    }
-
     private void AllowCompletion() {
         yesButton.SetActive(increaseSelected && decreaseSelected);
     }
