@@ -51,6 +51,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI leaderWealthStockpile;
     [SerializeField] TradeUIController tradeUI;
     [SerializeField] Transform converseData;
+    [SerializeField] TextMeshProUGUI ConversePrefab;
 
     private List<(string, string)> leaderButtonData; 
     Leader currentLeader;
@@ -229,7 +230,7 @@ public class UIController : MonoBehaviour {
     }
 
     public void AddToConverse(string converseInfo) {
-        var ConverseText = Instantiate(LogPrefab, converseData);
+        var ConverseText = Instantiate(ConversePrefab, converseData);
         ConverseText.text = converseInfo;
     }
 
