@@ -154,8 +154,8 @@ public class NebulaController : MonoBehaviour {
         for (int i = 0; i < numPlanets; i++) {
             float currentAngle = i * planetAngDisp;
             GameObject planetInstance = Instantiate(GetPlanetPrefabFromName(starPlanetsInfo[i].name));
-            PlanetController planetController = planetInstance.AddComponent<PlanetController>();
-            //PlanetController planetController = planetInstance.GetComponent<PlanetController>();
+            planetInstance.AddComponent<PlanetController>();
+            PlanetController planetController = planetInstance.GetComponent<PlanetController>();
             planetController.name = starPlanetsInfo[i].name;
             planetController.planetName = starPlanetsInfo[i].name;
             planetController.planetID = starPlanetsInfo[i].ID;

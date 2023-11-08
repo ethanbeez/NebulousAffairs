@@ -30,9 +30,20 @@ public class Planet {
     public int PoliticsYield => politicsYield;
     public int IntellectYield => intellectYield;
     // Personality
-    public float AffluencePriority => affluencePriority;
-    public float PoliticsPriority => politicsPriority;
-    public float IntelligencePriority => intelligencePriority;
+    public float AffluencePriority { get {
+            return Mathf.Clamp01((float) (affluenceYield + 4) / 8);
+        }
+    }
+    public float PoliticsPriority {
+        get {
+            return Mathf.Clamp01((float) (politicsYield + 4) / 8);
+        }
+    }
+    public float IntelligencePriority {
+        get {
+            return Mathf.Clamp01((float) (intellectYield + 4) / 8);
+        }
+    }
     public Leader? CurrentLeader => currentLeader;
     #endregion
 
@@ -101,17 +112,20 @@ public class Planet {
         switch (diplomacyAction.CurrencyToIncrease) {
             case CurrencyType.Affluence:
                 currencyIncreasePriority = affluencePriority;
-                affluencePriority++;
+                affluenceYield++;
+                // affluencePriority++;
                 increasedCurrency = "Gold";
                 break;
             case CurrencyType.Politics:
                 currencyIncreasePriority = politicsPriority;
-                politicsPriority++;
+                politicsYield++;
+                // politicsPriority++;
                 increasedCurrency = "Politics";
                 break;
             case CurrencyType.Intellect:
                 currencyIncreasePriority = intelligencePriority;
-                intelligencePriority++;
+                intellectYield++;
+                // intelligencePriority++;
                 increasedCurrency = "Intellect";
                 break;
         }
@@ -120,17 +134,20 @@ public class Planet {
         switch (diplomacyAction.CurrencyToDecrease) {
             case CurrencyType.Affluence:
                 currencyDecreasePriority = affluencePriority;
-                affluencePriority--;
+                affluenceYield--;
+                // affluencePriority--;
                 decreasedCurrency = "Gold";
                 break;
             case CurrencyType.Politics:
                 currencyDecreasePriority = politicsPriority;
-                politicsPriority--;
+                politicsYield--;
+                // politicsPriority--;
                 decreasedCurrency = "Politics";
                 break;
             case CurrencyType.Intellect:
                 currencyDecreasePriority = intelligencePriority;
-                intelligencePriority--;
+                intellectYield--;
+                // intelligencePriority--;
                 decreasedCurrency = "Intellect";
                 break;
         }

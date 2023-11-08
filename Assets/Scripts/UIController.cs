@@ -117,7 +117,49 @@ public class UIController : MonoBehaviour {
         planetImage.sprite = FileManager.GetPlanetImageFromFileName(clickedPlanet.Name);
 
         campaign.planet = clickedPlanet;
-        
+        string clickedPlanetName = clickedPlanet.Name;
+        string planetFlavorText = "";
+        // TODO: Please remove this or I will kill myself
+        switch (clickedPlanetName) {
+            case "Rhollian Remnants":
+                planetFlavorText = "Long ago, an asteroid collided with the planet Rhollia. Both Rhollia and the asteroid broke apart, creating the barrier between the Far Empire and the rest of the Ckepbo Galaxy. Over the years, the Far Empire has slowly rebuilt their civilization from the rubble of their ruined planet.";
+                break;
+            case "Pykien":
+                planetFlavorText = "Blocked from the rest of the galaxy, the Far Empire's wealth has amassed unspent in the vaults of the mountainous Pykien. Castles carved directly into the rocky surface lead down to subterranean cities. Volcanoes and deep oceans cover the majority of the planet. The rough terrain left temperate Rhollia the more suitable settlement for the Far Empire's governing body and upper class, though most surviving citizens emigrated to Pykien after Rhollia's destruction.";
+                break;
+            case "Havis-4":
+                planetFlavorText = "Havis-4 is a tropical planet best known for its rare food exports. Among them is the highly sought-after Nyndas Roe, a delicacy for the elite of the Ckepbo Galaxy. The population of fishermen and tourists are centralized along the equator. The northern and southern hemispheres are uninhabitable and largely unexplored. Those who venture too far from the equator inexplicably disappear…";
+                break;
+            case "Sevshaa":
+                planetFlavorText = "Sevshaa is a pirate's haven. The most valuable currency here is information—peddled by politicians' aides and interplanetary merchants looking for a quick buck. If you're hunting for dirt on your least favorite Emperor, this is the place to be. Though perhaps not for very long…the swampy surface of the planet is covered in thick mud, dangerous megafauna, and poisonous flora.";
+                break;
+            case "Pa'an":
+                planetFlavorText = "Pa'an is home to the prestigious Zeridian Academy, a celebrated hub of academics and theologians alike. Professional Loreites must graduate from this university in order to serve in the Church. If you're not interested in Lore, the Academy offers many other subjects, ranging from Theoretic Campthran Bison Biology to Experimental H'eshol Ballet.";
+                break;
+            case "Lore's Hope":
+                planetFlavorText = "Lore's Hope is the central hub of the Church of Lore. The gilded Grand Cathedral glitters as a beacon of hope for the faithful of Lore flocking to pay their required tithes. It is a solemn and quiet planet, as members of the Church who have yet to pay their tithe for the year must follow a vow of silence.";
+                break;
+            case "Tau Haren":
+                planetFlavorText = "Tau Haren is the Ckepbo Galaxy's political hub. It is home to the Capitol Building, the central meeting location for the Emperors and other influential political leaders. Tau Haren's cities are said to be the most technologically advanced in the galaxy. However, most people live off-world and commute to Tau Haren for work. The living creatures that do stay on the planet full time are the native Worms, a race of psychic earthworms. The Worms float through the atmosphere, living off microscopic organisms.";
+                break;
+            case "Sotaldi":
+                planetFlavorText = "Sotaldi is the manufacturing hub of the Ckepbo Galaxy. Here, spaceships of various sizes and utilities are constructed in its many factories. The planet combats pollution via massive pumps that transport smog from the atmosphere into orbit. The skies, as a result, are permanently gray and overcast.";
+                break;
+            case "Xyda-6":
+                planetFlavorText = "Xyda-6 is a lush planet and model of environmental sustainability. Its citizens live in harmony with the indigenous flora and fauna of its jungle habitat. The people of Xyda-6 have a reputation for being friendly and kind, especially to tourists or travelers. There is always a place at the synthetic fireplace for a weary intergalactic explorer.";
+                break;
+            case "Jocania":
+                planetFlavorText = "Jocania is one planet-sized museum. Artifacts, statues, art, and other historical items of ages past stand on display for visitors to endlessly browse. It is a favorite spot for politicians to meet and discuss matters of great secrecy and import. There are no cameras, no microphones, no technology of any sort on the planet. Spaceships must be parked far above the surface in the stratosphere.";
+                break;
+            case "Tacto":
+                planetFlavorText = "Tacto is a frozen planet—frozen all the way to its core, in fact. The planet relies on imports from other civilizations to maintain its large population. The capital city, Phaoria, is a popular marketplace and vacation destination for visitors from all corners of the galaxy. Perhaps the most beautiful attraction on Tacto are the Golvyric Spires: a forest of strange spiral obelisks visible from Phaoria's observation points. No one knows where the spires come from or whether they are natural or man-made.";
+                break;
+            case "Gamma Vertera":
+                planetFlavorText = "The desert planet of Gamma Vertera appears barren on its surface. However, despite its harsh environment, its biodiversity is the greatest in the galaxy. Tourists and locals gather in oases while most of the wildlife roam the vast sand dunes. In the scenic oases, politicians and business officials lounge and confer casually in comfort and luxury.";
+                break;
+        }
+        planetDescription.text = planetFlavorText;
+
         UIAnim.SetTrigger("ToPlanet");
     }
 
@@ -134,8 +176,48 @@ public class UIController : MonoBehaviour {
         planetIntelligenceYield.text = clickedPlanet.IntellectYield.ToString();
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
         pieChart.LoadPieChart(influenceRatios);
-        //planetDescription.text = clickedPlanet. 
-        
+        string clickedPlanetName = clickedPlanet.Name;
+        string planetFlavorText = "";
+        // TODO: Please remove this or I will kill myself
+        switch (clickedPlanetName) {
+            case "Rhollian Remnants":
+                planetFlavorText = "Long ago, an asteroid collided with the planet Rhollia. Both Rhollia and the asteroid broke apart, creating the barrier between the Far Empire and the rest of the Ckepbo Galaxy. Over the years, the Far Empire has slowly rebuilt their civilization from the rubble of their ruined planet.";
+                break;
+            case "Pykien":
+                planetFlavorText = "Blocked from the rest of the galaxy, the Far Empire's wealth has amassed unspent in the vaults of the mountainous Pykien. Castles carved directly into the rocky surface lead down to subterranean cities. Volcanoes and deep oceans cover the majority of the planet. The rough terrain left temperate Rhollia the more suitable settlement for the Far Empire's governing body and upper class, though most surviving citizens emigrated to Pykien after Rhollia's destruction.";
+                break;
+            case "Havis-4":
+                planetFlavorText = "Havis-4 is a tropical planet best known for its rare food exports. Among them is the highly sought-after Nyndas Roe, a delicacy for the elite of the Ckepbo Galaxy. The population of fishermen and tourists are centralized along the equator. The northern and southern hemispheres are uninhabitable and largely unexplored. Those who venture too far from the equator inexplicably disappear…";
+                break;
+            case "Sevshaa":
+                planetFlavorText = "Sevshaa is a pirate's haven. The most valuable currency here is information—peddled by politicians' aides and interplanetary merchants looking for a quick buck. If you're hunting for dirt on your least favorite Emperor, this is the place to be. Though perhaps not for very long…the swampy surface of the planet is covered in thick mud, dangerous megafauna, and poisonous flora.";
+                break;
+            case "Pa'an":
+                planetFlavorText = "Pa'an is home to the prestigious Zeridian Academy, a celebrated hub of academics and theologians alike. Professional Loreites must graduate from this university in order to serve in the Church. If you're not interested in Lore, the Academy offers many other subjects, ranging from Theoretic Campthran Bison Biology to Experimental H'eshol Ballet.";
+                break;
+            case "Lore's Hope":
+                planetFlavorText = "Lore's Hope is the central hub of the Church of Lore. The gilded Grand Cathedral glitters as a beacon of hope for the faithful of Lore flocking to pay their required tithes. It is a solemn and quiet planet, as members of the Church who have yet to pay their tithe for the year must follow a vow of silence.";
+                break;
+            case "Tau Haren":
+                planetFlavorText = "Tau Haren is the Ckepbo Galaxy's political hub. It is home to the Capitol Building, the central meeting location for the Emperors and other influential political leaders. Tau Haren's cities are said to be the most technologically advanced in the galaxy. However, most people live off-world and commute to Tau Haren for work. The living creatures that do stay on the planet full time are the native Worms, a race of psychic earthworms. The Worms float through the atmosphere, living off microscopic organisms.";
+                break;
+            case "Sotaldi":
+                planetFlavorText = "Sotaldi is the manufacturing hub of the Ckepbo Galaxy. Here, spaceships of various sizes and utilities are constructed in its many factories. The planet combats pollution via massive pumps that transport smog from the atmosphere into orbit. The skies, as a result, are permanently gray and overcast.";
+                break;
+            case "Xyda-6":
+                planetFlavorText = "Xyda-6 is a lush planet and model of environmental sustainability. Its citizens live in harmony with the indigenous flora and fauna of its jungle habitat. The people of Xyda-6 have a reputation for being friendly and kind, especially to tourists or travelers. There is always a place at the synthetic fireplace for a weary intergalactic explorer.";
+                break;
+            case "Jocania":
+                planetFlavorText = "Jocania is one planet-sized museum. Artifacts, statues, art, and other historical items of ages past stand on display for visitors to endlessly browse. It is a favorite spot for politicians to meet and discuss matters of great secrecy and import. There are no cameras, no microphones, no technology of any sort on the planet. Spaceships must be parked far above the surface in the stratosphere.";
+                break;
+            case "Tacto":
+                planetFlavorText = "Tacto is a frozen planet—frozen all the way to its core, in fact. The planet relies on imports from other civilizations to maintain its large population. The capital city, Phaoria, is a popular marketplace and vacation destination for visitors from all corners of the galaxy. Perhaps the most beautiful attraction on Tacto are the Golvyric Spires: a forest of strange spiral obelisks visible from Phaoria's observation points. No one knows where the spires come from or whether they are natural or man-made.";
+                break;
+            case "Gamma Vertera":
+                planetFlavorText = "The desert planet of Gamma Vertera appears barren on its surface. However, despite its harsh environment, its biodiversity is the greatest in the galaxy. Tourists and locals gather in oases while most of the wildlife roam the vast sand dunes. In the scenic oases, politicians and business officials lounge and confer casually in comfort and luxury.";
+                break;
+        }
+        planetDescription.text = planetFlavorText;
         campaign.planet = clickedPlanet;
     }
 
