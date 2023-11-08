@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System;
 using UnityEngine.UI;
 using System.Linq;
+using Unity.VisualScripting;
 public class UIController : MonoBehaviour {
 
     GameManager gameManager;
@@ -47,6 +48,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI leaderIntelligenceStockpile;
     [SerializeField] TextMeshProUGUI leaderWealthStockpile;
     [SerializeField] TradeUIController tradeUI;
+    [SerializeField] Transform converseData;
 
     private List<(string, string)> leaderButtonData; 
     Leader currentLeader;
@@ -150,7 +152,9 @@ public class UIController : MonoBehaviour {
             inputManager.CameraToMapPosition();
         
         UIAnim.SetTrigger("ToLeader");
-
+        for(int i = LogData.childCount; i > 0; i--) {
+            GameObject.Destroy(LogData.GetChild(0).gameObject);
+        }
         UpdateMainScreen();
     } 
 
@@ -199,6 +203,11 @@ public class UIController : MonoBehaviour {
     public void CompleteEspionage() {
         ConfirmEspionage.Invoke(espionageResource, currentLeader);
         UIAnim.SetTrigger("ToLeader");
+    }
+
+    public void AddToConverse(string converseInfo) {
+        var ConverseText = Instantiate(LogPrefab, converseData);
+        ConverseText.text = converseInfo;
     }
 
     

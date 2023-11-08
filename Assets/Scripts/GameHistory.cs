@@ -16,7 +16,6 @@ public class GameHistory {
     }
 
     public IEnumerable<GameEvent> GetEventHistory() {
-        Debug.Log(EventHistory.Count);
         return EventHistory;
     }
 

@@ -152,14 +152,15 @@ public class GameHandler {
         }
     }
     #region Player Game Actions
-    public void ProcessPlayerInitiatedTrade(TradeAction tradeAction) {
+    public bool ProcessPlayerInitiatedTrade(TradeAction tradeAction) {
         // TODO: Orion, here's how to build the TradeAction passed to the method in this code:
         // - don't worry about turnOccurred constructor param; just pass 0
         // - you'll need player leader and target leader references for next params
         // - pass the offer/request values in the order that they appear for the constructor
-        opponentHandler.ProcessPlayerInitiatedTradeAction(tradeAction);
+        bool output = opponentHandler.ProcessPlayerInitiatedTradeAction(tradeAction);
         player.ProcessOutgoingTradeOutcome(tradeAction);
         player.PlayerTurnActionsLeft--;
+        return output;
     }
 
     public void IntitiatePlayerTrade() {

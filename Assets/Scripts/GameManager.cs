@@ -131,7 +131,12 @@ public class GameManager : MonoBehaviour {
 
     private void HandlePlayerTrade(int[] vals, Leader enemyLeader) {
         TradeAction trade = new TradeAction(0, gameHandler.GetPlayerLeader(), enemyLeader, vals[2], vals[0], vals[1], vals[5], vals[3], vals[4] );
-        gameHandler.ProcessPlayerInitiatedTrade(trade);
+        if(gameHandler.ProcessPlayerInitiatedTrade(trade)) {
+            uiController.AddToConverse("Trade Successful!");
+        }
+        else {
+            uiController.AddToConverse("Trade Failed");
+        }
         uiController.RenderLeaderInfo(enemyLeader);
         uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
         uiController.UpdateLog(gameHandler.GetEventHistory());

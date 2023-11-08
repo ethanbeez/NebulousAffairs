@@ -44,9 +44,9 @@ public class OpponentHandler {
             $"{targetOpponent.Leader.Name} {accepted} the deal.");*/
     }
 
-    public void ProcessPlayerInitiatedTradeAction(TradeAction tradeAction) {
+    public bool ProcessPlayerInitiatedTradeAction(TradeAction tradeAction) {
         Opponent targetOpponent = opponents[tradeAction.TargetLeader.Name];
-        targetOpponent.ProcessIncomingTrade(tradeAction);
+        return targetOpponent.ProcessIncomingTrade(tradeAction);
     }
 
     public void HandleLeaderElimination(string leaderName) { 
