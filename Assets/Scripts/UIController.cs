@@ -114,10 +114,27 @@ public class UIController : MonoBehaviour {
         planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
         pieChart.LoadPieChart(influenceRatios);
-        
+
         campaign.planet = clickedPlanet;
         
         UIAnim.SetTrigger("ToPlanet");
+    }
+
+    //Should be combined with the previous one with an if statement for debug
+    public void UpdatePlanetInfo(Planet clickedPlanet, List<(Leader, float)> influenceRatios) {
+        planetName.text = clickedPlanet.Name;
+        planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
+
+        //Espionage Needs Implementation for these
+        planetIntelligencePriority.text = clickedPlanet.IntelligencePriority.ToString();
+        planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
+        planetWealthPriority.text = clickedPlanet.AffluencePriority.ToString();
+        planetPoliticsYield.text = clickedPlanet.PoliticsYield.ToString();
+        planetIntelligencePriority.text = clickedPlanet.IntellectYield.ToString();
+        planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
+        pieChart.LoadPieChart(influenceRatios);
+        
+        campaign.planet = clickedPlanet;
     }
 
     //Renders the LeaderInfo Screen Relative to a given Leader

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -147,10 +148,12 @@ public class GameManager : MonoBehaviour {
     {
         gameHandler.ProcessPlayerDiplomacy(planet.Name, increased, decreased);
         uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
-        uiController.RenderPlanetInfo(planet, gameHandler.GetPlanetInfluenceRatios(planet.Name));
+        uiController.UpdatePlanetInfo(planet, gameHandler.GetPlanetInfluenceRatios(planet.Name));
     }
 
     private void HandlePlayerEspionage(int resource, Leader leader) {
+
+        // should be moved into Espionage Class
         switch(resource) {
             case 0:
                 gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Politics);
@@ -162,6 +165,8 @@ public class GameManager : MonoBehaviour {
                 gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Affluence);
                 break;
         }
+        // end move to Espionage Class
+
         uiController.RenderLeaderInfo(leader);
         uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
         uiController.UpdateLog(gameHandler.GetEventHistory());

@@ -17,7 +17,14 @@ public class Campaign : MonoBehaviour
     bool decreaseSelected;
 
     public void Increase(int increased) {
-        DisableButtons(increaseButtons, increased);
+        for(int i = 0; i < decreaseButtons.Length; i++) {
+            if(increased != i) {
+                increaseButtons[i].SetActive(false);
+            }
+            else {
+                decreaseButtons[i].SetActive(false);
+            }
+        }
         increaseSelected = true;
         AllowCompletion();
         switch(increased) {
@@ -34,7 +41,14 @@ public class Campaign : MonoBehaviour
     }
 
     public void Decrease(int decreased) {
-        DisableButtons(decreaseButtons, decreased);
+        for(int i = 0; i < decreaseButtons.Length; i++) {
+            if(decreased != i) {
+                decreaseButtons[i].SetActive(false);
+            }
+            else {
+                increaseButtons[i].SetActive(false);
+            }
+        }
         decreaseSelected = true;
         AllowCompletion();
         switch(decreased) {
@@ -51,11 +65,6 @@ public class Campaign : MonoBehaviour
     }
 
     private void DisableButtons(GameObject[] gameObjects, int preserved) {
-        for(int i = 0; i < gameObjects.Length; i++) {
-            if(preserved != i) {
-                gameObjects[i].SetActive(false);
-            }
-        }
     }
 
     private void AllowCompletion() {
