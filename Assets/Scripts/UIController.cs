@@ -119,7 +119,7 @@ public class UIController : MonoBehaviour {
         campaign.planet = clickedPlanet;
         string clickedPlanetName = clickedPlanet.Name;
         string planetFlavorText = "";
-        // TODO: Please remove this or I will kill myself
+        
         switch (clickedPlanetName) {
             case "Rhollian Remnants":
                 planetFlavorText = "Long ago, an asteroid collided with the planet Rhollia. Both Rhollia and the asteroid broke apart, creating the barrier between the Far Empire and the rest of the Ckepbo Galaxy. Over the years, the Far Empire has slowly rebuilt their civilization from the rubble of their ruined planet.";

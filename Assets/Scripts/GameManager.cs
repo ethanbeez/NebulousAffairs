@@ -116,9 +116,7 @@ public class GameManager : MonoBehaviour {
             }
         }
         if (gameTurnInfo.CurrentTurn > gameTurnInfo.TurnLimit) {
-            if (gameHandler.GetPlayerPlanetsControlled() >= 7) { 
-            
-            }
+            gameHandler.CheckLeaderWon();
         }
         // TODO: Remove following, for rush proto
         /*int won = 0;
@@ -130,11 +128,12 @@ public class GameManager : MonoBehaviour {
             if (gameHandler.GetPlayerPlanetsControlled() == 12) won = 2;
         }*/
         uiController.UpdateTurnDisplay(gameTurnInfo.ToString());
+        gameHandler.gameHistory.LogGameEvent(new(gameTurnInfo.ToString()));
         uiController.UpdateLog(gameHandler.GetEventHistory());
     }
 
     private void HandlePlayerLoss() {
-        Debug.Log("Player lost!");
+        gameHandler.gameHistory.LogGameEvent(new("You lost control of all planets! Press ESC to quit and relaunch the game to try again."));
         Application.Quit();
     }
 

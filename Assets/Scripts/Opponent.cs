@@ -8,7 +8,7 @@ public class Opponent {
     #region Game Constants
 
     #endregion
-    public static int ActionsPerTurn { get; } = 1;
+    public static int ActionsPerTurn { get; } = 3;
 
     private OpponentDecisionProfile decisionProfile;
 

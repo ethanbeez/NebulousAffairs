@@ -16,7 +16,7 @@ public class GameHandler {
     Player player;
     OpponentHandler opponentHandler;
     PlanetHandler planetHandler;
-    GameHistory gameHistory;
+    public GameHistory gameHistory;
 
     public GameHandler(int leadersPerPlanet) {
         opponentHandler = new();
@@ -249,6 +249,7 @@ public class GameHandler {
         AccrueLeaderYields();
         ExecuteOpponentTurns(gameTurns);
         player.ResetPlayerActionsLeft();
+        
     }
 
     private void AccrueLeaderYields() {
@@ -383,5 +384,19 @@ public class GameHandler {
 
     public IEnumerable<GameEvent> GetEventHistory() { 
         return gameHistory.GetEventHistory();
+    }
+
+    public void CheckLeaderWon() {
+        if (GetPlayerPlanetsControlled() >= 7) {
+            gameHistory.LogGameEvent(new("You won with " + GetPlayerPlanetsControlled() + " planets!"));
+            return;
+        }
+        foreach (Opponent opponent in opponentHandler.opponents.Values) {
+            if (opponent.Leader.PlanetControlCount >= 7) {
+                gameHistory.LogGameEvent(new(opponent.Leader.Name + " won with " + opponent.Leader.PlanetControlCount + " planets!"));
+                return;
+            }
+        }
+        gameHistory.LogGameEvent(new("You ended the game with " + GetPlayerPlanetsControlled() + " planets!"));
     }
 }
