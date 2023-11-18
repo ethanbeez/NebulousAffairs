@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.031131228, g: 0.009468952, b: 0.013015968, a: 1}
+  m_IndirectSpecularColor: {r: 0.031163083, g: 0.009459269, b: 0.013044128, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -153,17 +153,6 @@ MonoBehaviour:
 --- !u!114 &225734187 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3902789571082617381, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &299810677 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2393181853959817919, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
   m_PrefabInstance: {fileID: 4322407485815068893}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -501,17 +490,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!114 &660316502 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 358499585084561706, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &733528125
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,17 +1153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1766667516 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4945970679606435039, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &1783733287 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 3418149444694864992, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
@@ -1319,9 +1286,9 @@ MonoBehaviour:
   LogPrefab: {fileID: 5330744377749603848, guid: f0b625f8306a75444aebd72d239bd079, type: 3}
   planetName: {fileID: 1586075936}
   planetInfo: {fileID: 2098303138}
-  planetPoliticsPriority: {fileID: 1766667516}
-  planetWealthPriority: {fileID: 299810677}
-  planetIntelligencePriority: {fileID: 660316502}
+  planetPoliticsPriority: {fileID: 0}
+  planetWealthPriority: {fileID: 0}
+  planetIntelligencePriority: {fileID: 0}
   planetPoliticsYield: {fileID: 1477062491}
   planetWealthYield: {fileID: 1721047996}
   planetIntelligenceYield: {fileID: 926905301}
@@ -1368,7 +1335,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cf9a13e688d33d47a75b3b6d7b63aa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraController: {fileID: 519420033}
   nebulaController: {fileID: 829074425}
   uiController: {fileID: 1941853395}
 --- !u!4 &1970983658
@@ -1810,7 +1776,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6528741892594560896, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 937585.5
+      value: 1742943.6
       objectReference: {fileID: 0}
     - target: {fileID: 6583364071777046369, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_fontSize
@@ -1873,7 +1839,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1941853395}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 9043451858751120192, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 1511171413127100832, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+    - {fileID: 8596749687373494216, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}

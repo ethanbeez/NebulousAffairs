@@ -109,7 +109,6 @@ public class CameraController : MonoBehaviour {
     }
 
     public void StartMapFly() {
-        if (!introFlyComplete || !freeCamReturnComplete || !flyToLocationComplete) return;
         FreeCam = false;
         focusTarget = null;
         freeCamReturnComplete = false;
@@ -204,7 +203,6 @@ public class CameraController : MonoBehaviour {
     }
 
     public void StartFly(GameObject focusTarget) {
-        if (!introFlyComplete || !flyToLocationComplete || !freeCamReturnComplete) return;
         this.focusTarget = focusTarget;
         flyToLocationComplete = false;
         flyToStartMarker = transform.position;

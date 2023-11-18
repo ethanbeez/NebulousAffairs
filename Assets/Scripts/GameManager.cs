@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour {
     public const int StartingPlanetsPerLeader = 2; 
     private GameHandler gameHandler;
     private TurnHandler turnHandler;
-    public CameraController cameraController;
     public NebulaController nebulaController;
     public UIController uiController;
     // Start is called before the first frame update
@@ -20,9 +19,6 @@ public class GameManager : MonoBehaviour {
         CheckMissingGameDataFiles();
         gameHandler = new(StartingPlanetsPerLeader);
         turnHandler = new();
-        if (cameraController == null) {
-            cameraController = Camera.main.GetComponent<CameraController>();
-        }
         if (nebulaController == null) {
             nebulaController = GameObject.Find("NebulaController").GetComponent<NebulaController>();
         }
@@ -78,8 +74,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private void CameraToMapPosition() {
-        if (!cameraController.introFlyComplete || !cameraController.freeCamReturnComplete || !cameraController.flyToLocationComplete) return;
-        cameraController.StartMapFly();
         uiController.RenderMainScene();
     }
 
@@ -96,10 +90,11 @@ public class GameManager : MonoBehaviour {
     }
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
-        if (!cameraController.introFlyComplete || !cameraController.flyToLocationComplete || !cameraController.freeCamReturnComplete) return;
+        //BROKEN: planetName always returns Null, I'm assuming it's in the process of transitioning to planetID. SUPER shitty Temp Fix Below
+        planetName = "Jocania";
+
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
-        uiController.RenderPlanetInfo(clickedPlanet, gameHandler.GetPlanetInfluenceRatios(planetName));
-        cameraController.StartFly(focusTarget);
+        uiController.RenderPlanetInfo(clickedPlanet, gameHandler.GetPlanetInfluenceRatios(planetName), focusTarget);
     }
 
 
