@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -99,8 +100,6 @@ public class GameManager : MonoBehaviour {
 
 
     private void HandleTurnAdvancement() {
-
-
         nebulaController.StartTurnTransitionAnim();
         TurnHandler.GameTurns gameTurnInfo = turnHandler.AdvanceTurn();
         gameHandler.AdvanceTurn(gameTurnInfo);
@@ -134,8 +133,13 @@ public class GameManager : MonoBehaviour {
 
     private void HandlePlayerTrade(int[] vals, Leader enemyLeader) {
         TradeAction trade = new TradeAction(0, gameHandler.GetPlayerLeader(), enemyLeader, vals[2], vals[0], vals[1], vals[5], vals[3], vals[4] );
-        if(gameHandler.ProcessPlayerInitiatedTrade(trade)) {
-            uiController.AddToConverse("Trade Successful!");
+        if(gameHandler.CheckPlayerCanAffordTrade() && gameHandler.GetPlayerActionsLeft() > 0) {
+            if(gameHandler.ProcessPlayerInitiatedTrade(trade)) {
+                uiController.AddToConverse("Trade Successful!");
+            }
+            else {
+                uiController.AddToConverse("Trade Failed");
+            }
         }
         else {
             uiController.AddToConverse("Trade Failed");
@@ -147,30 +151,36 @@ public class GameManager : MonoBehaviour {
 
     private void HandlePlayerCampaign(CurrencyType increased, CurrencyType decreased, Planet planet)
     {
-        gameHandler.ProcessPlayerDiplomacy(planet.Name, increased, decreased);
-        uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
-        uiController.UpdatePlanetInfo(planet, gameHandler.GetPlanetInfluenceRatios(planet.Name));
+        if(gameHandler.CheckPlayerCanAffordDiplomacy() && gameHandler.GetPlayerActionsLeft() > 0) {
+            gameHandler.ProcessPlayerDiplomacy(planet.Name, increased, decreased);
+            uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
+            uiController.RenderPlanetInfo(planet, gameHandler.GetPlanetInfluenceRatios(planet.Name), null);
+        }
+        // else display failstate
     }
 
     private void HandlePlayerEspionage(int resource, Leader leader) {
 
-        // TODO: should be moved into Espionage Class
-        switch(resource) {
-            case 0:
-                gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Politics);
-                break;
-            case 1:
-                gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Intellect);
-                break;
-            case 2:
-                gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Affluence);
-                break;
-        }
-        // end move to Espionage Class
+        if(gameHandler.CheckPlayerCanAffordEspionage() && gameHandler.GetPlayerActionsLeft() > 0) {
+            switch(resource) {
+                case 0:
+                    gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Politics);
+                    break;
+                case 1:
+                    gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Intellect);
+                    break;
+                case 2:
+                    gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Affluence);
+                    break;
+            }
 
-        uiController.RenderLeaderInfo(leader);
-        uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
-        uiController.UpdateLog(gameHandler.GetEventHistory());
+            uiController.RenderLeaderInfo(leader);
+            uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
+            uiController.UpdateLog(gameHandler.GetEventHistory());
+        }
+        else {
+            uiController.AddToConverse("Espionage Failed - Not Enough Resources");
+        }
     }
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {

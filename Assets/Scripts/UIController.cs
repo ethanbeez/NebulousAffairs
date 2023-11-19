@@ -75,6 +75,8 @@ public class UIController : MonoBehaviour {
     //Renders the Main Scene
     public void RenderMainScene(){
         UIAnim.SetTrigger("Back");
+        UpdateMainScreen();
+        cameraController.StartMapFly();
     }
 
     //Updates the TurnDisplay to a given String - the expected String is TurnHandler's GameTurns toString.
@@ -116,24 +118,6 @@ public class UIController : MonoBehaviour {
             cameraController.StartFly(focusTarget);
         }
         
-    }
-
-    //Should be combined with the previous one with an if statement for debug
-    public void UpdatePlanetInfo(Planet clickedPlanet, List<(Leader, float)> influenceRatios) {
-        planetName.text = clickedPlanet.Name;
-        planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
-
-        //Espionage Needs Implementation for these
-        planetIntelligencePriority.text = clickedPlanet.IntelligencePriority.ToString();
-        planetPoliticsPriority.text = clickedPlanet.PoliticsPriority.ToString();
-        planetWealthPriority.text = clickedPlanet.AffluencePriority.ToString();
-        planetPoliticsYield.text = clickedPlanet.PoliticsYield.ToString();
-        planetIntelligenceYield.text = clickedPlanet.IntellectYield.ToString();
-        planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
-        pieChart.LoadPieChart(influenceRatios);
-        //planetDescription.text = "Information String"
-        
-        campaign.planet = clickedPlanet;
     }
 
     //Renders the LeaderInfo Screen Relative to a given Leader
@@ -203,6 +187,7 @@ public class UIController : MonoBehaviour {
             cameraController.StartMapFly();
         }
         UIAnim.SetTrigger("Back");
+        UpdateMainScreen();
     }
 
     public void Trade() {
