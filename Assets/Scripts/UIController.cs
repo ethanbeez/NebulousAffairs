@@ -28,9 +28,6 @@ public class UIController : MonoBehaviour {
     [Header("Planet Screen Components")]
     [SerializeField] TextMeshProUGUI planetName;
     [SerializeField] TextMeshProUGUI planetInfo;
-    [SerializeField] TextMeshProUGUI planetPoliticsPriority;
-    [SerializeField] TextMeshProUGUI planetWealthPriority;
-    [SerializeField] TextMeshProUGUI planetIntelligencePriority;
     [SerializeField] TextMeshProUGUI planetPoliticsYield;
     [SerializeField] TextMeshProUGUI planetWealthYield;
     [SerializeField] TextMeshProUGUI planetIntelligenceYield;
