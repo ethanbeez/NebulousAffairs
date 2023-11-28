@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 // Heavily Referenced from https://www.youtube.com/watch?v=rcBHIOjZDpk&ab_channel=ShapedbyRainStudios
 public class FMODEvents : MonoBehaviour
 {
-    [field: Header("SFX")]
-    [field: SerializeField] public EventReference testFX {get; private set;}
+    [field: Header("Sound")]
+    [field: SerializeField] public EventReference music {get; private set;}
 
     // Start is called before the first frame update
     public static FMODEvents instance {get; private set;}
