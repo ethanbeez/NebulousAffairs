@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -48,6 +47,11 @@ public class UIController : MonoBehaviour {
     [SerializeField] Transform converseData;
     [SerializeField] TextMeshProUGUI ConversePrefab;
 
+    [Header("Espionage Components")]
+    [SerializeField] Button PoliticsEspionage;
+    [SerializeField] Button InfluenceEspionage;
+    [SerializeField] Button WealthEspionage;
+ 
     private List<(string, string)> leaderButtonData; 
     Leader currentLeader;
     private int espionageResource;
@@ -196,6 +200,16 @@ public class UIController : MonoBehaviour {
         actionCounter.UpdateActionDisplay(PlayerTurnActionsLeft);
     }
 
+    public void StartEspionage() {
+        UIAnim.SetTrigger("Espionage");
+        WealthEspionage.interactable = playerLeader.GetLeaderPreferenceVisibility(currentLeader, CurrencyType.Affluence);
+        InfluenceEspionage.interactable = playerLeader.GetLeaderPreferenceVisibility(currentLeader, CurrencyType.Intellect);
+        PoliticsEspionage.interactable = playerLeader.GetLeaderPreferenceVisibility(currentLeader, CurrencyType.Politics);
+
+        Debug.Log(PoliticsEspionage.enabled);
+
+    }
+
     public void ChooseEspionage(int resource) {
         espionageResource = resource;
         UIAnim.SetTrigger("ToConfirm");
@@ -205,6 +219,9 @@ public class UIController : MonoBehaviour {
     public void CompleteEspionage() {
         ConfirmEspionage.Invoke(espionageResource, currentLeader);
         UIAnim.SetTrigger("ToLeader");
+        WealthEspionage.interactable = false;
+        InfluenceEspionage.interactable = false;
+        PoliticsEspionage.interactable = false;
     }
 
     public void AddToConverse(string converseInfo) {
