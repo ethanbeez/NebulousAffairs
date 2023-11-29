@@ -76,6 +76,7 @@ public class TradeUIController : MonoBehaviour
 
     public void Confirm() {
         TradeConfirmPressed.Invoke(vals, enemyLeader);
+        Reset();
     }
 
     public void Reset() {

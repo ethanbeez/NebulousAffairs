@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour {
         InputManager.EscapePressed += QuitGame;
         InputManager.SpacePressed += HandleTurnAdvancement;
         LeaderButton.LeaderButtonPressed += HandleLeaderClick;
+        LeaderButton.LeaderButtonEnterOrExit += HandleLeaderHover;
         PlanetController.PlanetClicked += HandlePlanetClick;
         TradeUIController.TradeConfirmPressed += HandlePlayerTrade;
         Campaign.ConfirmCampaign += HandlePlayerCampaign;
@@ -44,6 +45,15 @@ public class GameManager : MonoBehaviour {
         uiController.UpdateLog(gameHandler.GetEventHistory());
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
+    }
+
+    private void HandleLeaderHover(string leaderName, bool isEnter)
+    {
+        if(isEnter) {
+            nebulaController.AddLeaderHovers(leaderName);
+            return;
+        }
+        nebulaController.RemoveLeaderHovers(leaderName);
     }
 
     private void HandleLeaderClick(string leaderName)
@@ -91,9 +101,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
-        //BROKEN: planetName always returns Null, I'm assuming it's in the process of transitioning to planetID. SUPER shitty Temp Fix Below
-        planetName = "Jocania";
-
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
         uiController.RenderPlanetInfo(clickedPlanet, gameHandler.GetPlanetInfluenceRatios(planetName), focusTarget);
     }
@@ -159,21 +166,10 @@ public class GameManager : MonoBehaviour {
         // else display failstate
     }
 
-    private void HandlePlayerEspionage(int resource, Leader leader) {
+    private void HandlePlayerEspionage(CurrencyType resource, Leader leader) {
 
         if(gameHandler.CheckPlayerCanAffordEspionage() && gameHandler.GetPlayerActionsLeft() > 0) {
-            switch(resource) {
-                case 0:
-                    gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Politics);
-                    break;
-                case 1:
-                    gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Intellect);
-                    break;
-                case 2:
-                    gameHandler.ProcessPlayerEspionage(leader.Name, CurrencyType.Affluence);
-                    break;
-            }
-
+            gameHandler.ProcessPlayerEspionage(leader.Name, resource);
             uiController.RenderLeaderInfo(leader);
             uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
             uiController.UpdateLog(gameHandler.GetEventHistory());

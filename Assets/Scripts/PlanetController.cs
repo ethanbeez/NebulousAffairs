@@ -66,7 +66,7 @@ public class PlanetController : MonoBehaviour {
     }
 
     void OnMouseDown() {
-        PlanetClicked?.Invoke(planetID, gameObject, planetName);
+        PlanetClicked?.Invoke(planetID, gameObject, name);
     }
 
     public void Orbit() {
@@ -118,4 +118,5 @@ public class PlanetController : MonoBehaviour {
         }
         transform.position = Vector3.Slerp(startRelCenter, endRelCenter, orbitAnimCurve.Evaluate(phaseCompletion)) + center;
     }*/
+
 }

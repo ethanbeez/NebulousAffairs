@@ -3,10 +3,9 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
 public class UIController : MonoBehaviour {
 
-    GameManager gameManager;
-    InputManager inputManager;
     ButtonController buttonController;
     [SerializeField] GameObject leaderButtonPrefab;
     CameraController cameraController;
@@ -55,17 +54,12 @@ public class UIController : MonoBehaviour {
     private List<(string, string)> leaderButtonData; 
     Leader currentLeader;
     private int espionageResource;
-    public delegate void EspionageConfirm(int resource, Leader enemyLeader);
+    public delegate void EspionageConfirm(CurrencyType resource, Leader enemyLeader);
     public static event EspionageConfirm? ConfirmEspionage;
     
-
-    //Gets the GameHandler from the GameManager on wakeup
     void OnEnable() {
         buttonController = new(leaderButtonPrefab);
-        gameManager = FindObjectOfType<GameManager>();
-        inputManager = FindObjectOfType<InputManager>();
         cameraController = FindObjectOfType<CameraController>();
-        AddToLog("Good Luck - The Galaxy Depends on You");
     }
 
     public void InstantiateButtons(List<(string, string)> leaderButtonData) {
@@ -75,8 +69,8 @@ public class UIController : MonoBehaviour {
 
     //Renders the Main Scene
     public void RenderMainScene(){
-        UIAnim.SetTrigger("Back");
         UpdateMainScreen();
+        UIAnim.SetTrigger("Back");
         cameraController.StartMapFly();
     }
 
@@ -110,7 +104,6 @@ public class UIController : MonoBehaviour {
         planetIntelligenceYield.text = clickedPlanet.IntellectYield.ToString();
         planetWealthYield.text = clickedPlanet.AffluenceYield.ToString();
         pieChart.LoadPieChart(influenceRatios);
-        Debug.Log(clickedPlanet.Name);
         planetImage.sprite = FileManager.GetPlanetImageFromFileName(clickedPlanet.Name);
         campaign.planet = clickedPlanet;
         
@@ -217,7 +210,18 @@ public class UIController : MonoBehaviour {
     }
 
     public void CompleteEspionage() {
-        ConfirmEspionage.Invoke(espionageResource, currentLeader);
+
+        switch(espionageResource) {
+            case 0:
+                ConfirmEspionage.Invoke(CurrencyType.Politics, currentLeader);
+                break;
+            case 1:
+                ConfirmEspionage.Invoke(CurrencyType.Intellect, currentLeader);
+                break;
+            case 2:
+                ConfirmEspionage.Invoke(CurrencyType.Politics, currentLeader);
+                break;
+        }
         UIAnim.SetTrigger("ToLeader");
         WealthEspionage.interactable = false;
         InfluenceEspionage.interactable = false;

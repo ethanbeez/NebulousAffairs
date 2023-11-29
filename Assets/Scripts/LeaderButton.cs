@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -11,7 +12,9 @@ public class LeaderButton {
 
     public delegate void LeaderButtonHandler(string leaderName);
     public static event LeaderButtonHandler? LeaderButtonPressed;
-    // public GameObject buttonObject;
+    public delegate void LeaderButtonHover(string leaderName, bool isEnter);
+    public static event LeaderButtonHover? LeaderButtonEnterOrExit;
+
     private GameObject leaderButtonGameObject;
     private UnityAction buttonPressed;
     public string LeaderName { get; private set; }
@@ -33,5 +36,15 @@ public class LeaderButton {
 
     public void LeaderClicked() {
         LeaderButtonPressed!.Invoke(leaderName);
+    }
+
+    void OnMouseEnter()
+    {
+        LeaderButtonEnterOrExit.Invoke(leaderName, true);
+    }
+
+    void OnMouseExit()
+    {
+        LeaderButtonEnterOrExit.Invoke(leaderName, false);
     }
 }

@@ -206,4 +206,12 @@ public class NebulaController : MonoBehaviour {
         }
         return null;
     }
+
+    public void AddLeaderHovers(string leaderName) {
+        //Add hover effects over the planets, based on the leadername and color
+    }
+
+    public void RemoveLeaderHovers(string leaderName) {
+        //Remove the hover effects
+    }
 }
