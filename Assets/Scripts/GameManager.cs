@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour {
         InputManager.MPressed += CameraToMapPosition;
         InputManager.SPressed += ToggleNebulaOrbits;
         InputManager.TPressed += ToggleGalaxyMotionTrails;
-        InputManager.EscapePressed += QuitGame;
+        InputManager.EscapePressed += uiController.Back;
         InputManager.SpacePressed += HandleTurnAdvancement;
         LeaderButton.LeaderButtonPressed += HandleLeaderClick;
         LeaderButton.LeaderButtonEnterOrExit += HandleLeaderHover;
@@ -39,7 +39,10 @@ public class GameManager : MonoBehaviour {
         TradeUIController.TradeConfirmPressed += HandlePlayerTrade;
         Campaign.ConfirmCampaign += HandlePlayerCampaign;
         UIController.ConfirmEspionage += HandlePlayerEspionage;
+        UIController.GameQuit += QuitGame;
 
+
+        gameHandler.gameHistory.LogGameEvent(new("Turn: 1/20, Year: 3000/ 4000"));
         uiController.playerLeader = gameHandler.GetPlayerLeader();
         uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo());
         uiController.UpdateLog(gameHandler.GetEventHistory());

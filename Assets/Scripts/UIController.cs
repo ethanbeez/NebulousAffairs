@@ -50,12 +50,22 @@ public class UIController : MonoBehaviour {
     [SerializeField] Button PoliticsEspionage;
     [SerializeField] Button InfluenceEspionage;
     [SerializeField] Button WealthEspionage;
- 
+
+    [Header("Leader Influence Thresholds")]
+    // Think about how to sort these.
+    [SerializeField] [Range(0, 100)] int AngryThreshold;
+    [SerializeField] [Range(0, 100)] int SadThreshold;
+    [SerializeField] [Range(0, 100)] int NeutralThreshold;
+    [SerializeField] [Range(0, 100)] int CuriousThreshold;
+    [SerializeField] [Range(0, 100)] int HappyThreshold;
+
     private List<(string, string)> leaderButtonData; 
     Leader currentLeader;
     private int espionageResource;
     public delegate void EspionageConfirm(CurrencyType resource, Leader enemyLeader);
     public static event EspionageConfirm? ConfirmEspionage;
+    public delegate void QuitGame();
+    public static event QuitGame? GameQuit;
     
     void OnEnable() {
         buttonController = new(leaderButtonPrefab);
@@ -141,6 +151,8 @@ public class UIController : MonoBehaviour {
        leaderPoliticsStockpile.text = leader.PoliticsStockpile.ToString();
        leaderWealthStockpile.text = leader.AffluenceStockpile.ToString();
        
+
+       
        leaderImage.sprite = FileManager.GetLeaderImageFromFileName(leader.GetLeaderImagePath(LeaderResources.Perspectives.Full, LeaderResources.Expressions.Neutral));
        ClearConverseLog();
 
@@ -149,6 +161,11 @@ public class UIController : MonoBehaviour {
             UIAnim.SetTrigger("ToLeader");
        }
     } 
+
+    //Not Implemented, will get a leader's image or something. idk I wrote this code like a week and a half
+    private void GetLeaderImage() {
+
+    }
 
     private void ClearConverseLog() {
         for(int i = converseData.childCount; i > 0; i--) {
@@ -228,9 +245,16 @@ public class UIController : MonoBehaviour {
         PoliticsEspionage.interactable = false;
     }
 
+
+    //TODO: ethan - this is currently the way to add to the log on the player screen
     public void AddToConverse(string converseInfo) {
         var ConverseText = Instantiate(ConversePrefab, converseData);
         ConverseText.text = converseInfo;
+    }
+
+    //Unsafe way of doing this tbh, should be privatized to a QuitButton Class that can only be applied to the quit button. but alas
+    public void Quit() {
+        GameQuit.Invoke();
     }
 
     
