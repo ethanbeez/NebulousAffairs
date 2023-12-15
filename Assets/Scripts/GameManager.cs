@@ -7,28 +7,42 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using static TurnHandler;
 
+public enum GameState { 
+    Default = 0,
+    MainMenu = 1,
+    InMatch = 2,
+    Paused = 3,
+    End = 4,
+}
+
 public class GameManager : MonoBehaviour {
+    public static GameState GameState { get; private set; }
     public const int NumLeaders = 6;
     public const int StartingPlanetsPerLeader = 2; 
     private GameHandler gameHandler;
     private TurnHandler turnHandler;
-    public CameraController cameraController;
+    public CameraStateContext cameraController;
     public NebulaController nebulaController;
     public UIController uiController;
     // Start is called before the first frame update
     void Start() {
+        GameState = GameState.MainMenu;
         CheckMissingGameDataFiles();
-        gameHandler = new(StartingPlanetsPerLeader);
-        turnHandler = new();
+        /*gameHandler = new(StartingPlanetsPerLeader);
+        turnHandler = new();*/
         if (cameraController == null) {
-            cameraController = Camera.main.GetComponent<CameraController>();
+            cameraController = Camera.main.GetComponent<CameraStateContext>();
         }
+        // TODO: 11/16 commented out for open heart surgery
         if (nebulaController == null) {
             nebulaController = GameObject.Find("NebulaController").GetComponent<NebulaController>();
         }
         if (uiController == null) {
             uiController = GameObject.Find("UIController").GetComponent<UIController>();
         }
+        BindKeys();
+        BindUI();
+        /*
         uiController.InstantiateButtons(gameHandler.GetLeaderButtonData());
         GenerateNebula();
         InputManager.MPressed += CameraToMapPosition;
@@ -44,13 +58,45 @@ public class GameManager : MonoBehaviour {
 
         uiController.playerLeader = gameHandler.GetPlayerLeader();
         uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo());
-        uiController.UpdateLog(gameHandler.GetEventHistory());
+        uiController.UpdateLog(gameHandler.GetEventHistory());*/
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
     }
 
-    private void HandleLeaderClick(string leaderName)
-    {
+    private void BindKeys() {
+        InputManager.MPressed += CameraToMapPosition;
+        InputManager.SPressed += ToggleNebulaOrbits;
+        InputManager.TPressed += ToggleGalaxyMotionTrails;
+        InputManager.EscapePressed += QuitGame;
+        InputManager.SpacePressed += HandleTurnAdvancement;
+    }
+
+    private void BindUI() {
+        LeaderButton.LeaderButtonPressed += HandleLeaderClick;   
+        TradeUIController.TradeConfirmPressed += HandlePlayerTrade;
+        Campaign.ConfirmCampaign += HandlePlayerCampaign;
+        UIController.ConfirmEspionage += HandlePlayerEspionage;
+
+    }
+
+    private void StartMatch() {
+        GameState = GameState.InMatch;
+        gameHandler = new(StartingPlanetsPerLeader);
+        turnHandler = new();
+        GenerateNebula();
+        cameraController.EnterMapState();
+        uiController.playerLeader = gameHandler.GetPlayerLeader();
+        uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo());
+        uiController.UpdateLog(gameHandler.GetEventHistory());
+        uiController.InstantiateButtons(gameHandler.GetLeaderButtonData());
+        PlanetController.PlanetClicked += HandlePlanetClick;
+    }
+
+    private void LoadMatch() { 
+    
+    }
+
+    private void HandleLeaderClick(string leaderName) {
         uiController.RenderLeaderInfo(gameHandler.GetOpponentLeader(leaderName));
     }
 
@@ -78,8 +124,8 @@ public class GameManager : MonoBehaviour {
     }
 
     private void CameraToMapPosition() {
-        if (!cameraController.introFlyComplete || !cameraController.freeCamReturnComplete || !cameraController.flyToLocationComplete) return;
-        cameraController.StartMapFly();
+        // if (!cameraController.introFlyComplete || !cameraController.freeCamReturnComplete || !cameraController.flyToLocationComplete) return;
+        cameraController.EnterMapState();
         uiController.RenderMainScene();
     }
 
@@ -96,10 +142,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
-        if (!cameraController.introFlyComplete || !cameraController.flyToLocationComplete || !cameraController.freeCamReturnComplete) return;
+        // if (!cameraController.introFlyComplete || !cameraController.flyToLocationComplete || !cameraController.freeCamReturnComplete) return;
         Planet clickedPlanet = gameHandler.GetPlanet(planetName);
         uiController.RenderPlanetInfo(clickedPlanet, gameHandler.GetPlanetInfluenceRatios(planetName));
-        cameraController.StartFly(focusTarget);
+        cameraController.TrackPlanet(focusTarget);
     }
 
 
@@ -118,15 +164,6 @@ public class GameManager : MonoBehaviour {
         if (gameTurnInfo.CurrentTurn > gameTurnInfo.TurnLimit) {
             gameHandler.CheckLeaderWon();
         }
-        // TODO: Remove following, for rush proto
-        /*int won = 0;
-        if (gameTurnInfo.CurrentTurn > 20) {
-            if (gameHandler.GetPlayerPlanetsControlled() < 7) won = 1;
-            if (gameHandler.GetPlayerPlanetsControlled() >= 7) won = 2;
-        } else {
-            if (gameHandler.GetPlayerPlanetsControlled() == 0) won = 1;
-            if (gameHandler.GetPlayerPlanetsControlled() == 12) won = 2;
-        }*/
         uiController.UpdateTurnDisplay(gameTurnInfo.ToString());
         gameHandler.gameHistory.LogGameEvent(new(gameTurnInfo.ToString()));
         uiController.UpdateLog(gameHandler.GetEventHistory());
@@ -191,6 +228,9 @@ public class GameManager : MonoBehaviour {
                 eventHistory += gameEvent.ToString() + "\n";
             }
             Debug.Log(eventHistory);
+        }
+        if (Input.GetKeyDown(KeyCode.X)) {
+            StartMatch();
         }
     }
 }

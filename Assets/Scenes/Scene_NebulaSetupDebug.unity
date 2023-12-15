@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.031131228, g: 0.009468952, b: 0.013015968, a: 1}
+  m_IndirectSpecularColor: {r: 0.031163083, g: 0.009459269, b: 0.013044128, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -260,14 +260,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2.83, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1580984647}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &519420033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,10 +277,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8886484250836e945b61d31349cb73e9, type: 3}
+  m_Script: {fileID: 11500000, guid: 63b1046f14eff984991ee0b3b0e1a861, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 1783733289}
+  canvas: {fileID: 0}
   warpVFX: {fileID: 1580984646}
   freeCamReturnCurve:
     serializedVersion: 2
@@ -288,21 +288,12 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
-    - serializedVersion: 3
-      time: 0.25853515
-      value: 0.6546075
-      inSlope: 1.450834
-      outSlope: 1.450834
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.06675168
     - serializedVersion: 3
       time: 1
       value: 1
@@ -321,30 +312,12 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
-    - serializedVersion: 3
-      time: 0.18719283
-      value: 0.2686177
-      inSlope: 2.7647774
-      outSlope: 2.7647774
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.23927051
-      outWeight: 0.13362372
-    - serializedVersion: 3
-      time: 0.43517292
-      value: 0.76310956
-      inSlope: 1.0833192
-      outSlope: 1.0833192
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.11348093
     - serializedVersion: 3
       time: 1
       value: 1
@@ -370,16 +343,16 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.44529387
-      value: 0.106138304
-      inSlope: 5.056317
-      outSlope: 5.056317
+      time: 0.29634947
+      value: 0.93632096
+      inSlope: 0.28998166
+      outSlope: 0.28998166
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.038777787
+      inWeight: 0.28057244
+      outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
+      time: 0.9912109
       value: 1
       inSlope: 0
       outSlope: 0
@@ -403,8 +376,8 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.08612393
-      value: 0.99292374
+      time: 0.17080435
+      value: 0.9976405
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -412,14 +385,14 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.48677284
-      value: 0.96462345
-      inSlope: -0.3870184
-      outSlope: -0.3870184
+      time: 0.65508854
+      value: 0.8606598
+      inSlope: -0.81804866
+      outSlope: -0.81804866
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.15113673
+      outWeight: 0.18918113
     - serializedVersion: 3
       time: 0.99999994
       value: 0.0023584906
@@ -434,20 +407,19 @@ MonoBehaviour:
     m_RotationOrder: 4
   freeCamEndMarker: {x: 0, y: 0, z: 0}
   focusTarget: {fileID: 0}
-  freeCamReturnComplete: 0
-  speed: 10
-  flyToLocationComplete: 0
+  speed: 0
   acceleration: 50
   accelerationFastMultiplier: 4
   velocity: {x: 0, y: 0, z: 0}
   dampingCoefficient: 5
   lookSensitivity: 1
   freeCam: 0
-  introFlyComplete: 0
   screenFadedIn: 0
-  planetClickCameraOffset: {x: -0.1, y: 0.09, z: -1.58}
-  volumeProfile: {fileID: 11400000, guid: 17e6d98b95bad2d49bf5114d40d45fda, type: 2}
+  planetClickCameraOffset: {x: 0, y: 0, z: -3}
+  volumeProfile: {fileID: 0}
   lensDistortion: {fileID: 0}
+  state: 0
+  transitioning: 0
 --- !u!45 &519420035
 Skybox:
   m_ObjectHideFlags: 0
@@ -1191,11 +1163,6 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 3418149444694864992, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
   m_PrefabInstance: {fileID: 4322407485815068893}
   m_PrefabAsset: {fileID: 0}
---- !u!225 &1783733289 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 644364164487251351, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1804925540 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1053289092787031220, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
@@ -1810,7 +1777,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6528741892594560896, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 937585.5
+      value: 6768851.5
       objectReference: {fileID: 0}
     - target: {fileID: 6583364071777046369, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_fontSize
