@@ -15,13 +15,13 @@ public static class FileManager {
     private static int MissingLeaderNameInt = 1;
     private static int MissingPlanetNameInt = 1;
     private const string GameDataFileExtension = ".nebfair";
-    private const string ResourcesFolder = "/Resources";
     private const string GameDataFolder = "/GameData";
     private const string LeaderImageExtension = ".png";
     private const string GameplayConstantsFolder = "/GameplayConstants";
-    private const string LeadersResourceFolder = "/Leaders";
+    private const string LeadersResourceFolder = "/Resources/Leaders";
     private const string LeaderGameplayDataFile = "/leaders";
     private const string PlanetGameplayDataFile = "/planets";
+    private const string LeaderDialogueDataFile = "/EventDialogue";
     private static readonly List<string> GameplayConstantsFiles = new(){ LeaderGameplayDataFile, PlanetGameplayDataFile };
   
     public static List<string> GetMissingGameDataFiles() {
@@ -34,6 +34,58 @@ public static class FileManager {
             }
         }
         return missingFiles;
+    }
+
+    public static LeaderDialogue GetLeaderDialogue(Leader leader) {
+        string leaderDialogueFile = Path.Join(Application.streamingAssetsPath, LeadersResourceFolder, LeaderDialogueDataFile) + GameDataFileExtension; // Full file path
+        // Debug.Log(leaderDialogueFile);
+        LeaderDialogue leaderDialogue = new(leader);
+        try {
+            StreamReader sr = new(leaderDialogueFile);
+            string line = sr.ReadLine();
+
+            while (line != null) {
+                Regex leaderPattern = new(@"origin_leader: '(?<originLeader>\w+( \w+)*)' \.event_type: '(?<eventType>\w+( \w+)*.?)' \.interaction_leader: '(?<interactionLeader>\w+( \w+)*)' \.min_relationship: (?<minRelationship>\-?\d?.?\d*) \.max_relationship: (?<maxRelationship>\-?\d?.?\d*) \.dialogue: '(?<dialogue>.*)'");
+                Match match = leaderPattern.Match(line);
+                DialogueContextType dialogueContextType = GetDialogueContextType(match.Groups["eventType"].Value);
+                string originLeader = match.Groups["originLeader"].Value;
+                string interactionLeader = match.Groups["interactionLeader"].Value;
+                float minRelationship = float.Parse(match.Groups["minRelationship"].Value);
+                float maxRelationship = float.Parse(match.Groups["maxRelationship"].Value);
+                string dialogue = match.Groups["dialogue"].Value;
+                LeaderDialogue.DialogueCondition dialogueCondition = new(minRelationship, maxRelationship, interactionLeader);
+                leaderDialogue.AddContextEdge(dialogueContextType, dialogue, dialogueCondition);
+                line = sr.ReadLine();
+            }
+        } catch (Exception e) {
+            Debug.LogError(e.Message);
+        }
+        return leaderDialogue;
+    }
+
+    public static DialogueContextType GetDialogueContextType(string eventType) {
+        switch (eventType) {
+            case "Receive Trade":
+                return DialogueContextType.ReceiveTrade;
+            case "Accept Received Trade":
+                return DialogueContextType.AcceptReceivedTrade;
+            case "Refuse Received Trade":
+                return DialogueContextType.RefuseReceivedTrade;
+            case "Send Trade":
+                return DialogueContextType.SendTrade;
+            case "Sent Trade Accepted":
+                return DialogueContextType.SentTradeAccepted;
+            case "Sent Trade Refused":
+                return DialogueContextType.SendTradeRejected;
+            case "Leader Eliminated":
+                return DialogueContextType.LeaderEliminated;
+            case "Stolen Planet":
+                return DialogueContextType.StolenPlanet;
+            case "Personal Question":
+                return DialogueContextType.PersonalQuestion;
+        }
+        Debug.LogError("FileManager.GetDialogueContextType: Parse failed!");
+        return DialogueContextType.Default;
     }
 
     public static Dictionary<string, Dictionary<CurrencyType, int>> GetLeaderPreferences() { 
@@ -174,12 +226,6 @@ public static class FileManager {
         }
         return Resources.Load<Sprite>(leaderImageFilePath);
     }
-
-    // TODO: Somewhat deprecated.
-    /*public static Sprite GetLeaderImageFromType(string leaderName, LeaderResources.Perspectives perspective, LeaderResources.Expressions expression) {
-        string leaderImageFilePath = "LeaderImages/";
-
-    }*/
 
     public static Dictionary<LeaderResources.Perspectives, Dictionary<LeaderResources.Expressions, string>> GetLeaderImagePaths(string leaderName) {
         Dictionary<LeaderResources.Perspectives, Dictionary<LeaderResources.Expressions, string>> leaderImagePaths = new();

@@ -67,7 +67,7 @@ public class Leader {
         controlledPlanets = new();
         relationships = new();
         visibilities = new();
-        leaderResources = new(name);
+        leaderResources = new(this);
     }
 
     public string GetLeaderImagePath(LeaderResources.Perspectives perspective, LeaderResources.Expressions expression) {
@@ -333,6 +333,22 @@ public class Leader {
         }
     }
     #endregion
+
+    public LeaderDialogue.DialogueNode GetEventDialogueResponse(Leader originLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
+        return leaderResources.GetEventDialogueResponse(originLeader, interactionLeader, dialogueContext);
+    }
+}
+public enum DialogueContextType {
+    Default = 0,
+    SendTrade = 1,
+    SentTradeAccepted = 2,
+    SendTradeRejected = 3,
+    ReceiveTrade = 4,
+    AcceptReceivedTrade = 5,
+    RefuseReceivedTrade = 6,
+    StolenPlanet = 7,
+    LeaderEliminated = 8,
+    PersonalQuestion = 9
 }
 
 public class LeaderResources {
@@ -351,15 +367,191 @@ public class LeaderResources {
         Full = 2
     }
 
+    private LeaderDialogue dialogue;
+
     private Dictionary<Perspectives, Dictionary<Expressions, string>> imagePaths;
 
-    public LeaderResources(string leaderName) {
-        imagePaths = FileManager.GetLeaderImagePaths(leaderName);
+    public LeaderResources(Leader leader) {
+        dialogue = FileManager.GetLeaderDialogue(leader);
+        imagePaths = FileManager.GetLeaderImagePaths(leader.Name);
+        Debug.Log("hlelo");
+    }
+
+    public List<string> GetValidDialogueQuestions(Leader originLeader) {
+        return dialogue.GetValidQuestions(originLeader);
+    }
+
+    public LeaderDialogue.DialogueNode GetEventDialogueResponse(Leader originLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
+        return dialogue.GetEventDialogueResponse(originLeader, interactionLeader, dialogueContext);
     }
 
     public string GetLeaderImagePath(Perspectives perspective, Expressions expression) {
         return imagePaths[perspective][expression];
     }
+}
+
+public class LeaderDialogue {
+
+    private Leader leader;
+    private Dictionary<string, DialogueNode> nodes;
+    private Dictionary<DialogueContextType, ContextNode> contextNodes;
+    public LeaderDialogue(Leader leader) {
+        contextNodes = new();
+        nodes = new();
+        BuildContextNodes();
+        this.leader = leader;
+    }
+
+    public DialogueNode GetEventDialogueResponse(Leader originLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
+        ContextNode contextNode = contextNodes[dialogueContext];
+        return contextNode.GetValidDialogueNode(originLeader, leader, interactionLeader);
+    }
+
+    private void BuildContextNodes() {
+        foreach (DialogueContextType contextType in (DialogueContextType[]) Enum.GetValues(typeof(DialogueContextType))) {
+            contextNodes.Add(contextType, new(contextType));
+        }
+    }
+
+    public List<string> GetValidQuestions(Leader originLeader) {
+        List<string> validQuestions = new();
+        ContextNode personalQuestionsContext = contextNodes[DialogueContextType.PersonalQuestion];
+        foreach (DialogueEdge edge in personalQuestionsContext.adjacencyList) {
+            if (edge.CheckConditions(originLeader, leader, leader)) {
+                validQuestions.Add(edge.Destination.Dialogue);
+            }
+        }
+        return validQuestions;
+    }
+
+    public void AddDialogueEdge(string sourceDialogue, string destinationDialogue, DialogueCondition condition) {
+        DialogueNode sourceNode;
+        if (nodes.ContainsKey(sourceDialogue)) {
+            sourceNode = nodes[sourceDialogue];
+        } else { 
+            sourceNode = new DialogueNode(sourceDialogue);
+            nodes[sourceDialogue] = sourceNode;
+        }
+        DialogueNode destinationNode;
+        if (nodes.ContainsKey(destinationDialogue)) {
+            destinationNode = nodes[destinationDialogue];
+        } else {
+            destinationNode = new DialogueNode(destinationDialogue);
+            nodes[destinationDialogue] = destinationNode;
+        }
+        sourceNode.AddEdge(new(destinationNode, condition));
+    }
+
+    public void AddContextEdge(DialogueContextType contextType, string dialogue, DialogueCondition condition) {
+        ContextNode contextNode = contextNodes[contextType];
+        DialogueNode dialogueNode = new(dialogue);
+        contextNode.AddEdge(new(dialogueNode, condition));
+        nodes.Add(dialogue, dialogueNode);
+    }
+
+    public class ContextNode {
+        public List<DialogueEdge> adjacencyList;
+        public DialogueContextType ContextType;
+        public ContextNode(DialogueContextType contextType) {
+            ContextType = contextType;
+            adjacencyList = new();
+        }
+
+        public void AddEdge(DialogueEdge dialogueEdge) {
+            adjacencyList.Add(dialogueEdge);
+        }
+
+        public DialogueNode GetValidDialogueNode(Leader originLeader, Leader targetLeader, Leader interactionLeader) {
+            foreach (DialogueEdge edge in adjacencyList) {
+                if (edge.CheckConditions(originLeader, targetLeader, interactionLeader)) {
+                    return edge.Destination;
+                }
+            }
+            return null;
+        }
+    }
+
+    public class DialogueNode {
+        public string Dialogue;
+        // public bool OriginLeaderInitiated;
+        public List<DialogueEdge> adjacencyList;
+
+        public DialogueNode(string dialogue) {
+            Dialogue = dialogue;
+            // OriginLeaderInitiated = originLeaderInitiated;
+            adjacencyList = new();
+        }
+
+        public void AddEdge(DialogueEdge dialogueEdge) {
+            adjacencyList.Add(dialogueEdge);
+        }
+    }
+
+    public enum ConditionType { 
+        Default = 0,
+        RelationshipLevel = 1,
+        TargetLeader = 2
+    }
+
+    public class DialogueEdge {
+        public DialogueCondition Condition;
+        public DialogueNode Destination;
+
+        public DialogueEdge(DialogueNode destination, DialogueCondition condition) {
+            Destination = destination;
+            Condition = condition;
+        }
+
+        public bool CheckConditions(Leader originLeader, Leader targetLeader, Leader interactionLeader) {
+            return Condition.CheckCondition(originLeader, targetLeader, interactionLeader);
+        }
+    }
+
+    public class DialogueCondition {
+        private float MinimumRelationshipRequired;
+        private float MaximumRelationshipRequired;
+        private string InteractionLeaderName;
+
+        public DialogueCondition(float minimumRelationshipRequired, float maximumRelationshipRequired, string interactionLeaderName) { 
+            MinimumRelationshipRequired = minimumRelationshipRequired;
+            MaximumRelationshipRequired = maximumRelationshipRequired;
+            InteractionLeaderName = interactionLeaderName;
+        }
+
+        public bool CheckCondition(Leader originLeader, Leader targetLeader, Leader interactionLeader) {
+            if (interactionLeader.Name != InteractionLeaderName) return false;
+            float relationshipValue = originLeader.GetRelationshipValue(targetLeader.Name);
+            if (relationshipValue < MinimumRelationshipRequired || relationshipValue > MaximumRelationshipRequired) return false;
+            return true;
+        }
+    }
+
+    /*public class RelationshipCondition : Condition {
+        private float MinimumRelationshipRequired;
+        private float MaximumRelationshipRequired;
+
+        public RelationshipCondition(float minimumRelationshipRequired, float maximumRelationshipRequired) {
+            MinimumRelationshipRequired = minimumRelationshipRequired;
+            MaximumRelationshipRequired = maximumRelationshipRequired;
+        }
+
+        public override bool CheckCondition(Leader originLeader, Leader targetLeader) {
+            float relationshipValue = originLeader.GetRelationshipValue(targetLeader.Name);
+            return relationshipValue >= MinimumRelationshipRequired && relationshipValue <= MaximumRelationshipRequired;
+        }
+    }
+
+    public class TargetLeaderCondition : Condition {
+        private string TargetLeaderName;
+
+        public TargetLeaderCondition(string targetLeaderName) {
+            TargetLeaderName = targetLeaderName;
+        }
+
+        public override bool CheckCondition(Leader originLeader, Leader targetLeader) {
+            return targetLeader.Name == TargetLeaderName;
+        }
+    }*/
 }
 
 public class Influence {

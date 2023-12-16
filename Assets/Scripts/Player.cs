@@ -4,7 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player {
-
     public Leader Leader { get; private set; }
 
     #region Properties

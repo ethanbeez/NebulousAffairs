@@ -16,9 +16,11 @@ public class GameHandler {
     Player player;
     OpponentHandler opponentHandler;
     PlanetHandler planetHandler;
+    NotificationHandler notificationHandler;
     public GameHistory gameHistory;
 
     public GameHandler(int leadersPerPlanet) {
+        notificationHandler = new();
         opponentHandler = new();
         player = new();
         BuildLeadersFromGameData();
@@ -246,6 +248,7 @@ public class GameHandler {
     }
 
     public void AdvanceTurn(TurnHandler.GameTurns gameTurns) {
+        notificationHandler.ClearNotifications();
         AccrueLeaderYields();
         ExecuteOpponentTurns(gameTurns);
         player.ResetPlayerActionsLeft();
@@ -364,6 +367,7 @@ public class GameHandler {
     private void HandleTradeAction(TradeAction tradeAction) {
         tradeAction.originLeader.IncurTradeCosts();
         if (tradeAction.TargetLeader == player.Leader) { // Should be reference equality, this is intentional.
+            notificationHandler.AddNotification(new(tradeAction.originLeader, NotificationType.TradeOffer, 0, "temp"));
             player.AddOutstandingTrade(tradeAction);
             return;
         }
