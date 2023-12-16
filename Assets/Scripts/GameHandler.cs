@@ -249,6 +249,7 @@ public class GameHandler {
 
     public void AdvanceTurn(TurnHandler.GameTurns gameTurns) {
         notificationHandler.ClearNotifications();
+        player.ClearOutstandingTrades();
         AccrueLeaderYields();
         ExecuteOpponentTurns(gameTurns);
         player.ResetPlayerActionsLeft();
@@ -367,7 +368,8 @@ public class GameHandler {
     private void HandleTradeAction(TradeAction tradeAction) {
         tradeAction.originLeader.IncurTradeCosts();
         if (tradeAction.TargetLeader == player.Leader) { // Should be reference equality, this is intentional.
-            notificationHandler.AddNotification(new(tradeAction.originLeader, NotificationType.TradeOffer, 0, "temp"));
+            notificationHandler.AddNotification(new(tradeAction.originLeader, NotificationType.TradeOffer, 0, 
+                tradeAction.originLeader.GetEventDialogueResponse(tradeAction.originLeader, tradeAction.originLeader, DialogueContextType.SendTrade).Dialogue));
             player.AddOutstandingTrade(tradeAction);
             return;
         }

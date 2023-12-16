@@ -49,14 +49,18 @@ public class Player {
         trade.Accepted = accepted;
         if (accepted) Leader.AcceptIncomingTrade(trade);
         else Leader.RefuseIncomingTrade(trade);
+        OutstandingTrades.Remove(originLeader);
+    }
+
+    public void ClearOutstandingTrades() { 
+        foreach (TradeAction tradeAction in OutstandingTrades.Values) {
+            Leader.RefuseIncomingTrade(tradeAction);
+        }
+        OutstandingTrades.Clear();
     }
 
     public void ResetPlayerActionsLeft() {
         PlayerTurnActionsLeft = ActionsPerTurn;
-    }
-
-    public void ProcessPlayerAction(GameAction action) { 
-    
     }
 
     public void ProcessOutgoingTradeOutcome(TradeAction tradeAction) {
