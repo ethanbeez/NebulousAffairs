@@ -337,6 +337,9 @@ public class Leader {
     public LeaderDialogue.DialogueNode GetEventDialogueResponse(Leader originLeader, Leader targetLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
         return leaderResources.GetEventDialogueResponse(originLeader, targetLeader, interactionLeader, dialogueContext);
     }
+    public bool HasEventDialogueResponse(Leader originLeader, Leader targetLeader, Leader interactionLeader,DialogueContextType contextType) {
+        return leaderResources.HasEventDialogueResponse(originLeader, targetLeader, interactionLeader, contextType);
+    }
 }
 public enum DialogueContextType {
     Default = 0,
@@ -388,6 +391,10 @@ public class LeaderResources {
     public string GetLeaderImagePath(Perspectives perspective, Expressions expression) {
         return imagePaths[perspective][expression];
     }
+
+    public bool HasEventDialogueResponse(Leader originLeader, Leader targetLeader, Leader interactionLeader, DialogueContextType contextType) {
+        return dialogue.HasEventDialogueResponse(originLeader, targetLeader, interactionLeader, contextType);
+    }
 }
 
 public class LeaderDialogue {
@@ -422,6 +429,16 @@ public class LeaderDialogue {
             }
         }
         return validQuestions;
+    }
+
+    public bool HasEventDialogueResponse(Leader originLeader, Leader targetLeader, Leader interactionLeader, DialogueContextType contextType) {
+        ContextNode personalQuestionsContext = contextNodes[contextType];
+        foreach (DialogueEdge edge in personalQuestionsContext.adjacencyList) {
+            if (edge.CheckConditions(originLeader, targetLeader, interactionLeader)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void AddDialogueEdge(string sourceDialogue, string destinationDialogue, DialogueCondition condition) {
@@ -467,7 +484,7 @@ public class LeaderDialogue {
                     return edge.Destination;
                 }
             }
-            return null;
+             return null;
         }
     }
 
@@ -620,7 +637,7 @@ public class Relationship {
     #endregion
 
     public void ProcessTradeOutcome(int incomingTradeWeight) {
-        RelationshipValue += IncomingTradeWeightModifier * incomingTradeWeight;
+        RelationshipValue = Mathf.Clamp(RelationshipValue + IncomingTradeWeightModifier * incomingTradeWeight, 0, 1);
     }
 
     public Leader GetOtherLeader(string leaderName) {

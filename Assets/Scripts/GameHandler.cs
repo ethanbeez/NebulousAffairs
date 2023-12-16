@@ -320,6 +320,12 @@ public class GameHandler {
                 Leader previousLeader;
                 if (gainedPlanets.Key == player.Leader.Name) {
                     previousLeader = player.Leader.GainPlanetControl(gainedPlanet);
+                    foreach (Opponent opponent in opponentHandler.opponents.Values) {
+                        if (opponent.Leader.Name == previousLeader.Name) continue;
+                        if (!opponent.Leader.HasEventDialogueResponse(opponent.Leader, player.Leader, previousLeader, DialogueContextType.StolenPlanet)) continue;
+                        string reaction = opponent.Leader.GetEventDialogueResponse(opponent.Leader, player.Leader, previousLeader, DialogueContextType.StolenPlanet).Dialogue;
+                        notificationHandler.AddNotification(new(opponent.Leader, NotificationType.Message, 0, reaction));
+                    }
                 } else {
                     previousLeader = opponentHandler.opponents[gainedPlanets.Key].Leader.GainPlanetControl(gainedPlanet);
                 }
