@@ -49,6 +49,11 @@ public static class FileManager {
                 Match match = leaderPattern.Match(line);
                 DialogueContextType dialogueContextType = GetDialogueContextType(match.Groups["eventType"].Value);
                 string originLeader = match.Groups["originLeader"].Value;
+                if (originLeader != leader.Name) {
+                    // TODO: Please do something other than this.
+                    line = sr.ReadLine();
+                    continue;
+                }
                 string interactionLeader = match.Groups["interactionLeader"].Value;
                 float minRelationship = float.Parse(match.Groups["minRelationship"].Value);
                 float maxRelationship = float.Parse(match.Groups["maxRelationship"].Value);
