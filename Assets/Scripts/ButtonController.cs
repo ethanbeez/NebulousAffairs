@@ -35,15 +35,27 @@ public class ButtonController {
             leaderButtonGameObject.transform.SetParent(leadersPanelGameObject.transform, false);
             
         }
+        Debug.Log(leaderButtons.Count + "Buttons");
     }
 
     public void ActivateNotifs(Leader leader, bool isMessage)
     {
+        Debug.Log("Message from " + leader.Name + isMessage);
         leaderButtons[leader.Name].ActivateNotif(isMessage);
     }
 
     public void DeactivateNotifs(Leader leader, bool isMessage)
     {
         leaderButtons[leader.Name].DeactivateNotif(isMessage);
+    }
+
+    public void DeactivateAllNotifs()
+    {
+        foreach(KeyValuePair<string, LeaderButton> keyValuePair in leaderButtons)
+        {
+            keyValuePair.Value.DeactivateNotif(true);
+            keyValuePair.Value.DeactivateNotif(false);
+        }
+
     }
 }

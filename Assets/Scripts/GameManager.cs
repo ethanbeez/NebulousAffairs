@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour {
 
         gameHandler.gameHistory.LogGameEvent(new("Turn: 1/20, Year: 3000/ 4000"));
         uiController.playerLeader = gameHandler.GetPlayerLeader();
-        uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo());
+        uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo(), gameHandler.GetNotifications());
         uiController.UpdateLog(gameHandler.GetEventHistory());
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour {
             gameHandler.CheckLeaderWon();
             uiController.EndGame(gameHandler.GetEventHistory());
         }
-        uiController.UpdateTurnDisplay(gameTurnInfo.ToString());
+        uiController.UpdateTurnDisplay(gameTurnInfo.ToString(), gameHandler.GetNotifications());
         gameHandler.gameHistory.LogGameEvent(new(gameTurnInfo.ToString()));
         uiController.UpdateLog(gameHandler.GetEventHistory());
     }

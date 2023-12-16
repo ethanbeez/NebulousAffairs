@@ -403,6 +403,11 @@ public class GameHandler {
         return gameHistory.GetEventHistory();
     }
 
+    public List<Notification> GetNotifications()
+    {
+        return notificationHandler.GetCurrentNotifications();
+    }
+
     public void CheckLeaderWon() {
         if (GetPlayerPlanetsControlled() >= 7) {
             gameHistory.LogGameEvent(new("You won with " + GetPlayerPlanetsControlled() + " planets!"));

@@ -35,8 +35,8 @@ public class LeaderButton {
         buttonPressed += LeaderClicked;
         leaderButtonGameObject.GetComponent<Button>().onClick.AddListener(LeaderClicked);
         var notifs = leaderButtonGameObject.GetComponentsInChildren<Image>();
-        tradeNotif = notifs[0];
-        messageNotif = notifs[1];
+        tradeNotif = notifs[1];
+        messageNotif = notifs[2];
 
     }
 

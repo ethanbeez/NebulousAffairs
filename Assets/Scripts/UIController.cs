@@ -71,6 +71,7 @@ public class UIController : MonoBehaviour {
     public static event EspionageConfirm? ConfirmEspionage;
     public delegate void QuitGame();
     public static event QuitGame? GameQuit;
+    private List<Notification> notifs;
     
     void OnEnable() {
         buttonController = new(leaderButtonPrefab);
@@ -90,11 +91,12 @@ public class UIController : MonoBehaviour {
     }
 
     //Updates the TurnDisplay to a given String - the expected String is TurnHandler's GameTurns toString.
-    public void UpdateTurnDisplay(String TurnInfo) {
+    public void UpdateTurnDisplay(String TurnInfo, List<Notification> notifications) {
 
         //Pie Chart should be updated when turn ends. yipee.
         //pieChart.LoadPieChart(influenceRatios);
         UpdateMainScreen();
+        AddNotifs(notifications);
         UpdateActionDisplay(3);
 
     }
@@ -106,6 +108,18 @@ public class UIController : MonoBehaviour {
         playerIntelligenceYield.text = "+" + playerLeader.IntelligenceYield.ToString();
         playerWealthYield.text = "+" + playerLeader.AffluenceYield.ToString();
         playerPoliticsYield.text = "+" + playerLeader.PoliticsYield.ToString();
+        buttonController.DeactivateAllNotifs();
+        
+
+    }
+
+    private void AddNotifs(List<Notification> notifications)
+    {
+        Debug.Log(notifications.Count + " Notifications");
+        foreach (Notification notif in notifications)
+        {
+            buttonController.ActivateNotifs(notif.OriginLeader, notif.Type == NotificationType.Message);
+        }
     }
 
     //Renders the PlanetInfo Screen
