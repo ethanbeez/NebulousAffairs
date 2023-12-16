@@ -69,6 +69,9 @@ public class Player {
 
     public void HandleLeaderElimination(string leaderName) {
         Leader.ProcessLeaderElimination(leaderName);
+        if (OutstandingTrades.ContainsKey(leaderName)) {
+            OutstandingTrades.Remove(leaderName);
+        }
     }
 }
 
