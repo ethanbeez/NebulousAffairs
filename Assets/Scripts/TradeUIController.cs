@@ -27,6 +27,7 @@ public class TradeUIController : MonoBehaviour
     [SerializeField] TextMeshProUGUI leaderWealth;
     [SerializeField] Image leaderIcon;
     Leader enemyLeader;
+
     public delegate void TradeHandler(int[] vals, Leader enemyLeader);
     public static event TradeHandler? TradeConfirmPressed;
 

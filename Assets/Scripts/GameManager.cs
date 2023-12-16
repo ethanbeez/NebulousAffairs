@@ -119,18 +119,12 @@ public class GameManager : MonoBehaviour {
                 HandlePlayerLoss();
             }
         }
+        Debug.Log(gameTurnInfo.CurrentTurn);
+
         if (gameTurnInfo.CurrentTurn > gameTurnInfo.TurnLimit) {
             gameHandler.CheckLeaderWon();
+            uiController.EndGame(gameHandler.GetEventHistory());
         }
-        // TODO: Remove following, for rush proto
-        /*int won = 0;
-        if (gameTurnInfo.CurrentTurn > 20) {
-            if (gameHandler.GetPlayerPlanetsControlled() < 7) won = 1;
-            if (gameHandler.GetPlayerPlanetsControlled() >= 7) won = 2;
-        } else {
-            if (gameHandler.GetPlayerPlanetsControlled() == 0) won = 1;
-            if (gameHandler.GetPlayerPlanetsControlled() == 12) won = 2;
-        }*/
         uiController.UpdateTurnDisplay(gameTurnInfo.ToString());
         gameHandler.gameHistory.LogGameEvent(new(gameTurnInfo.ToString()));
         uiController.UpdateLog(gameHandler.GetEventHistory());
@@ -166,7 +160,10 @@ public class GameManager : MonoBehaviour {
             uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());
             uiController.RenderPlanetInfo(planet, gameHandler.GetPlanetInfluenceRatios(planet.Name), null);
         }
-        // else display failstate
+        else
+        {
+            uiController.AddToLog("Campaign Failed, Not enough resources");
+        }
     }
 
     private void HandlePlayerEspionage(CurrencyType resource, Leader leader) {
@@ -178,7 +175,7 @@ public class GameManager : MonoBehaviour {
             uiController.UpdateLog(gameHandler.GetEventHistory());
         }
         else {
-            uiController.AddToConverse("Espionage Failed - Not Enough Resources");
+            uiController.AddToLog("Espionage Failed - Not Enough Resources");
         }
     }
 

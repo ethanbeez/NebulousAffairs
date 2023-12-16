@@ -45,6 +45,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] TradeUIController tradeUI;
     [SerializeField] Transform converseData;
     [SerializeField] TextMeshProUGUI ConversePrefab;
+    [SerializeField] TextMeshProUGUI LeaderName;
 
     [Header("Espionage Components")]
     [SerializeField] Button PoliticsEspionage;
@@ -59,9 +60,13 @@ public class UIController : MonoBehaviour {
     [SerializeField] [Range(0, 100)] int CuriousThreshold;
     [SerializeField] [Range(0, 100)] int HappyThreshold;
 
+    [Header("End Screen Components")]
+    [SerializeField] TextMeshProUGUI endText;
+    [SerializeField] TextMeshProUGUI scoreText;
     private List<(string, string)> leaderButtonData; 
     Leader currentLeader;
     private int espionageResource;
+    private int actionsLeft;
     public delegate void EspionageConfirm(CurrencyType resource, Leader enemyLeader);
     public static event EspionageConfirm? ConfirmEspionage;
     public delegate void QuitGame();
@@ -86,8 +91,6 @@ public class UIController : MonoBehaviour {
 
     //Updates the TurnDisplay to a given String - the expected String is TurnHandler's GameTurns toString.
     public void UpdateTurnDisplay(String TurnInfo) {
-        //whatever the turn counter is gonna be = currentTurn;
-
 
         //Pie Chart should be updated when turn ends. yipee.
         //pieChart.LoadPieChart(influenceRatios);
@@ -107,6 +110,11 @@ public class UIController : MonoBehaviour {
 
     //Renders the PlanetInfo Screen
     public void RenderPlanetInfo(Planet clickedPlanet, List<(Leader, float)> influenceRatios, GameObject focusTarget) {
+        if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Planet") || UIAnim.GetCurrentAnimatorStateInfo(0).IsName("ToPlanet")) {
+            return;
+        }
+
+
         planetName.text = clickedPlanet.Name;
         planetInfo.text = clickedPlanet.Name + " is owned by " + clickedPlanet.CurrentLeader.Name;
 
@@ -150,11 +158,12 @@ public class UIController : MonoBehaviour {
        leaderIntelligenceStockpile.text = leader.IntelligenceStockpile.ToString();
        leaderPoliticsStockpile.text = leader.PoliticsStockpile.ToString();
        leaderWealthStockpile.text = leader.AffluenceStockpile.ToString();
-       
+        LeaderName.text = leader.Name;
 
        
        leaderImage.sprite = FileManager.GetLeaderImageFromFileName(leader.GetLeaderImagePath(LeaderResources.Perspectives.Full, LeaderResources.Expressions.Neutral));
        ClearConverseLog();
+        
 
        //check if coming from Nebula
        if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Nebula")) {
@@ -188,7 +197,7 @@ public class UIController : MonoBehaviour {
     /// </summary>
     /// <param name="LogInfo"> The info that is added to the log</param>
     /// <returns>the current number of unique text instances within the log</returns>
-    private void AddToLog(string LogInfo) {
+    public void AddToLog(string LogInfo) {
         var LogText = Instantiate(LogPrefab, LogData);
         LogText.text = LogInfo;
     }
@@ -202,15 +211,26 @@ public class UIController : MonoBehaviour {
     }
 
     public void Trade() {
+        if(actionsLeft == 0)
+        {
+            AddToLog("Not Enough Actions to Trade");
+            return;
+        }
         tradeUI.BeginTrade(playerLeader, currentLeader, leaderButtonData);
         UIAnim.SetTrigger("Trade");
     }
 
     public void UpdateActionDisplay(int PlayerTurnActionsLeft) {
+        actionsLeft = PlayerTurnActionsLeft;
         actionCounter.UpdateActionDisplay(PlayerTurnActionsLeft);
     }
 
     public void StartEspionage() {
+        if (actionsLeft == 0)
+        {
+            AddToLog("Not Enough Actions to Espionage");
+            return;
+        }
         UIAnim.SetTrigger("Espionage");
         WealthEspionage.interactable = playerLeader.GetLeaderPreferenceVisibility(currentLeader, CurrencyType.Affluence);
         InfluenceEspionage.interactable = playerLeader.GetLeaderPreferenceVisibility(currentLeader, CurrencyType.Intellect);
@@ -245,6 +265,17 @@ public class UIController : MonoBehaviour {
         PoliticsEspionage.interactable = false;
     }
 
+    public void Campaign()
+    {
+        if(actionsLeft == 0)
+        {
+            AddToLog("Not Enough Actions to Campaign");
+            return;
+        }
+        UIAnim.SetTrigger("Campaign");
+
+    }
+
 
     //TODO: ethan - this is currently the way to add to the log on the player screen
     public void AddToConverse(string converseInfo) {
@@ -253,9 +284,35 @@ public class UIController : MonoBehaviour {
     }
 
     //Unsafe way of doing this tbh, should be privatized to a QuitButton Class that can only be applied to the quit button. but alas
-    public void Quit() {
+    public void Quit()
+    {
         GameQuit.Invoke();
     }
 
+    public void playGame()
+    {
+        //zoom
+        UIAnim.SetTrigger("MainMenu");
+    }
+
+    public void EndGame(IEnumerable<GameEvent> gameEvents)
+    {
+        foreach(GameEvent gameEvent in gameEvents)
+        {
+            String stringy = gameEvent.ToString();
+            if (stringy.Contains("won"))
+            {
+                endText.text = stringy;
+            }
+            else {
+                endText.text = "You Lose!";
+            }
+            if (stringy.Contains("ended the game")) {
+                scoreText.text = stringy;
+            }
+        }
+
+        UIAnim.SetTrigger("EndGame");   
+    }
     
 }
