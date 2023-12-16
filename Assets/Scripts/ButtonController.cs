@@ -19,7 +19,6 @@ public class ButtonController {
     }
 
     public void InstantiateLeaderButtons(List<(string, string)> leaderInfo) {
-        Debug.Log(leaderInfo.Count);
         int order = 0;
         foreach ((string, string) leader in leaderInfo) {
             GameObject leaderButtonGameObject = Object.Instantiate(leaderButtonPrefab);
@@ -36,5 +35,15 @@ public class ButtonController {
             leaderButtonGameObject.transform.SetParent(leadersPanelGameObject.transform, false);
             
         }
+    }
+
+    public void ActivateNotifs(Leader leader, bool isMessage)
+    {
+        leaderButtons[leader.Name].ActivateNotif(isMessage);
+    }
+
+    public void DeactivateNotifs(Leader leader, bool isMessage)
+    {
+        leaderButtons[leader.Name].DeactivateNotif(isMessage);
     }
 }

@@ -21,6 +21,8 @@ public class LeaderButton {
     public string ImagePath { get; private set; }
     private Image leaderImage;
     private string leaderName;
+    private Image tradeNotif;
+    private Image messageNotif;
 
     public LeaderButton(string leaderName, string imagePath, GameObject leaderButtonGameObject) {
         this.leaderButtonGameObject = leaderButtonGameObject;
@@ -32,6 +34,10 @@ public class LeaderButton {
         leaderImage.sprite = FileManager.GetLeaderImageFromFileName(ImagePath);
         buttonPressed += LeaderClicked;
         leaderButtonGameObject.GetComponent<Button>().onClick.AddListener(LeaderClicked);
+        var notifs = leaderButtonGameObject.GetComponentsInChildren<Image>();
+        tradeNotif = notifs[0];
+        messageNotif = notifs[1];
+
     }
 
     public void LeaderClicked() {
@@ -46,5 +52,29 @@ public class LeaderButton {
     void OnMouseExit()
     {
         LeaderButtonEnterOrExit.Invoke(leaderName, false);
+    }
+
+    public void ActivateNotif(bool isMessage)
+    {
+        if(isMessage)
+        {
+            messageNotif.enabled = true;
+        }
+        else
+        {
+            tradeNotif.enabled = true;
+        }
+    }
+
+    public void DeactivateNotif(bool isMessage)
+    {
+        if (isMessage)
+        {
+            messageNotif.enabled = false;
+        }
+        else
+        {
+            tradeNotif.enabled = false;
+        }
     }
 }
