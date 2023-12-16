@@ -317,7 +317,12 @@ public class GameHandler {
         
         foreach (KeyValuePair<string, HashSet<Planet>> gainedPlanets in electionData.GainedPlanetLeaders) {
             foreach (Planet gainedPlanet in gainedPlanets.Value) {
-                Leader previousLeader = opponentHandler.opponents[gainedPlanets.Key].Leader.GainPlanetControl(gainedPlanet);
+                Leader previousLeader;
+                if (gainedPlanets.Key == player.Leader.Name) {
+                    previousLeader = player.Leader.GainPlanetControl(gainedPlanet);
+                } else {
+                    previousLeader = opponentHandler.opponents[gainedPlanets.Key].Leader.GainPlanetControl(gainedPlanet);
+                }
                 if (GameHistory.LogIncludesElectionOutcomes) {
                     List<(Leader, float)> influenceRatios = GetPlanetInfluenceRatios(gainedPlanet.Name); // TODO: This can be simplified.
                     string electedLeaderPercent = influenceRatios[0].Item2.ToString("P2", new NumberFormatInfo { PercentPositivePattern = 1, PercentNegativePattern = 1 });
@@ -369,7 +374,7 @@ public class GameHandler {
         tradeAction.originLeader.IncurTradeCosts();
         if (tradeAction.TargetLeader == player.Leader) { // Should be reference equality, this is intentional.
             notificationHandler.AddNotification(new(tradeAction.originLeader, NotificationType.TradeOffer, 0, 
-                tradeAction.originLeader.GetEventDialogueResponse(tradeAction.originLeader, tradeAction.originLeader, DialogueContextType.SendTrade).Dialogue));
+                tradeAction.originLeader.GetEventDialogueResponse(tradeAction.originLeader, tradeAction.TargetLeader, tradeAction.originLeader, DialogueContextType.SendTrade).Dialogue));
             player.AddOutstandingTrade(tradeAction);
             return;
         }

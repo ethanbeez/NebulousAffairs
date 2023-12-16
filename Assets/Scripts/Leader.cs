@@ -334,8 +334,8 @@ public class Leader {
     }
     #endregion
 
-    public LeaderDialogue.DialogueNode GetEventDialogueResponse(Leader originLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
-        return leaderResources.GetEventDialogueResponse(originLeader, interactionLeader, dialogueContext);
+    public LeaderDialogue.DialogueNode GetEventDialogueResponse(Leader originLeader, Leader targetLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
+        return leaderResources.GetEventDialogueResponse(originLeader, targetLeader, interactionLeader, dialogueContext);
     }
 }
 public enum DialogueContextType {
@@ -381,8 +381,8 @@ public class LeaderResources {
         return dialogue.GetValidQuestions(originLeader);
     }
 
-    public LeaderDialogue.DialogueNode GetEventDialogueResponse(Leader originLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
-        return dialogue.GetEventDialogueResponse(originLeader, interactionLeader, dialogueContext);
+    public LeaderDialogue.DialogueNode GetEventDialogueResponse(Leader originLeader, Leader targetLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
+        return dialogue.GetEventDialogueResponse(originLeader, targetLeader, interactionLeader, dialogueContext);
     }
 
     public string GetLeaderImagePath(Perspectives perspective, Expressions expression) {
@@ -402,9 +402,9 @@ public class LeaderDialogue {
         this.leader = leader;
     }
 
-    public DialogueNode GetEventDialogueResponse(Leader originLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
+    public DialogueNode GetEventDialogueResponse(Leader originLeader, Leader targetLeader, Leader interactionLeader, DialogueContextType dialogueContext) {
         ContextNode contextNode = contextNodes[dialogueContext];
-        return contextNode.GetValidDialogueNode(originLeader, leader, interactionLeader);
+        return contextNode.GetValidDialogueNode(originLeader, targetLeader, interactionLeader);
     }
 
     private void BuildContextNodes() {
