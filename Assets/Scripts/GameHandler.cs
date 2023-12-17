@@ -13,7 +13,7 @@ public class GameHandler {
     #region Game Constants
     public const int TotalSessionPlayers = 6;
     #endregion
-    Player player;
+    public Player player;
     OpponentHandler opponentHandler;
     PlanetHandler planetHandler;
     NotificationHandler notificationHandler;

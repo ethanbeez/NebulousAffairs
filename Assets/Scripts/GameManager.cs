@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour {
         uiController.playerLeader = gameHandler.GetPlayerLeader();
         uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo(), gameHandler.GetNotifications());
         uiController.UpdateLog(gameHandler.GetEventHistory());
+        uiController.player = gameHandler.player;
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
     }

@@ -9,6 +9,7 @@ public class UIController : MonoBehaviour {
     ButtonController buttonController;
     [SerializeField] GameObject leaderButtonPrefab;
     CameraController cameraController;
+    [SerializeField] DialogueController dialogueController;
 
     [Header("Main Screen Components")]
     [SerializeField] public Animator UIAnim;
@@ -46,6 +47,7 @@ public class UIController : MonoBehaviour {
     [SerializeField] Transform converseData;
     [SerializeField] TextMeshProUGUI ConversePrefab;
     [SerializeField] TextMeshProUGUI LeaderName;
+    [SerializeField] VerticalLayoutGroup ConverseGroup; 
 
     [Header("Espionage Components")]
     [SerializeField] Button PoliticsEspionage;
@@ -72,6 +74,8 @@ public class UIController : MonoBehaviour {
     public delegate void QuitGame();
     public static event QuitGame? GameQuit;
     private List<Notification> notifs;
+    public Player player;
+
     
     void OnEnable() {
         buttonController = new(leaderButtonPrefab);
@@ -96,6 +100,7 @@ public class UIController : MonoBehaviour {
         //Pie Chart should be updated when turn ends. yipee.
         //pieChart.LoadPieChart(influenceRatios);
         UpdateMainScreen();
+        notifs = notifications;
         AddNotifs(notifications);
         UpdateActionDisplay(3);
 
@@ -172,7 +177,10 @@ public class UIController : MonoBehaviour {
        leaderIntelligenceStockpile.text = leader.IntelligenceStockpile.ToString();
        leaderPoliticsStockpile.text = leader.PoliticsStockpile.ToString();
        leaderWealthStockpile.text = leader.AffluenceStockpile.ToString();
-        LeaderName.text = leader.Name;
+       LeaderName.text = leader.Name;
+        ClearConverseButtons();
+        dialogueController.UpdateData(notifs, currentLeader, player);
+       
 
        
        leaderImage.sprite = FileManager.GetLeaderImageFromFileName(leader.GetLeaderImagePath(LeaderResources.Perspectives.Full, LeaderResources.Expressions.Neutral));
@@ -327,6 +335,21 @@ public class UIController : MonoBehaviour {
         }
 
         UIAnim.SetTrigger("EndGame");   
+    }
+
+    public void AddConverseButton(Button button)
+    {
+        button.gameObject.transform.SetParent(ConverseGroup.transform);
+        button.gameObject.transform.localPosition = new(0, 0, 0);
+    }
+
+    public void ClearConverseButtons()
+    {
+        var buttons = ConverseGroup.GetComponentsInChildren<Button>();
+        foreach(Button button in buttons)
+        {
+            GameObject.Destroy(button);
+        }
     }
     
 }
