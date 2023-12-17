@@ -21,7 +21,8 @@ public static class FileManager {
     private const string LeadersResourceFolder = "/Resources/Leaders";
     private const string LeaderGameplayDataFile = "/leaders";
     private const string PlanetGameplayDataFile = "/planets";
-    private const string LeaderDialogueDataFile = "/EventDialogue";
+    private const string EventDialogueFile = "/EventDialogue";
+    private const string QuestionDialogueFile = "/QuestionDialogue";
     private static readonly List<string> GameplayConstantsFiles = new(){ LeaderGameplayDataFile, PlanetGameplayDataFile };
   
     public static List<string> GetMissingGameDataFiles() {
@@ -37,7 +38,7 @@ public static class FileManager {
     }
 
     public static LeaderDialogue GetLeaderDialogue(Leader leader) {
-        string leaderDialogueFile = Path.Join(Application.streamingAssetsPath, LeadersResourceFolder, LeaderDialogueDataFile) + GameDataFileExtension; // Full file path
+        string leaderDialogueFile = Path.Join(Application.streamingAssetsPath, LeadersResourceFolder, EventDialogueFile) + GameDataFileExtension; // Full file path
         // Debug.Log(leaderDialogueFile);
         LeaderDialogue leaderDialogue = new(leader);
         try {
@@ -65,6 +66,39 @@ public static class FileManager {
         } catch (Exception e) {
             Debug.LogError(e.Message);
         }
+
+        // QUESTION DIALOGUE
+
+        string questionDialogueFile = Path.Join(Application.streamingAssetsPath, LeadersResourceFolder, QuestionDialogueFile) + GameDataFileExtension; // Full file path
+        // Debug.Log(leaderDialogueFile);
+        try {
+            StreamReader sr = new(questionDialogueFile);
+            string line = sr.ReadLine();
+
+            while (line != null) {
+                Regex leaderPattern = new(@"origin_leader: '(?<originLeader>\w+( \w+)*)' \.min_relationship: (?<minRelationship>\-?\d?.?\d*) \.max_relationship: (?<maxRelationship>\-?\d?.?\d*) \.question: '(?<question>.*)' \.response: '(?<response>.*)'");
+                Match match = leaderPattern.Match(line);
+                DialogueContextType dialogueContextType = DialogueContextType.PersonalQuestion;
+                string originLeader = match.Groups["originLeader"].Value;
+                if (originLeader != leader.Name) {
+                    // TODO: Please do something other than this.
+                    line = sr.ReadLine();
+                    continue;
+                }
+                float minRelationship = float.Parse(match.Groups["minRelationship"].Value);
+                float maxRelationship = float.Parse(match.Groups["maxRelationship"].Value);
+                string question = match.Groups["question"].Value;
+                string response = match.Groups["response"].Value;
+                LeaderDialogue.DialogueCondition questionCondition = new(minRelationship, maxRelationship, leader.Name);
+                leaderDialogue.AddContextEdge(dialogueContextType, question, questionCondition);
+                LeaderDialogue.DialogueCondition dialogueCondition = new(0, 1, leader.Name);
+                leaderDialogue.AddDialogueEdge(question, response, dialogueCondition);
+                line = sr.ReadLine();
+            }
+        } catch (Exception e) {
+            Debug.LogError(e.Message);
+        }
+
         return leaderDialogue;
     }
 

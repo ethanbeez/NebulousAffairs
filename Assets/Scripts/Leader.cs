@@ -340,6 +340,10 @@ public class Leader {
     public bool HasEventDialogueResponse(Leader originLeader, Leader targetLeader, Leader interactionLeader,DialogueContextType contextType) {
         return leaderResources.HasEventDialogueResponse(originLeader, targetLeader, interactionLeader, contextType);
     }
+
+    public List<LeaderDialogue.DialogueNode> GetValidDialogueQuestions(Leader originLeader) {
+        return leaderResources.GetValidDialogueQuestions(originLeader);
+    }
 }
 public enum DialogueContextType {
     Default = 0,
@@ -380,7 +384,7 @@ public class LeaderResources {
         Debug.Log("hlelo");
     }
 
-    public List<string> GetValidDialogueQuestions(Leader originLeader) {
+    public List<LeaderDialogue.DialogueNode> GetValidDialogueQuestions(Leader originLeader) {
         return dialogue.GetValidQuestions(originLeader);
     }
 
@@ -420,12 +424,12 @@ public class LeaderDialogue {
         }
     }
 
-    public List<string> GetValidQuestions(Leader originLeader) {
-        List<string> validQuestions = new();
+    public List<DialogueNode> GetValidQuestions(Leader originLeader) {
+        List<DialogueNode> validQuestions = new();
         ContextNode personalQuestionsContext = contextNodes[DialogueContextType.PersonalQuestion];
         foreach (DialogueEdge edge in personalQuestionsContext.adjacencyList) {
             if (edge.CheckConditions(originLeader, leader, leader)) {
-                validQuestions.Add(edge.Destination.Dialogue);
+                validQuestions.Add(edge.Destination);
             }
         }
         return validQuestions;
@@ -501,6 +505,11 @@ public class LeaderDialogue {
 
         public void AddEdge(DialogueEdge dialogueEdge) {
             adjacencyList.Add(dialogueEdge);
+        }
+
+        // TODO: ONLY use for final build question dialogue.
+        public DialogueNode GetQuestionResponse() {
+            return adjacencyList[0].Destination;
         }
     }
 

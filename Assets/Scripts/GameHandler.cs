@@ -53,7 +53,7 @@ public class GameHandler {
         List<(string, string)> leaderButtonData = new();
         foreach (Opponent opponent in opponentHandler.opponents.Values) {
             Leader opponentLeader = opponent.Leader;
-            (string, string) buttonData = (opponentLeader.Name, opponentLeader.GetLeaderImagePath(LeaderResources.Perspectives.Portrait, LeaderResources.Expressions.Neutral)); 
+            (string, string) buttonData = (opponentLeader.Name, opponentLeader.GetLeaderImagePath(LeaderResources.Perspectives.Portrait, LeaderResources.Expressions.Neutral));
             leaderButtonData.Add(buttonData);
         }
         return leaderButtonData;
@@ -182,7 +182,7 @@ public class GameHandler {
         player.Leader.IncurDiplomacyCosts();
         Planet targetPlanet = planetHandler.planets[targetPlanetName];
         DiplomacyAction diplomacy = new(0, player.Leader, targetPlanet, currencyToIncrease, currencyToDecrease);
-        
+
         targetPlanet.HandleDiplomacyAction(diplomacy);
     }
 
@@ -228,7 +228,7 @@ public class GameHandler {
     /// <param name="leaderName">The name of the Leader to get the outstanding treade of</param>
     /// <returns>The outstanding trade corresponding to the input Leader name</returns>
     public TradeAction GetOutstandingTrade(string leaderName) {
-        return player.OutstandingTrades[leaderName];   
+        return player.OutstandingTrades[leaderName];
     }
 
     public Planet GetPlanet(string planetName) {
@@ -253,7 +253,7 @@ public class GameHandler {
         AccrueLeaderYields();
         ExecuteOpponentTurns(gameTurns);
         player.ResetPlayerActionsLeft();
-        
+
     }
 
     private void AccrueLeaderYields() {
@@ -314,7 +314,7 @@ public class GameHandler {
         foreach (Planet planet in planetHandler.planets.Values) {
             electionData.DeterminePlanetElectionOutcome(planet);
         }
-        
+
         foreach (KeyValuePair<string, HashSet<Planet>> gainedPlanets in electionData.GainedPlanetLeaders) {
             foreach (Planet gainedPlanet in gainedPlanets.Value) {
                 Leader previousLeader;
@@ -379,7 +379,7 @@ public class GameHandler {
     private void HandleTradeAction(TradeAction tradeAction) {
         tradeAction.originLeader.IncurTradeCosts();
         if (tradeAction.TargetLeader == player.Leader) { // Should be reference equality, this is intentional.
-            notificationHandler.AddNotification(new(tradeAction.originLeader, NotificationType.TradeOffer, 0, 
+            notificationHandler.AddNotification(new(tradeAction.originLeader, NotificationType.TradeOffer, 0,
                 tradeAction.originLeader.GetEventDialogueResponse(tradeAction.originLeader, tradeAction.TargetLeader, tradeAction.originLeader, DialogueContextType.SendTrade).Dialogue));
             player.AddOutstandingTrade(tradeAction);
             return;
@@ -387,8 +387,12 @@ public class GameHandler {
         opponentHandler.ProcessOpponentOnlyTradeAction(tradeAction);
     }
 
-    public Leader GetOpponentLeader(string leaderName) { 
-        return opponentHandler.opponents[leaderName].Leader;    
+    public Leader GetOpponentLeader(string leaderName) {
+        return opponentHandler.opponents[leaderName].Leader;
+    }
+
+    public List<LeaderDialogue.DialogueNode> GetValidDialogueQuestions(string leaderName) {
+        return opponentHandler.opponents[leaderName].Leader.GetValidDialogueQuestions(player.Leader);
     }
 
     public Leader GetPlayerLeader() {
