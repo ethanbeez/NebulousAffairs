@@ -43,14 +43,12 @@ public class NotificationHandler {
     }
 }
 
-public class Notification
-{
+public class Notification {
     public Leader OriginLeader;
     public NotificationType Type;
     public int TurnRaised;
     public string NotificationMessage; // Packed into Notification class to avoid need for specific context with which it was raised.
-    public Notification(Leader originLeader, NotificationType type, int turnRaised, string notificationMessage)
-    {
+    public Notification(Leader originLeader, NotificationType type, int turnRaised, string notificationMessage) {
         OriginLeader = originLeader;
         TurnRaised = turnRaised;
         Type = type;
