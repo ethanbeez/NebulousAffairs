@@ -119,9 +119,24 @@ public class UIController : MonoBehaviour {
         playerIntelligence.text = playerLeader.IntelligenceStockpile.ToString();
         playerWealth.text = playerLeader.AffluenceStockpile.ToString();
         playerPolitics.text = playerLeader.PoliticsStockpile.ToString();
-        playerIntelligenceYield.text = "+" + playerLeader.IntelligenceYield.ToString();
-        playerWealthYield.text = "+" + playerLeader.AffluenceYield.ToString();
-        playerPoliticsYield.text = "+" + playerLeader.PoliticsYield.ToString();
+
+
+        if(playerLeader.IntelligenceYield >= 0)
+            playerIntelligenceYield.text = "+" + playerLeader.IntelligenceYield.ToString();
+        else
+            playerIntelligenceYield.text = playerLeader.IntelligenceYield.ToString();
+
+        if (playerLeader.AffluenceYield >= 0)
+            playerWealthYield.text = "+" + playerLeader.AffluenceYield.ToString();
+        else
+            playerWealthYield.text = playerLeader.AffluenceYield.ToString();
+
+        if (playerLeader.PoliticsYield >= 0)
+            playerPoliticsYield.text = "+" + playerLeader.PoliticsYield.ToString();
+        else
+            playerPoliticsYield.text = playerLeader.PoliticsYield.ToString();
+
+
         buttonController.DeactivateAllNotifs();
         AddNotifs(notifs);
 
