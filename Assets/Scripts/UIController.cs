@@ -183,12 +183,12 @@ public class UIController : MonoBehaviour {
        leaderWealthStockpile.text = leader.AffluenceStockpile.ToString();
        LeaderName.text = leader.Name;
         ClearConverseButtons();
+        ClearConverseLog();
         dialogueController.UpdateData(notifs, currentLeader, player);
        
 
        
        leaderImage.sprite = FileManager.GetLeaderImageFromFileName(leader.GetLeaderImagePath(LeaderResources.Perspectives.Full, LeaderResources.Expressions.Neutral));
-       ClearConverseLog();
         
 
        //check if coming from Nebula
@@ -209,7 +209,6 @@ public class UIController : MonoBehaviour {
     }
 
     public void UpdateLog(IEnumerable<GameEvent> gameEvents) {
-        Debug.Log(gameEvents);
         for(int i = LogData.childCount; i > 0; i--) {
             GameObject.Destroy(LogData.GetChild(i - 1).gameObject);
         }
@@ -346,7 +345,8 @@ public class UIController : MonoBehaviour {
     public void AddConverseButton(Button button)
     {
         button.gameObject.transform.SetParent(ConverseGroup.transform);
-        button.gameObject.transform.localPosition = new(0, 0, 0);
+        button.gameObject.GetComponent<RectTransform>().localScale = Vector3.one;
+
     }
 
     public void ClearConverseButtons()
@@ -354,7 +354,7 @@ public class UIController : MonoBehaviour {
         var buttons = ConverseGroup.GetComponentsInChildren<Button>();
         foreach(Button button in buttons)
         {
-            GameObject.Destroy(button);
+            GameObject.Destroy(button.gameObject);
         }
     }
     
