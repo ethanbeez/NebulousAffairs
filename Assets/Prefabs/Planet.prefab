@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 495831569539797861}
   - component: {fileID: 6619053429591652051}
   - component: {fileID: 2855708977290222687}
+  - component: {fileID: 3836763048547476493}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Untagged
@@ -248,3 +249,16 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
+--- !u!114 &3836763048547476493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4610384906330584056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a4739604a630bb4e9b97f1bd92692e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content: 

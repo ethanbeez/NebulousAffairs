@@ -19,13 +19,11 @@ public class Tooltip : MonoBehaviour
 
     public void SetText(string content) {
         contentField.text = content;
+        int contentLength = contentField.text.Length;
+        layoutElement.enabled = contentLength > characterWrapLimit;
     }
 
     private void Update() {
-        int contentLength = contentField.text.Length;
-
-        layoutElement.enabled = contentLength > characterWrapLimit;
-
         Vector2 position = Input.mousePosition;
 
         float pivotX = position.x / Screen.width;

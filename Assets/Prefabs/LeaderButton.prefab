@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2801723203111450797}
   - component: {fileID: 1236617891210706102}
   - component: {fileID: -5351664322173186066}
+  - component: {fileID: 2919611113253243755}
   m_Layer: 5
   m_Name: LeaderButton
   m_TagString: Untagged
@@ -77,6 +78,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2919611113253243755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2860308653684846246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a4739604a630bb4e9b97f1bd92692e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content: 
 --- !u!1 &5325595250642362039
 GameObject:
   m_ObjectHideFlags: 0
