@@ -191,15 +191,18 @@ public class GameManager : MonoBehaviour {
     private void HandlePlayerTrade(int[] vals, Leader enemyLeader) {
         TradeAction trade = new TradeAction(0, gameHandler.GetPlayerLeader(), enemyLeader, vals[2], vals[0], vals[1], vals[5], vals[3], vals[4] );
         if(gameHandler.CheckPlayerCanAffordTrade() && gameHandler.GetPlayerActionsLeft() > 0) {
+            Debug.Log("how");
             if(gameHandler.ProcessPlayerInitiatedTrade(trade)) {
-                uiController.AddToConverse("Trade Successful!");
+                Debug.Log("why1");
+                uiController.AddToConverse(enemyLeader.GetEventDialogueResponse(enemyLeader, gameHandler.player.Leader, enemyLeader, DialogueContextType.AcceptReceivedTrade).Dialogue);
             }
             else {
-                uiController.AddToConverse("Trade Failed");
+                Debug.Log("why2");
+                uiController.AddToConverse(enemyLeader.GetEventDialogueResponse(enemyLeader, gameHandler.player.Leader, enemyLeader, DialogueContextType.RefuseReceivedTrade).Dialogue);
             }
         }
         else {
-            uiController.AddToConverse("Trade Failed");
+            uiController.AddToLog("Trade Failed - Not enough Resources");
         }
         uiController.RenderLeaderInfo(enemyLeader);
         uiController.UpdateActionDisplay(gameHandler.GetPlayerActionsLeft());

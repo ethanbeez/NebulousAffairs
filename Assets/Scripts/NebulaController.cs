@@ -31,7 +31,7 @@ public class NebulaController : MonoBehaviour {
     public float planetLocationZ = 10f;
     public int planetsPerRow = 4;
     public int planetsPerCol = 3;
-    public bool motionEnabled = false;
+    public bool motionEnabled = true;
     private bool motionTrailsEnabled;
 
     [SerializeField]

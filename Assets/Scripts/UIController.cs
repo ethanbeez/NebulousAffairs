@@ -140,6 +140,9 @@ public class UIController : MonoBehaviour {
         buttonController.DeactivateAllNotifs();
         AddNotifs(notifs);
 
+        ClearConverseLog();
+        ClearConverseButtons();
+
 
     }
 
@@ -210,12 +213,12 @@ public class UIController : MonoBehaviour {
        leaderWealthStockpile.text = leader.AffluenceStockpile.ToString();
        LeaderName.text = leader.Name;
         ClearConverseButtons();
-        ClearConverseLog();
         dialogueController.UpdateData(notifs, currentLeader, player);
-       
+        AddToConverse("Greetings!");
 
-       
-       leaderImage.sprite = FileManager.GetLeaderImageFromFileName(leader.GetLeaderImagePath(LeaderResources.Perspectives.Full, LeaderResources.Expressions.Neutral));
+
+
+        leaderImage.sprite = FileManager.GetLeaderImageFromFileName(leader.GetLeaderImagePath(LeaderResources.Perspectives.Full, LeaderResources.Expressions.Neutral));
         
 
        //check if coming from Nebula
@@ -267,7 +270,6 @@ public class UIController : MonoBehaviour {
             UnPause();
         }
         UIAnim.SetTrigger("Back");
-        UpdateMainScreen();
     }
 
     public void Trade() {
@@ -339,6 +341,7 @@ public class UIController : MonoBehaviour {
 
     //TODO: ethan - this is currently the way to add to the log on the player screen
     public void AddToConverse(string converseInfo) {
+        Debug.Log("When");
         var ConverseText = Instantiate(ConversePrefab, converseData);
         ConverseText.text = converseInfo;
     }
@@ -389,6 +392,7 @@ public class UIController : MonoBehaviour {
 
     public void ClearConverseButtons()
     {
+        Debug.Log("this will fix things");
         var buttons = ConverseGroup.GetComponentsInChildren<Button>();
         foreach(Button button in buttons)
         {

@@ -28,7 +28,6 @@ public class DialogueController : MonoBehaviour
         this.currentLeader = currentLeader;
         ReadNotifs();
         GenerateButtons();
-        uiController.AddToConverse("Greetings!");
     }
 
     private void ReadNotifs()
