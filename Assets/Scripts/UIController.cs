@@ -103,9 +103,8 @@ public class UIController : MonoBehaviour {
 
         //Pie Chart should be updated when turn ends. yipee.
         //pieChart.LoadPieChart(influenceRatios);
-        UpdateMainScreen();
         notifs = notifications;
-        AddNotifs(notifications);
+        UpdateMainScreen();
         UpdateActionDisplay(3);
 
     }
@@ -118,7 +117,8 @@ public class UIController : MonoBehaviour {
         playerWealthYield.text = "+" + playerLeader.AffluenceYield.ToString();
         playerPoliticsYield.text = "+" + playerLeader.PoliticsYield.ToString();
         buttonController.DeactivateAllNotifs();
-        
+        AddNotifs(notifs);
+
 
     }
 
@@ -230,6 +230,14 @@ public class UIController : MonoBehaviour {
     public void Back() {
         if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Planet") || UIAnim.GetCurrentAnimatorStateInfo(0).IsName("NebulaToPlanet")) {
             cameraController.StartMapFly();
+        }
+        if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Nebula"))
+        {
+            Pause();
+        }
+        if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Pause"))
+        {
+            UnPause();
         }
         UIAnim.SetTrigger("Back");
         UpdateMainScreen();
@@ -356,6 +364,16 @@ public class UIController : MonoBehaviour {
         {
             GameObject.Destroy(button.gameObject);
         }
+    }
+
+    private void Pause()
+    {
+
+    }
+
+    private void UnPause()
+    {
+
     }
     
 }

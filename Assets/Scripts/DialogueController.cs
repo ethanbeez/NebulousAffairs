@@ -192,6 +192,7 @@ public class DialogueController : MonoBehaviour
         Debug.Log("Trade Processed");
         uiController.ClearConverseButtons();
         currentNotifs.Remove(currentNotif);
+        notifs.Remove(currentNotif);
         GenerateButtons();
     }
 
@@ -200,6 +201,7 @@ public class DialogueController : MonoBehaviour
         playerLeader.ProcessOutstandingTrade(currentLeader.Name, false);
         uiController.ClearConverseButtons();
         currentNotifs.Remove(currentNotif);
+        notifs.Remove(currentNotif);
         GenerateButtons();
     }
 
@@ -207,6 +209,7 @@ public class DialogueController : MonoBehaviour
     {
         uiController.ClearConverseButtons();
         currentNotifs.Remove(currentNotif);
+        notifs.Remove(currentNotif);
         GenerateButtons();
     }
 
