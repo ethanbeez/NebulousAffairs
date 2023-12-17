@@ -97,7 +97,10 @@ public class GameManager : MonoBehaviour {
 
     private void HandleLeaderClick(string leaderName)
     {
-        uiController.RenderLeaderInfo(gameHandler.GetOpponentLeader(leaderName));
+        Leader opponentLeader = gameHandler.GetOpponentLeader(leaderName);
+        if (opponentLeader != null) {
+            uiController.RenderLeaderInfo(gameHandler.GetOpponentLeader(leaderName));
+        }
     }
 
     private void CheckMissingGameDataFiles() {

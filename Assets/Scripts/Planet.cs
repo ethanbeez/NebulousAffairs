@@ -160,9 +160,31 @@ public class Planet {
         float totalInfluenceModifier = actualIncreasePoints + actualDecreasePoints;
         Influence leaderInfluence = influences[diplomacyAction.OriginLeader.Name];
         leaderInfluence.UpdateInfluence(totalInfluenceModifier);
-        string gainOrLoss = (totalInfluenceModifier > 0) ? "gain" : "loss";
-        Debug.Log(leaderInfluence.LeaderName + " performed diplomacy with " + leaderInfluence.PlanetName + ", resulting in +1 " + increasedCurrency + "/turn, and -1 " + decreasedCurrency + "/turn. " +
-            "This resulted in a " + gainOrLoss + " of " + totalInfluenceModifier + " Influence points! (new total: " + leaderInfluence.InfluenceValue + ")");
+         //string gainOrLoss = (totalInfluenceModifier > 0) ? "gain" : "loss";
+        // Debug.Log(leaderInfluence.LeaderName + " performed diplomacy with " + leaderInfluence.PlanetName + ", resulting in +1 " + increasedCurrency + "/turn, and -1 " + decreasedCurrency + "/turn. " +
+        //    "This resulted in a " + gainOrLoss + " of " + totalInfluenceModifier + " Influence points! (new total: " + leaderInfluence.InfluenceValue + ")");
+    }
+
+    public void HandleTradeAction(TradeAction tradeAction) {
+        float currencyOfferedPriority = 0;
+        float currencyRequestedPriority = 0;
+        string increasedCurrency = ""; // TODO: Remove these, mainly just for debugging.
+        currencyOfferedPriority += affluencePriority * ((tradeAction.OfferedAffluence > 0) ? 1 : 0);
+        currencyOfferedPriority += politicsPriority * ((tradeAction.OfferedPolitics > 0) ? 1 : 0);
+        currencyOfferedPriority += intelligencePriority * ((tradeAction.OfferedIntellect > 0) ? 1 : 0);
+
+        currencyRequestedPriority += affluencePriority * ((tradeAction.RequestedAffluence > 0) ? 1 : 0);
+        currencyRequestedPriority += politicsPriority * ((tradeAction.RequestedPolitics > 0) ? 1 : 0);
+        currencyRequestedPriority += intelligencePriority * ((tradeAction.RequestedIntellect > 0) ? 1 : 0);
+
+        float potentialIncreasePoints = 0.25f; // TODO: Don't hardcode these!
+        float potentialDecreasePoints = -0.10f;
+
+        float actualIncreasePoints = potentialIncreasePoints * currencyOfferedPriority;
+        float actualDecreasePoints = potentialDecreasePoints * currencyRequestedPriority;
+        float totalInfluenceModifier = actualIncreasePoints + actualDecreasePoints;
+        Influence leaderInfluence = influences[tradeAction.OriginLeader.Name];
+        leaderInfluence.UpdateInfluence(totalInfluenceModifier);
     }
     #endregion
 }

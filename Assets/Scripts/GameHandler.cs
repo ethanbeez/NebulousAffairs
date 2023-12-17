@@ -20,7 +20,6 @@ public class GameHandler {
     public GameHistory gameHistory;
 
     public GameHandler(int leadersPerPlanet) {
-        notificationHandler = new();
         opponentHandler = new();
         player = new();
         BuildLeadersFromGameData();
@@ -28,6 +27,7 @@ public class GameHandler {
         BuildPlanetsFromGameData();
         BuildConnections(leadersPerPlanet);
         gameHistory = new();
+        notificationHandler = new(opponentHandler.GetOpponentLeaders());
     }
 
     private void BuildLeadersFromGameData() {
@@ -349,6 +349,7 @@ public class GameHandler {
         foreach (Opponent opponent in opponentHandler.opponents.Values) {
             if (opponent.Leader.PlanetControlCount == 0) {
                 // Debug.Log(opponent.Leader.Name + " WAS ELIMINATED!");
+                notificationHandler.RemoveLeaderNotifications(opponent.Leader.Name);
                 planetHandler.HandleLeaderElimination(opponent.Leader.Name);
                 player.HandleLeaderElimination(opponent.Leader.Name);
                 opponentHandler.HandleLeaderElimination(opponent.Leader.Name);
@@ -389,7 +390,10 @@ public class GameHandler {
     }
 
     public Leader GetOpponentLeader(string leaderName) {
-        return opponentHandler.opponents[leaderName].Leader;
+        if (opponentHandler.opponents.ContainsKey(leaderName)) {
+            return opponentHandler.opponents[leaderName].Leader;
+        }
+        return null;
     }
 
     public List<LeaderDialogue.DialogueNode> GetValidDialogueQuestions(string leaderName) {

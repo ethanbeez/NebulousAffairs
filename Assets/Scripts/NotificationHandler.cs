@@ -8,25 +8,39 @@ public enum NotificationType {
 }
 
 public class NotificationHandler {
-    private List<Notification> OutstandingNotifications;
+    private Dictionary<string, List<Notification>> OutstandingNotifications;
+    // private List<Notification> OutstandingNotifications;
 
-    public NotificationHandler() {
-        OutstandingNotifications = new List<Notification>();
+    public NotificationHandler(List<Leader> leaders) {
+        OutstandingNotifications = new();
+        foreach (Leader leader in leaders) {
+            OutstandingNotifications.Add(leader.Name, new());
+        }
     }
 
     public void ClearNotifications() {
-        OutstandingNotifications.Clear();
+        foreach (List<Notification> notifications in OutstandingNotifications.Values) {
+            notifications.Clear();
+        }
     }
 
     public void AddNotification(Notification notification) {
-        OutstandingNotifications.Add(notification);
+        OutstandingNotifications[notification.OriginLeader.Name].Add(notification);
     }
 
     public List<Notification> GetCurrentNotifications() {
-        return OutstandingNotifications;
+        List<Notification> list = new();
+        foreach (List<Notification> notifs in OutstandingNotifications.Values) { 
+            foreach (Notification notification in notifs) {
+                list.Add(notification);
+            }
+        }
+        return list;
     }
 
-    
+    public void RemoveLeaderNotifications(string leaderName) {
+        OutstandingNotifications[leaderName].Clear();
+    }
 }
 
 public class Notification

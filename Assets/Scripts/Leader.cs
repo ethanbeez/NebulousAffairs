@@ -294,6 +294,9 @@ public class Leader {
         IntelligenceStockpile += tradeAction.OfferedIntellect - tradeAction.RequestedIntellect;
         PoliticsStockpile += tradeAction.OfferedPolitics - tradeAction.RequestedPolitics;
         relationships[tradeAction.OriginLeader.Name].ProcessTradeOutcome(tradeAction.TradeWeight);
+        foreach (Planet planet in controlledPlanets.Values) {
+            planet.HandleTradeAction(tradeAction);
+        }
     }
 
     public void RefuseIncomingTrade(TradeAction tradeAction) {

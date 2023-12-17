@@ -60,4 +60,12 @@ public class OpponentHandler {
     public void EliminateOpponent(string leaderName) {
         opponents.Remove(leaderName);
     }
+
+    public List<Leader> GetOpponentLeaders() {
+        List<Leader> opponentLeaders = new();
+        foreach (Opponent opponent in opponents.Values) {
+            opponentLeaders.Add(opponent.Leader);
+        }
+        return opponentLeaders;
+    } 
 }
