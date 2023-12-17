@@ -23,7 +23,7 @@ public class InputManager : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            SpacePressed?.Invoke();
+            // SpacePressed?.Invoke();
         } else if (Input.GetKeyDown(KeyCode.M)) {
             MPressed?.Invoke();
         } else if (Input.GetKeyDown(KeyCode.S)) {

@@ -39,8 +39,8 @@ public class GameManager : MonoBehaviour {
         // uiController.InstantiateButtons(gameHandler.GetLeaderButtonData());
         // GenerateNebula();
         InputManager.MPressed += CameraToMapPosition;
-        InputManager.SPressed += ToggleNebulaOrbits;
-        InputManager.TPressed += ToggleGalaxyMotionTrails;
+        // InputManager.SPressed += ToggleNebulaOrbits;
+        // InputManager.TPressed += ToggleGalaxyMotionTrails;
         InputManager.EscapePressed += uiController.Back;
         InputManager.SpacePressed += HandleTurnAdvancement;
         LeaderButton.LeaderButtonPressed += HandleLeaderClick;
@@ -52,6 +52,8 @@ public class GameManager : MonoBehaviour {
         UIController.GameQuit += QuitGame;
         UIController.GameStart += StartMatch;
         DialogueController.DialogueRequest += HandleDialogue;
+        UIController.GamePaused += PauseGame;
+        UIController.GameUnpaused += UnpauseGame;
 
         // COMMENTED OUT FOR MAIN MENU LOGIC
         /*gameHandler.gameHistory.LogGameEvent(new("Turn: 1/20, Year: 3000/ 4000"));
@@ -61,6 +63,14 @@ public class GameManager : MonoBehaviour {
         uiController.player = gameHandler.player;*/
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
+    }
+
+    private void PauseGame() { 
+        GameState = GameState.Paused;
+    }
+
+    private void UnpauseGame() {
+        GameState = GameState.InMatch;
     }
 
     private void StartMatch() {
@@ -106,19 +116,24 @@ public class GameManager : MonoBehaviour {
     }
 
     private void ToggleGalaxyMotionTrails() {
-        nebulaController.ToggleGalaxyMotionTrails();
+        // nebulaController.ToggleGalaxyMotionTrails();
     }
 
     private void GenerateNebula() {
-        GeneratePlanets();
+        if (nebulaController.nebulaGenerated == false) {
+            GeneratePlanets();
+            nebulaController.nebulaGenerated = true;
+        }
     }
 
     private void CameraToMapPosition() {
-        uiController.RenderMainScene();
+        if (GameState == GameState.InMatch) {
+            uiController.RenderMainScene();
+        }
     }
 
     private void ToggleNebulaOrbits() {
-        nebulaController.ToggleNebulaMotion();
+        // nebulaController.ToggleNebulaMotion();
     }
 
     private void GeneratePlanets() {
@@ -130,35 +145,39 @@ public class GameManager : MonoBehaviour {
     }
 
     private void HandlePlanetClick(int planetID, GameObject focusTarget, string planetName) {
-        Planet clickedPlanet = gameHandler.GetPlanet(planetName);
-        uiController.RenderPlanetInfo(clickedPlanet, gameHandler.GetPlanetInfluenceRatios(planetName), focusTarget);
+        if (GameState == GameState.InMatch) {
+            Planet clickedPlanet = gameHandler.GetPlanet(planetName);
+            uiController.RenderPlanetInfo(clickedPlanet, gameHandler.GetPlanetInfluenceRatios(planetName), focusTarget);
+        }
     }
 
 
     private void HandleTurnAdvancement() {
-        nebulaController.StartTurnTransitionAnim();
-        TurnHandler.GameTurns gameTurnInfo = turnHandler.AdvanceTurn();
-        gameHandler.AdvanceTurn(gameTurnInfo);
-        if (gameTurnInfo.ElectionTurn) {
-            Election election = new(gameTurnInfo.CurrentTurn - 1, gameTurnInfo.CurrentYear - gameTurnInfo.YearsPerTurn);
-            if (gameHandler.ProcessElection(election)) {
-                HandlePlayerLoss();
+        if (GameState == GameState.InMatch) {
+            nebulaController.StartTurnTransitionAnim();
+            TurnHandler.GameTurns gameTurnInfo = turnHandler.AdvanceTurn();
+            gameHandler.AdvanceTurn(gameTurnInfo);
+            if (gameTurnInfo.ElectionTurn) {
+                Election election = new(gameTurnInfo.CurrentTurn - 1, gameTurnInfo.CurrentYear - gameTurnInfo.YearsPerTurn);
+                if (gameHandler.ProcessElection(election)) {
+                    HandlePlayerLoss();
+                }
             }
-        }
-        Debug.Log(gameTurnInfo.CurrentTurn);
+            Debug.Log(gameTurnInfo.CurrentTurn);
 
-        if (gameTurnInfo.CurrentTurn > gameTurnInfo.TurnLimit) {
-            gameHandler.CheckLeaderWon();
-            uiController.EndGame(gameHandler.GetEventHistory());
+            if (gameTurnInfo.CurrentTurn > gameTurnInfo.TurnLimit) {
+                gameHandler.CheckLeaderWon();
+                uiController.EndGame(gameHandler.GetEventHistory());
+            }
+            uiController.UpdateTurnDisplay(gameTurnInfo.ToString(), gameHandler.GetNotifications());
+            gameHandler.gameHistory.LogGameEvent(new(gameTurnInfo.ToString()));
+            uiController.UpdateLog(gameHandler.GetEventHistory());
         }
-        uiController.UpdateTurnDisplay(gameTurnInfo.ToString(), gameHandler.GetNotifications());
-        gameHandler.gameHistory.LogGameEvent(new(gameTurnInfo.ToString()));
-        uiController.UpdateLog(gameHandler.GetEventHistory());
     }
 
     private void HandlePlayerLoss() {
-        gameHandler.gameHistory.LogGameEvent(new("You lost control of all planets! Press ESC to quit and relaunch the game to try again."));
-        Application.Quit();
+        // gameHandler.gameHistory.LogGameEvent(new("You lost control of all planets! Press ESC to quit and relaunch the game to try again."));
+        // Application.Quit();
     }
 
     private void HandlePlayerTrade(int[] vals, Leader enemyLeader) {
@@ -219,12 +238,5 @@ public class GameManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            string eventHistory = "";
-            foreach (GameEvent gameEvent in gameHandler.GetEventHistory()) {
-                eventHistory += gameEvent.ToString() + "\n";
-            }
-            Debug.Log(eventHistory);
-        }
     }
 }

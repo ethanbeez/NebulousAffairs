@@ -76,6 +76,12 @@ public class UIController : MonoBehaviour {
 
     public delegate void StartGame();
     public static event StartGame GameStart;
+
+    public delegate void PauseGame();
+    public static event PauseGame GamePaused;
+
+    public delegate void UnpauseGame();
+    public static event UnpauseGame GameUnpaused;
     private List<Notification> notifs;
     public Player player;
 
@@ -368,12 +374,12 @@ public class UIController : MonoBehaviour {
 
     private void Pause()
     {
-
+        GamePaused.Invoke();
     }
 
     private void UnPause()
     {
-
+        GameUnpaused.Invoke();
     }
     
 }
