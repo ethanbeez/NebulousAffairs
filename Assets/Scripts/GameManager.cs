@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour {
         UIController.ConfirmEspionage += HandlePlayerEspionage;
         UIController.GameQuit += QuitGame;
         UIController.GameStart += StartMatch;
+        DialogueController.DialogueRequest += HandleDialogue;
 
         // COMMENTED OUT FOR MAIN MENU LOGIC
         /*gameHandler.gameHistory.LogGameEvent(new("Turn: 1/20, Year: 3000/ 4000"));
@@ -203,6 +204,13 @@ public class GameManager : MonoBehaviour {
             uiController.AddToLog("Espionage Failed - Not Enough Resources");
         }
     }
+
+    private void HandleDialogue(DialogueController dialogueController, string leaderName)
+    {
+        dialogueController.EngageDialogue(gameHandler.GetValidDialogueQuestions(leaderName));
+    }
+
+
 
     /*private void AdvanceElectionTurn(TurnHandler.GameTurns gameTurns, Election electionData) {
         AdvanceTurn(gameTurns);

@@ -13,8 +13,9 @@ public class DialogueController : MonoBehaviour
     private List<Notification> currentNotifs;
     UIController uiController;
     Notification currentNotif;
-    TradeAction currentTrade;
-
+    public delegate void RequestDialogueQuestions(DialogueController dialogueController, string leaderName);
+    public static event RequestDialogueQuestions? DialogueRequest;
+    List<LeaderDialogue.DialogueNode> currentDialogues;
     public void OnEnable()
     {
         uiController = FindObjectOfType<UIController>();
@@ -49,7 +50,7 @@ public class DialogueController : MonoBehaviour
         switch (currentNotifs.Count)
         {
             case 0:
-                //Chatting
+                DisplayConversation();
                 break;
             case 1:
                 SelectButtons(currentNotifs[0]);
@@ -156,9 +157,37 @@ public class DialogueController : MonoBehaviour
         uiController.AddConverseButton(button.GetComponent<Button>());
     }
 
+    private void DisplayConversation()
+    {
+        DialogueRequest(this, currentLeader.Name);
+    }
+
+    public void EngageDialogue(List<LeaderDialogue.DialogueNode> availableDialogues)
+    {
+        currentDialogues = availableDialogues;
+        Debug.Log(availableDialogues.Count);
+        foreach(var availableDialogue in availableDialogues)
+        {
+
+            var button = Instantiate(DialogueButton);
+            button.GetComponent<Button>().onClick.AddListener(() => DialogueConfirm(availableDialogue.Dialogue));
+            button.GetComponentInChildren<TextMeshProUGUI>().text = availableDialogue.Dialogue;
+            uiController.AddConverseButton(button.GetComponent<Button>());
+
+        }
+    }
+
+    private void DialogueConfirm(string dialogueText)
+    {
+        foreach( var availableDialogue in currentDialogues)
+        {
+            if(dialogueText.Equals(availableDialogue.Dialogue))
+                uiController.AddToConverse(availableDialogue.GetQuestionResponse().Dialogue);
+        }
+    }
+
     private void TradeConfirm()
     {
-        Debug.Log("Trade Confirmed");
         playerLeader.ProcessOutstandingTrade(currentLeader.Name, true );
         Debug.Log("Trade Processed");
         uiController.ClearConverseButtons();
