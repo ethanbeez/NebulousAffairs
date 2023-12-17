@@ -199,6 +199,8 @@ public class UIController : MonoBehaviour {
             leaderWealthPriority.text = "?";
        }
 
+        TooltipSystem.Hide();
+
        leaderIntelligenceStockpile.text = leader.IntelligenceStockpile.ToString();
        leaderPoliticsStockpile.text = leader.PoliticsStockpile.ToString();
        leaderWealthStockpile.text = leader.AffluenceStockpile.ToString();
