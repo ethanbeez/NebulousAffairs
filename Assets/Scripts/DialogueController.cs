@@ -194,6 +194,7 @@ public class DialogueController : MonoBehaviour
         currentNotifs.Remove(currentNotif);
         notifs.Remove(currentNotif);
         GenerateButtons();
+        uiController.AddToConverse(currentLeader.GetEventDialogueResponse(currentLeader, playerLeader.Leader, currentLeader, DialogueContextType.SentTradeAccepted).Dialogue);
     }
 
     private void TradeDeny()
@@ -203,6 +204,8 @@ public class DialogueController : MonoBehaviour
         currentNotifs.Remove(currentNotif);
         notifs.Remove(currentNotif);
         GenerateButtons();
+        uiController.AddToConverse(currentLeader.GetEventDialogueResponse(currentLeader, playerLeader.Leader, currentLeader, DialogueContextType.SendTradeRejected).Dialogue);
+
     }
 
     private void MessageConfirm()

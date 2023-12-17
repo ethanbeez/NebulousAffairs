@@ -20,17 +20,16 @@ public class PieChart : MonoBehaviour
         float totalValue = 0f;
         for(int i = 0; i < names.Length; i++)  {
             var leader = CheckLeaderNames(names[i]);
-            imagesPieChart[i].alphaHitTestMinimumThreshold = 0.5f;
             if(leader.Item2 > 0.01) {
                 totalValue += leader.Item2;
                 Debug.Log(leader.Item1.Name + " " + leader.Item2);
                 imagesPieChart[i].fillAmount = totalValue;
-                imagesPieChart[i].GetComponent<TooltipTrigger>().content = leader.Item1.Name + ": " + (leader.Item2 * 100) + "%";
+                //imagesPieChart[i].GetComponent<TooltipTrigger>().content = leader.Item1.Name + ": " + (leader.Item2 * 100) + "%";
             }
             else {
                 imagesPieChart[i].fillAmount = 0;
             }
-        }       
+        }
     }
 
     private (Leader, float) CheckLeaderNames(string leaderName) {

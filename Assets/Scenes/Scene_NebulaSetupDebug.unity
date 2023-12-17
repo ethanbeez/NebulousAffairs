@@ -172,24 +172,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &180898727 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7946306038017569909, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &180898731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180898727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a4739604a630bb4e9b97f1bd92692e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: 
 --- !u!114 &225734187 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3902789571082617381, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
@@ -370,24 +352,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: The amount of Wealth this Leader has
---- !u!1 &512163864 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5516576464168479067, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &512163868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 512163864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a4739604a630bb4e9b97f1bd92692e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1235,24 +1199,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: The amount of Influence this planet provides each turn
---- !u!1 &1086034708 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3641688235893698806, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1086034712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1086034708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a4739604a630bb4e9b97f1bd92692e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: 
 --- !u!114 &1110769615 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5636669673633104929, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
@@ -1546,24 +1492,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: How this Leader prefers Wealth. This can be learned through espionage
---- !u!1 &1448799239 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8817807089983818404, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1448799243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1448799239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a4739604a630bb4e9b97f1bd92692e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: 
 --- !u!114 &1477062491 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1967790927740503478, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
@@ -1870,24 +1798,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1727464110 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 582717317485572923, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1727464114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1727464110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a4739604a630bb4e9b97f1bd92692e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: 
 --- !u!114 &1735340543 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8966941767679483153, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
@@ -2147,24 +2057,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: Influence
---- !u!1 &1968966232 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3953271161999367013, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-  m_PrefabInstance: {fileID: 4322407485815068893}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1968966236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1968966232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a4739604a630bb4e9b97f1bd92692e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: 
 --- !u!1 &1970983656
 GameObject:
   m_ObjectHideFlags: 0
@@ -2685,6 +2577,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
+    - target: {fileID: 5483478079761387582, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5572341757504824381, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 200
@@ -2767,7 +2663,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6528741892594560896, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -250
+      value: 109143.305
       objectReference: {fileID: 0}
     - target: {fileID: 7009755159693729745, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2892,24 +2788,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7044486455631306303, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1074673763}
-    - targetCorrespondingSourceObject: {fileID: 7946306038017569909, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 180898731}
-    - targetCorrespondingSourceObject: {fileID: 3641688235893698806, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1086034712}
-    - targetCorrespondingSourceObject: {fileID: 5516576464168479067, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 512163868}
-    - targetCorrespondingSourceObject: {fileID: 8817807089983818404, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1448799243}
-    - targetCorrespondingSourceObject: {fileID: 3953271161999367013, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1968966236}
-    - targetCorrespondingSourceObject: {fileID: 582717317485572923, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1727464114}
     - targetCorrespondingSourceObject: {fileID: 728453648548574947, guid: 9e4c0b4c5bea03645865ae4be562bab5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 669357267}
