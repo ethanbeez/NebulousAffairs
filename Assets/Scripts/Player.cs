@@ -35,10 +35,12 @@ public class Player {
 
     public int PlayerTurnActionsLeft { get; set; } = 3;
 
-    public void AddOutstandingTrade(TradeAction outstandingTrade) {
+    public bool AddOutstandingTrade(TradeAction outstandingTrade) {
         if (!OutstandingTrades.ContainsKey(outstandingTrade.originLeader.Name)) {
             OutstandingTrades.Add(outstandingTrade.OriginLeader.Name, outstandingTrade);
+            return true;
         }
+        return false;
     }
 
     public void ProcessOutstandingTrade(string originLeader, bool accepted) {
