@@ -8,26 +8,36 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using static TurnHandler;
 
+public enum GameState {
+    Default = 0,
+    MainMenu = 1,
+    InMatch = 2,
+    Paused = 3,
+    End = 4,
+}
+
 public class GameManager : MonoBehaviour {
+    public static GameState GameState { get; private set; }
     public const int NumLeaders = 6;
-    public const int StartingPlanetsPerLeader = 2; 
+    public const int StartingPlanetsPerLeader = 2;
     private GameHandler gameHandler;
     private TurnHandler turnHandler;
     public NebulaController nebulaController;
     public UIController uiController;
     // Start is called before the first frame update
     void Start() {
+        GameState = GameState.MainMenu;
         CheckMissingGameDataFiles();
-        gameHandler = new(StartingPlanetsPerLeader);
-        turnHandler = new();
+        // gameHandler = new(StartingPlanetsPerLeader);
+        // turnHandler = new();
         if (nebulaController == null) {
             nebulaController = GameObject.Find("NebulaController").GetComponent<NebulaController>();
         }
         if (uiController == null) {
             uiController = GameObject.Find("UIController").GetComponent<UIController>();
         }
-        uiController.InstantiateButtons(gameHandler.GetLeaderButtonData());
-        GenerateNebula();
+        // uiController.InstantiateButtons(gameHandler.GetLeaderButtonData());
+        // GenerateNebula();
         InputManager.MPressed += CameraToMapPosition;
         InputManager.SPressed += ToggleNebulaOrbits;
         InputManager.TPressed += ToggleGalaxyMotionTrails;
@@ -40,15 +50,29 @@ public class GameManager : MonoBehaviour {
         Campaign.ConfirmCampaign += HandlePlayerCampaign;
         UIController.ConfirmEspionage += HandlePlayerEspionage;
         UIController.GameQuit += QuitGame;
+        UIController.GameStart += StartMatch;
 
-
-        gameHandler.gameHistory.LogGameEvent(new("Turn: 1/20, Year: 3000/ 4000"));
+        // COMMENTED OUT FOR MAIN MENU LOGIC
+        /*gameHandler.gameHistory.LogGameEvent(new("Turn: 1/20, Year: 3000/ 4000"));
         uiController.playerLeader = gameHandler.GetPlayerLeader();
         uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo(), gameHandler.GetNotifications());
         uiController.UpdateLog(gameHandler.GetEventHistory());
-        uiController.player = gameHandler.player;
+        uiController.player = gameHandler.player;*/
         // turnHandler.TurnChanged += AdvanceTurn;
         // turnHandler.ElectionOccurred += AdvanceElectionTurn;
+    }
+
+    private void StartMatch() {
+        GameState = GameState.InMatch;
+        gameHandler = new(StartingPlanetsPerLeader);
+        turnHandler = new();
+        GenerateNebula();
+        gameHandler.gameHistory.LogGameEvent(new("Turn: 1/20, Year: 3000/ 4000"));
+        uiController.playerLeader = gameHandler.GetPlayerLeader();
+        uiController.player = gameHandler.player;
+        uiController.UpdateTurnDisplay(turnHandler.GetCurrentTurnInfo(), gameHandler.GetNotifications());
+        uiController.UpdateLog(gameHandler.GetEventHistory());
+        uiController.InstantiateButtons(gameHandler.GetLeaderButtonData());
     }
 
     private void HandleLeaderHover(string leaderName, bool isEnter)

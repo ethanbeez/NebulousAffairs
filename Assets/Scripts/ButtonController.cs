@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,13 @@ public class ButtonController {
         leadersPanelGameObject = GameObject.Find("LeadersPanel");
         this.leaderButtonPrefab = leaderButtonPrefab;
         leaderButtons = new();
+    }
+
+    public void ClearLeaderButtons() {
+        foreach (LeaderButton button in leaderButtons.Values) {
+            GameObject.Destroy(button.leaderButtonGameObject);
+        }
+        leaderButtons.Clear();
     }
 
     public void InstantiateLeaderButtons(List<(string, string)> leaderInfo) {

@@ -6,6 +6,7 @@ using UnityEngine.VFX;
 
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour {
+    public bool inMatch = false;
     public CanvasGroup canvas;
     public VisualEffect warpVFX;
     private bool warpActive;
@@ -79,14 +80,24 @@ public class CameraController : MonoBehaviour {
         introFlyComplete = false;
         screenFadedIn = false;
         warpVFX.Stop();
+    }
+
+    public void StartGame() {
+        freeCamReturnComplete = true;
+        flyToLocationComplete = true;
+        introFlyComplete = false;
+        screenFadedIn = false;
+        warpVFX.Stop();
+        startTime = Time.time;
+        inMatch = true;
         StartIntroFly();
     }
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.F)) {
+        /*if (Input.GetKeyDown(KeyCode.F)) {
             FreeCam = true;
-        }
+        }*/
 
         if (FreeCam) {
             UpdateInput();
@@ -94,7 +105,7 @@ public class CameraController : MonoBehaviour {
             transform.position += velocity * Time.deltaTime;
         } else {
             if (!introFlyComplete) {
-                if (!screenFadedIn) FadeScreen(3);
+                if (inMatch && !screenFadedIn) FadeScreen(6);
                 FlyToMapPosition(9);
             } else if (!freeCamReturnComplete) {
                 // Debug.Log(freeCamEndMarker);
