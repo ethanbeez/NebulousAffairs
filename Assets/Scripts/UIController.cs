@@ -338,12 +338,15 @@ public class UIController : MonoBehaviour {
             if (stringy.Contains("won"))
             {
                 endText.text = stringy;
+                if (stringy.Contains("ended the game"))
+                {
+                    scoreText.text = stringy;
+                }
             }
-            else {
+            else
+            {
                 endText.text = "You Lose!";
-            }
-            if (stringy.Contains("ended the game")) {
-                scoreText.text = stringy;
+                scoreText.text = "";
             }
         }
 
