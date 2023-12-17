@@ -73,6 +73,9 @@ public class UIController : MonoBehaviour {
     public static event EspionageConfirm? ConfirmEspionage;
     public delegate void QuitGame();
     public static event QuitGame? GameQuit;
+
+    public delegate void StartGame();
+    public static event StartGame GameStart;
     private List<Notification> notifs;
     public Player player;
 
@@ -84,6 +87,7 @@ public class UIController : MonoBehaviour {
 
     public void InstantiateButtons(List<(string, string)> leaderButtonData) {
         this.leaderButtonData = leaderButtonData;
+        buttonController.ClearLeaderButtons();
         buttonController.InstantiateLeaderButtons(leaderButtonData);
     }
 
@@ -312,6 +316,8 @@ public class UIController : MonoBehaviour {
 
     public void playGame()
     {
+        cameraController.StartGame();
+        GameStart.Invoke();
         //zoom
         UIAnim.SetTrigger("MainMenu");
     }

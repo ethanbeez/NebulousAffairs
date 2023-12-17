@@ -15,7 +15,7 @@ public class LeaderButton {
     public delegate void LeaderButtonHover(string leaderName, bool isEnter);
     public static event LeaderButtonHover? LeaderButtonEnterOrExit;
 
-    private GameObject leaderButtonGameObject;
+    public GameObject leaderButtonGameObject;
     private UnityAction buttonPressed;
     public string LeaderName { get; private set; }
     public string ImagePath { get; private set; }
