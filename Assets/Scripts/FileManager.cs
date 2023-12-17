@@ -266,6 +266,14 @@ public static class FileManager {
         return Resources.Load<Sprite>(leaderImageFilePath);
     }
 
+    public static Sprite GetLeaderEliminatedImageFromFileName(string name) {
+        string leaderImageFilePath = "LeaderImages/" + whitespaceTrim.Replace(name, "");
+        if (Resources.Load<Sprite>(leaderImageFilePath) == null) {
+            Debug.Log("):");
+        }
+        return Resources.Load<Sprite>(leaderImageFilePath);
+    }
+
     public static Dictionary<LeaderResources.Perspectives, Dictionary<LeaderResources.Expressions, string>> GetLeaderImagePaths(string leaderName) {
         Dictionary<LeaderResources.Perspectives, Dictionary<LeaderResources.Expressions, string>> leaderImagePaths = new();
         foreach (LeaderResources.Perspectives perspective in Enum.GetValues(typeof(LeaderResources.Perspectives))) {

@@ -162,8 +162,13 @@ public class GameManager : MonoBehaviour {
             gameHandler.AdvanceTurn(gameTurnInfo);
             if (gameTurnInfo.ElectionTurn) {
                 Election election = new(gameTurnInfo.CurrentTurn - 1, gameTurnInfo.CurrentYear - gameTurnInfo.YearsPerTurn);
-                if (gameHandler.ProcessElection(election)) {
+                List<string> eliminatedLeaders = gameHandler.ProcessElection(election);
+
+                if (eliminatedLeaders.Contains(gameHandler.player.Leader.Name)) {
                     HandlePlayerLoss();
+                }
+                foreach (string leader in eliminatedLeaders) {
+                    uiController.UpdateEliminatedLeaderButton(leader);
                 }
             }
             Debug.Log(gameTurnInfo.CurrentTurn);

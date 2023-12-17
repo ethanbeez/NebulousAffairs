@@ -306,7 +306,7 @@ public class GameHandler {
         return planetInfluences;
     }
 
-    public bool ProcessElection(Election electionData) {
+    public List<string> ProcessElection(Election electionData) {
         player.Leader.IncurElectionTurnCosts();
         foreach (Opponent opponent in opponentHandler.opponents.Values) {
             opponent.Leader.IncurElectionTurnCosts();
@@ -362,9 +362,9 @@ public class GameHandler {
             gameHistory.LogGameEvent(new($"{eliminatedLeaderName} was eliminated from the game!"));
         }
         if (player.Leader.PlanetControlCount == 0) {
-            return true;
+            eliminatedLeaderNames.Add(player.Leader.Name);
         }
-        return false;
+        return eliminatedLeaderNames;
     }
 
     private void HandleDiplomacyAction(DiplomacyAction diplomacyAction) {

@@ -128,6 +128,10 @@ public class UIController : MonoBehaviour {
 
     }
 
+    public void UpdateEliminatedLeaderButton(string leaderName) {
+        buttonController.EliminateLeaderButton(leaderName);
+    }
+
     private void AddNotifs(List<Notification> notifications)
     {
         Debug.Log(notifications.Count + " Notifications");

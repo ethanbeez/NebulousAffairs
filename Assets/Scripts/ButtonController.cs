@@ -26,6 +26,10 @@ public class ButtonController {
         leaderButtons.Clear();
     }
 
+    public void EliminateLeaderButton(string leaderName) {
+        leaderButtons[leaderName].EliminateLeader();
+    }
+
     public void InstantiateLeaderButtons(List<(string, string)> leaderInfo) {
         int order = 0;
         foreach ((string, string) leader in leaderInfo) {

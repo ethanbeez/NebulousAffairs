@@ -19,6 +19,7 @@ public class LeaderButton {
     private UnityAction buttonPressed;
     public string LeaderName { get; private set; }
     public string ImagePath { get; private set; }
+    private Sprite leaderEliminatedImage;
     private Image leaderImage;
     private string leaderName;
     private Image tradeNotif;
@@ -32,6 +33,7 @@ public class LeaderButton {
         ImagePath = imagePath;
         leaderImage = leaderButtonGameObject.GetComponent<Image>();
         leaderImage.sprite = FileManager.GetLeaderImageFromFileName(ImagePath);
+        leaderEliminatedImage = FileManager.GetLeaderEliminatedImageFromFileName(leaderName + "_portrait_neutral_eliminated");
         buttonPressed += LeaderClicked;
         leaderButtonGameObject.GetComponent<Button>().onClick.AddListener(LeaderClicked);
         var notifs = leaderButtonGameObject.GetComponentsInChildren<Image>();
@@ -76,5 +78,9 @@ public class LeaderButton {
         {
             tradeNotif.enabled = false;
         }
+    }
+
+    public void EliminateLeader() {
+        leaderImage.sprite = leaderEliminatedImage;
     }
 }
