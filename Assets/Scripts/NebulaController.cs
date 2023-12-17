@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NebulaController : MonoBehaviour {
+    public bool nebulaGenerated = false;
     private bool nebulaMotionEnabled;
     // public AnimationCurve nextTurnAnimCurve;
     [SerializeField]
