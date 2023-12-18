@@ -206,7 +206,6 @@ public class UIController : MonoBehaviour {
             leaderWealthPriority.text = "?";
        }
 
-        TooltipSystem.Hide();
 
        leaderIntelligenceStockpile.text = leader.IntelligenceStockpile.ToString();
        leaderPoliticsStockpile.text = leader.PoliticsStockpile.ToString();
@@ -214,17 +213,17 @@ public class UIController : MonoBehaviour {
        LeaderName.text = leader.Name;
         ClearConverseButtons();
         dialogueController.UpdateData(notifs, currentLeader, player);
-        AddToConverse("Greetings!");
 
 
 
         leaderImage.sprite = FileManager.GetLeaderImageFromFileName(leader.GetLeaderImagePath(LeaderResources.Perspectives.Full, LeaderResources.Expressions.Neutral));
-        
 
+        TooltipSystem.Hide();
        //check if coming from Nebula
        if(UIAnim.GetCurrentAnimatorStateInfo(0).IsName("Nebula")) {
             UIAnim.SetTrigger("ToLeader");
-       }
+            AddToConverse("Greetings!");
+        }
     } 
 
     //Not Implemented, will get a leader's image or something. idk I wrote this code like a week and a half
@@ -269,6 +268,7 @@ public class UIController : MonoBehaviour {
         {
             UnPause();
         }
+        UpdateMainScreen();
         UIAnim.SetTrigger("Back");
     }
 
